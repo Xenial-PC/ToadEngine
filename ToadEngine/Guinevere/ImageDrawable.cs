@@ -1,0 +1,25 @@
+﻿using SkiaSharp;
+
+namespace Guinevere;
+
+public class ImageDrawable : IDrawable
+{
+    public SKImage Image { get; }
+    public Rect Destination { get; }
+
+    public SKPaint? Paint { get; }
+
+    public ImageDrawable(SKImage image, Rect dest)
+    {
+        Image = image;
+        Destination = dest;
+    }
+
+    public void Render(Gui gui, LayoutNode node, SKCanvas canvas)
+    {
+        var r = Destination;
+        var skRect = new SKRect(r.X, r.Y, r.X + r.W, r.Y + r.H);
+
+        canvas.DrawImage(Image, skRect);
+    }
+}

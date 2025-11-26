@@ -1,0 +1,96 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Classes\Base\Rendering\Scene.cs~RF103b3d3.TMP" />
+    <None Remove="Classes\Fonts\fa-regular-400.ttf" />
+    <None Remove="Classes\Fonts\font.ttf" />
+    <None Remove="Classes\Fonts\icons.ttf" />
+    <None Remove="Classes\Fonts\NotoColorEmoji-Regular.ttf" />
+    <None Remove="Classes\Fonts\Roboto-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Classes\Fonts\fa-regular-400.ttf" />
+    <EmbeddedResource Include="Classes\Fonts\font.ttf" />
+    <EmbeddedResource Include="Classes\Fonts\icons.ttf" />
+    <EmbeddedResource Include="Classes\Fonts\NotoColorEmoji-Regular.ttf" />
+    <EmbeddedResource Include="Classes\Fonts\Roboto-Regular.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\core.vert">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\cubemap.frag">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\cubemap.vert">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\quad.frag">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\quad.vert">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\shadowmap.frag">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\shadowmap.vert">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\lamp.frag">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\lamp.vert">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\lighting.frag">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\skybox.frag">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\skybox.vert">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\ui.frag">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Shaders\CoreShaders\ui.vert">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AssimpNet" Version="4.1.0" />
+    <PackageReference Include="BepuPhysics" Version="2.4.0" />
+    <PackageReference Include="BepuUtilities" Version="2.4.0" />
+    <PackageReference Include="Costura.Fody" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="DearImGui" Version="1.89.3" />
+    <PackageReference Include="DearImGui.OpenTK" Version="1.0.0.1" />
+    <PackageReference Include="DearImPlot" Version="0.14.0.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="OpenTK" Version="4.9.4" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.Vulkan.SharpVk" Version="3.119.1" />
+    <PackageReference Include="StbImageSharp" Version="2.30.15" />
+  </ItemGroup>
+
+</Project>
