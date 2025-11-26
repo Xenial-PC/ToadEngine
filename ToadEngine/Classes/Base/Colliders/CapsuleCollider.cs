@@ -12,6 +12,7 @@ public class CapsuleCollider : Behaviour
     public BodyHandle Collider;
     public int Handle;
 
+    public Vector2 Size = Vector2.Zero;
     public ColliderType Type;
     public float Mass = 1f, Radius;
 
@@ -26,32 +27,31 @@ public class CapsuleCollider : Behaviour
     public override void Setup()
     {
         base.Setup();
+        if (Size == Vector2.Zero)
+            Size = new Vector2(Radius, GameObject.Transform.LocalScale.Y);
+
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = GetCurrentScene().PhysicsManager.CreateTriggerCapsule((Vector3)GameObject.Transform.Position,
-                    new Vector2(Radius, GameObject.Transform.LocalScale.Y));
+                Collider = GetCurrentScene().PhysicsManager.CreateTriggerCapsule((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
-                Collider = GetCurrentScene().PhysicsManager.CreateKinematicCapsule((Vector3)GameObject.Transform.Position,
-                    new Vector2(Radius, GameObject.Transform.LocalScale.Y));
+                Collider = GetCurrentScene().PhysicsManager.CreateKinematicCapsule((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
-                Collider = GetCurrentScene().PhysicsManager.CreateCapsule((Vector3)GameObject.Transform.Position,
-                    new Vector2(Radius, GameObject.Transform.LocalScale.Y), Mass);
+                Collider = GetCurrentScene().PhysicsManager.CreateCapsule((Vector3)GameObject.Transform.Position, Size, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
-                var h = GetCurrentScene().PhysicsManager.CreateStaticCapsule((Vector3)GameObject.Transform.Position,
-                    new Vector2(Radius, GameObject.Transform.LocalScale.Y));
+                var h = GetCurrentScene().PhysicsManager.CreateStaticCapsule((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = h.Value;
                 BodyToGameObject[Handle] = GameObject;

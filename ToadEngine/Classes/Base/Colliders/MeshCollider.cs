@@ -11,7 +11,8 @@ public class MeshCollider : Behaviour
 {
     public BodyHandle Collider;
     public int Handle;
-    private Buffer<Triangle> Triangles;
+    public OpenTK.Mathematics.Vector3 Size = OpenTK.Mathematics.Vector3.Zero;
+    public Buffer<Triangle> Triangles;
     public ColliderType Type;
     public float Mass = 1f;
 
@@ -26,26 +27,29 @@ public class MeshCollider : Behaviour
     public override void Setup()
     {
         base.Setup();
+        if (Size == OpenTK.Mathematics.Vector3.Zero)
+            Size = GameObject.Transform.LocalScale;
+
         switch (Type)
         {
             case ColliderType.Trigger:
                 Collider = GetCurrentScene().PhysicsManager.CreateTriggerMesh(
                     (Vector3)GameObject.Transform.Position,
-                    Triangles, (Vector3)GameObject.Transform.LocalScale);
+                    Triangles, (Vector3)Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
                 Collider = GetCurrentScene().PhysicsManager.CreateKinematicMesh((Vector3)GameObject.Transform.Position,
-                    Triangles, (Vector3)GameObject.Transform.LocalScale);
+                    Triangles, (Vector3)Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
                 Collider = GetCurrentScene().PhysicsManager.CreateMesh((Vector3)GameObject.Transform.Position,
-                    Triangles, (Vector3)GameObject.Transform.LocalScale, Mass);
+                    Triangles, (Vector3)Size, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
@@ -53,7 +57,7 @@ public class MeshCollider : Behaviour
             case ColliderType.Static:
             {
                 var h = GetCurrentScene().PhysicsManager.CreateStaticMesh((Vector3)GameObject.Transform.Position,
-                    Triangles, (Vector3)GameObject.Transform.LocalScale);
+                    Triangles, (Vector3)Size);
 
                 Handle = h.Value;
                 BodyToGameObject[Handle] = GameObject;
@@ -73,7 +77,6 @@ public class MeshCollider : Behaviour
         if (Type == ColliderType.Kinematic && !GameObject.IsChild)
         {
             body.Pose.Position = (Vector3)GameObject.Transform.Position;
-
             var finalOrientation = Quaternion.Normalize(GameObject.Transform.Rotation.ToEuler());
 
             body.Pose.Orientation = finalOrientation;

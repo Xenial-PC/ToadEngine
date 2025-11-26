@@ -12,6 +12,7 @@ public class CylinderCollider : Behaviour
     public int Handle;
     public ColliderType Type;
     public float Mass = 1f, Radius;
+    public Vector2 Size = Vector2.Zero;
 
     public enum ColliderType
     {
@@ -24,33 +25,32 @@ public class CylinderCollider : Behaviour
     public override void Setup()
     {
         base.Setup();
+        if (Size == Vector2.Zero)
+            Size = new Vector2(Radius, GameObject.Transform.LocalScale.Y);
+
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = GetCurrentScene().PhysicsManager.CreateTriggerCylinder((Vector3)GameObject.Transform.Position,
-                    new Vector2(Radius, GameObject.Transform.LocalScale.Y));
+                Collider = GetCurrentScene().PhysicsManager.CreateTriggerCylinder((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
-                Collider = GetCurrentScene().PhysicsManager.CreateKinematicCylinder((Vector3)GameObject.Transform.Position,
-                    new Vector2(Radius, GameObject.Transform.LocalScale.Y));
+                Collider = GetCurrentScene().PhysicsManager.CreateKinematicCylinder((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
-                Collider = GetCurrentScene().PhysicsManager.CreateCylinder((Vector3)GameObject.Transform.Position,
-                    new Vector2(Radius, GameObject.Transform.LocalScale.Y), Mass);
+                Collider = GetCurrentScene().PhysicsManager.CreateCylinder((Vector3)GameObject.Transform.Position, Size, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
             {
-                var h = GetCurrentScene().PhysicsManager.CreateStaticCylinder((Vector3)GameObject.Transform.Position,
-                    new Vector2(Radius, GameObject.Transform.LocalScale.Y));
+                var h = GetCurrentScene().PhysicsManager.CreateStaticCylinder((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = h.Value;
                 BodyToGameObject[Handle] = GameObject;
