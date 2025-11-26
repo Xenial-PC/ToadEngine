@@ -4,7 +4,7 @@ using Vector3 = System.Numerics.Vector3;
 
 namespace ToadEngine.Classes.Base.Colliders
 {
-    public class BaseCollider : Behaviour
+    public class BaseCollider : Behavior
     {
         public BodyHandle Collider;
         public int Handle;

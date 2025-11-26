@@ -17,7 +17,7 @@ public class GameObject : RenderObject
     public string Name;
 
     public Structs.GameObj Obj = new();
-    private List<Behaviour?> _behaviours = new();
+    private List<Behavior?> _behaviours = new();
     public PhysicsComponent Physics = new();
     public bool UsePhysics = false;
 
@@ -142,10 +142,10 @@ public class GameObject : RenderObject
 
     public void SetupBehaviours()
     {
-        _behaviours = GetComponents<Behaviour>()!;
+        _behaviours = GetComponents<Behavior>()!;
         if (_behaviours.Count <= 0) return;
 
-        foreach (var behaviour in _behaviours.OfType<Behaviour>())
+        foreach (var behaviour in _behaviours.OfType<Behavior>())
         {
             Console.WriteLine(behaviour.GetType());
             behaviour.GameObject = this;
@@ -157,7 +157,7 @@ public class GameObject : RenderObject
 
     public void UpdateBehaviours(float deltaTime)
     {
-        foreach (var behaviour in _behaviours.OfType<Behaviour>())
+        foreach (var behaviour in _behaviours.OfType<Behavior>())
         {
             Obj = behaviour.GameObject.Obj;
             behaviour.GameObject = this;
@@ -169,7 +169,7 @@ public class GameObject : RenderObject
 
     public void CleanupBehaviours()
     {
-        foreach (var behaviour in _behaviours.OfType<Behaviour>())
+        foreach (var behaviour in _behaviours.OfType<Behavior>())
         {
             foreach (var source in behaviour.Sources)
                 source.Value.Dispose();
@@ -203,7 +203,7 @@ public class GameObject : RenderObject
 
     public override void Resize(FramebufferResizeEventArgs e)
     {
-        foreach (var behaviour in _behaviours.OfType<Behaviour>())
+        foreach (var behaviour in _behaviours.OfType<Behavior>())
         {
             behaviour.Resize(e);
         }

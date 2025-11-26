@@ -3,7 +3,7 @@ using SimplePlatformer.Classes.GameObjects.Scripts;
 
 namespace SimplePlatformer.Classes.GameObjects.Menus;
 
-public class EOLMenu : Behaviour
+public class EOLMenu : Behavior
 {
     public static bool IsDrawingEOLMenu;
 

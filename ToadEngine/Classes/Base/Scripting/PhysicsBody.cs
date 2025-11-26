@@ -4,7 +4,7 @@ using ToadEngine.Classes.Base.Physics;
 
 namespace ToadEngine.Classes.Base.Scripting;
 
-public class PhysicsBody : Behaviour
+public class PhysicsBody : Behavior
 {
     public override void Setup()
     {
@@ -29,10 +29,5 @@ public class PhysicsBody : Behaviour
         var body = GetCurrentScene().PhysicsManager.Simulation.Bodies.GetBodyReference(GameObject.Physics.BodyHandle);
         GameObject.Transform.Position = new Vector3(body.Pose.Position.X, body.Pose.Position.Y, body.Pose.Position.Z);
         GameObject.Transform.Rotation = new Vector3(body.Pose.Orientation.X, body.Pose.Orientation.Y, body.Pose.Orientation.Z);
-    }
-
-    public override void Dispose()
-    {
-        base.Dispose();
     }
 }

@@ -5,7 +5,7 @@ using ToadEngine.Classes.Shaders;
 
 namespace ToadEngine.Classes.Base.Scripting;
 
-public class ShadowCaster : Behaviour
+public class ShadowCaster : Behavior
 {
     public int CasterFBO, ShadowMap;
     public int ShadowWidth = 1024, ShadowHeight = 1024;

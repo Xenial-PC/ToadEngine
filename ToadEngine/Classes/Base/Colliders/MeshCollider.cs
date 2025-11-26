@@ -14,7 +14,6 @@ public class MeshCollider : BaseCollider
 
     public override void Setup()
     {
-        base.Setup();
         if (Size == OpenTK.Mathematics.Vector3.Zero)
             Size = GameObject.Transform.LocalScale;
 

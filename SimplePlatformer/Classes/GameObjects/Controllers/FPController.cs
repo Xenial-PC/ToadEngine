@@ -69,7 +69,7 @@ public class FPController
         }
     }
 
-    public class FPControllerScript : Behaviour
+    public class FPControllerScript : Behavior
     {
         private FPCamera? _fpCamera;
         
@@ -93,7 +93,6 @@ public class FPController
 
         public override void Setup()
         {
-            base.Setup();
             _fpCamera = GameObject.GetComponent<FPCamera>("fpCamera");
 
             GameObject.UsePhysics = true;
@@ -124,7 +123,6 @@ public class FPController
 
         public override void Update(float deltaTime)
         {
-            base.Update(deltaTime);
             HandleMove(deltaTime);
         }
 

@@ -13,7 +13,6 @@ public class CylinderCollider : BaseCollider
 
     public override void Setup()
     {
-        base.Setup();
         if (Size == Vector2.Zero)
             Size = new Vector2(Radius, GameObject.Transform.LocalScale.Y);
 

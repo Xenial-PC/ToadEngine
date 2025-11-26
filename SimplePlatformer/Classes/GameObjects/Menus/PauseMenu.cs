@@ -2,7 +2,7 @@
 
 namespace SimplePlatformer.Classes.GameObjects.Menus;
 
-public class PauseMenu : Behaviour
+public class PauseMenu : Behavior
 {
     public static bool IsPaused, IsDrawingPauseMenu;
     private static Vector2 _mousePositionCache;
