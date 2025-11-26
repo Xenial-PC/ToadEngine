@@ -32,6 +32,13 @@ public class Scene
         Late
     }
 
+    public virtual void Setup() { }
+    public virtual void OnStart() { }
+    public virtual void OnDraw(float deltaTime) { }
+    public virtual void OnUpdate(FrameEventArgs e) { }
+    public virtual void OnLateUpdate(FrameEventArgs e) { }
+    public virtual void Dispose() { }
+
     public Scene(string sceneName)
     {
         if (RenderObject.Scenes.ContainsValue(this)) return;
@@ -108,11 +115,6 @@ public class Scene
         return RenderGameObjects.GetValueOrDefault(name);
     }
 
-    public virtual void Setup()
-    {
-        
-    }
-
     public void Start()
     {
         foreach (var render in RenderGameObjects)
@@ -127,10 +129,6 @@ public class Scene
             render.Value.UpdateWorldTransform();
         }
         OnStart();
-    }
-
-    public virtual void OnStart()
-    {
     }
 
     public void Draw(float deltaTime)
@@ -215,17 +213,13 @@ public class Scene
         OnDraw(deltaTime);
     }
 
-    public virtual void OnDraw(float deltaTime)
-    {
-        
-    }
-
     public void Update(FrameEventArgs e)
     {
         _accumulator += (float)e.Time;
         while (_accumulator >= FixedDelta)
         {
-            RenderObject.GetCurrentScene().PhysicsManager.Step(FixedDelta);
+            if (!GetCurrentScene().PhysicsManager.IsPhysicsPaused)
+                GetCurrentScene().PhysicsManager.Step(FixedDelta);
             _accumulator -= FixedDelta;
         }
 
@@ -234,24 +228,16 @@ public class Scene
         {
             render.Value.OnUpdate((float)e.Time);
             render.Value.UpdateWorldTransform();
+            render.Value.UpdateBehaviours((float)e.Time);
         }
 
         foreach (var render in RenderGameObjectsLast)
         {
             render.Value.OnUpdate((float)e.Time);
             render.Value.UpdateWorldTransform();
+            render.Value.UpdateBehaviours((float)e.Time);
         }
         OnLateUpdate(e);
-    }
-
-    public virtual void OnUpdate(FrameEventArgs e)
-    {
-        
-    }
-
-    public virtual void OnLateUpdate(FrameEventArgs e)
-    {
-
     }
 
     public virtual void OnResize(FramebufferResizeEventArgs e)
@@ -261,11 +247,6 @@ public class Scene
 
         foreach (var render in RenderGameObjectsLast)
             render.Value.OnResize(e);
-    }
-
-    public virtual void Dispose()
-    {
-
     }
 
     public void Load(NativeWindow state, Window.Window window)
@@ -282,6 +263,16 @@ public class Scene
         Start();
 
         Instantiate(Scripts);
+        SetupBehaviours();
+    }
+
+    private void SetupBehaviours()
+    {
+        foreach (var render in RenderGameObjects)
+            render.Value.SetupBehaviours();
+
+        foreach (var render in RenderGameObjectsLast)
+            render.Value.SetupBehaviours();
     }
 
     public void Destroy()

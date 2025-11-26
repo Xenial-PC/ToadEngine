@@ -66,6 +66,7 @@ public class PauseMenu : Behaviour
         if (Input.IsKeyPressed(Keys.Escape))
         {
             IsDrawingPauseMenu = !IsDrawingPauseMenu;
+            Scene.PhysicsManager.IsPhysicsPaused = !Scene.PhysicsManager.IsPhysicsPaused;
             UpdatePausedState();
         }
     }

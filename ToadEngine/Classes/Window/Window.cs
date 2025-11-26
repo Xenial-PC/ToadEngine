@@ -139,13 +139,6 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
         CurrentScene.Load(this, this);
     }
 
-    /*public void LoadNextScene()
-    {
-        CurrentScene.Destroy();
-        CurrentScene = RenderObject.GetScene();
-        CurrentScene.Load(this, this);
-    }*/
-
     #region IInputHandler
 
     public Vector2 MouseDelta => new(MouseState.Delta.X, MouseState.Delta.Y);

@@ -58,6 +58,7 @@ public static class Trigger
 
 public class PhysicsManager
 {
+    public bool IsPhysicsPaused;
     public Simulation Simulation { get; private set; }
     public BufferPool BufferPool { get; private set; }
 

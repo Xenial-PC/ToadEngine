@@ -67,7 +67,6 @@ public class Skybox(List<string> textures) : GameObject
 
     public override void Setup()
     {
-        base.Setup();
         _skybox = new Shader($"skybox.vert", $"skybox.frag");
 
         GL.GenVertexArrays(1, out _skyboxVao);
@@ -87,7 +86,6 @@ public class Skybox(List<string> textures) : GameObject
 
     public override void Draw(float deltaTime)
     {
-        base.Draw(deltaTime);
         var camera = GetService<Camera>()!;
 
         GL.DepthFunc(DepthFunction.Lequal);
@@ -110,12 +108,10 @@ public class Skybox(List<string> textures) : GameObject
 
     public override void Update(float deltaTime)
     {
-        base.Update(deltaTime);
     }
 
     public override void Dispose()
     {
-        base.Dispose();
         _skybox?.Dispose();
     }
 }

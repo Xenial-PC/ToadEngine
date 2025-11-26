@@ -34,14 +34,12 @@ public class SpotLight : GameObject
 
     public override void Setup()
     {
-        base.Setup();
         LightIndex++;
         CurrentIndex = LightIndex - 1;
     }
 
     public override void Draw(float deltaTime)
     {
-        base.Draw(deltaTime);
         GetCoreShader().Use();
         GetCoreShader().SetInt1("spotLightAmount", SpotLight.LightIndex);
         GetCoreShader().SetInt1("pointLightAmount", PointLight.LightIndex);
@@ -72,12 +70,10 @@ public class SpotLight : GameObject
 
     public override void Update(float deltaTime)
     {
-        base.Update(deltaTime);
     }
 
     public override void Dispose()
     {
-        base.Dispose();
         LightIndex--;
     }
 }

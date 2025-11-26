@@ -3,7 +3,7 @@ using ToadEngine.Classes.Shaders;
 
 namespace ToadEngine.Classes.Base.Rendering;
 
-public class RenderObject
+public abstract class RenderObject
 {
     public static Dictionary<string, Scene> Scenes { get; set; } = new();
     private static readonly Dictionary<Type, object> Services = new();
@@ -12,6 +12,12 @@ public class RenderObject
     public bool IsEnabled = true;
 
     public static NativeWindow WHandler => GetNativeWindow();
+
+    public virtual void Setup() {}
+    public virtual void Draw(float deltaTime) {}
+    public virtual void Update(float deltaTime) {}
+    public virtual void Resize(FramebufferResizeEventArgs e) {}
+    public virtual void Dispose() {}
 
     public static void AddService<T>(T service) where T : class
     {
@@ -63,20 +69,10 @@ public class RenderObject
         _isDisposing = false;
     }
 
-    public virtual void Setup()
-    {
-        
-    }
-
     public void OnDraw(float deltaTime)
     {
         if (_isDisposing || !IsEnabled) return;
         Draw(deltaTime);
-    }
-
-    public virtual void Draw(float deltaTime)
-    {
-        
     }
 
     public void OnUpdate(float deltaTime)
@@ -85,19 +81,9 @@ public class RenderObject
         Update(deltaTime);
     }
 
-    public virtual void Update(float deltaTime)
-    {
-        
-    }
-
     public void OnResize(FramebufferResizeEventArgs e)
     {
         Resize(e);
-    }
-
-    public virtual void Resize(FramebufferResizeEventArgs e)
-    {
-
     }
 
     public void OnDispose()
@@ -105,10 +91,5 @@ public class RenderObject
         _isSetup = false;
         _isDisposing = true;
         Dispose();
-    }
-
-    public virtual void Dispose()
-    {
-        
     }
 }

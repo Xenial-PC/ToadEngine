@@ -6,14 +6,14 @@ namespace ToadEngine.Classes.Base.UI;
 
 public class GUI
 {
-    public static ImGuiController Controller;
-    public static ImPlotContext ImPlotContext;
+    public static ImGuiController Controller = null!;
+    public static ImPlotContext ImPlotContext = null!;
 
-    public static Gui Paint;
-    public static ICanvasRenderer Canvas;
-    public static Action GuiCallBack;
+    public static Gui Paint = null!;
+    public static ICanvasRenderer Canvas = null!;
+    public static Action GuiCallBack = null!;
 
-    public static Font FontText, FontIcon;
+    public static Font FontText = null!, FontIcon = null!;
     public static StringBuilder TypedCharacters = new();
 
     public static void Init(Window.Window window)

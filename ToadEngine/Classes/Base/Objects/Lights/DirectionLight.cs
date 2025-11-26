@@ -25,14 +25,8 @@ public class DirectionLight : GameObject
         ShadowCaster.FarPlane = 200f;
     }
 
-    public override void Setup()
-    {
-        base.Setup();
-    }
-
     public override void Draw(float deltaTime)
     {
-        base.Draw(deltaTime);
         GetCoreShader().Use();
         GetCoreShader().SetInt1("spotLightAmount", SpotLight.LightIndex);
         GetCoreShader().SetInt1("pointLightAmount", PointLight.LightIndex);
@@ -54,11 +48,11 @@ public class DirectionLight : GameObject
 
     public override void Update(float deltaTime)
     {
-        base.Update(deltaTime);
+        
     }
 
     public override void Dispose()
     {
-        base.Dispose();
+        
     }
 }

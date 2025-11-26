@@ -10,7 +10,7 @@ using Scene = ToadEngine.Classes.Base.Rendering.Scene;
 
 namespace ToadEngine.Classes.Base.Scripting;
 
-public class Behaviour : RenderObject, ICloneable
+public abstract class Behaviour : RenderObject, ICloneable
 {
     public RaycastManager Raycast = new(GetCurrentScene().PhysicsManager.BufferPool);
     public static readonly Dictionary<int, GameObject> BodyToGameObject = new();
@@ -55,31 +55,10 @@ public class Behaviour : RenderObject, ICloneable
                 component?.OnTriggerExit(objA);
         };
     }
-    
-    public override void Setup()
-    {
-        
-    }
 
-    public override void Update(float deltaTime)
-    {
-        
-    }
-
-    public virtual void OnGUI()
-    {
-
-    }
-
-    public virtual void OnTriggerEnter(GameObject other)
-    {
-
-    }
-
-    public virtual void OnTriggerExit(GameObject other)
-    {
-
-    }
+    public virtual void OnGUI() {}
+    public virtual void OnTriggerEnter(GameObject other) {}
+    public virtual void OnTriggerExit(GameObject other) {}
 
     public override void Dispose()
     {

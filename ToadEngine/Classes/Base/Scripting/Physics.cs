@@ -50,7 +50,6 @@ public class Physics : Behaviour
 
     public override void Update(float deltaTime)
     {
-        base.Update(deltaTime);
         if (!GameObject.UsePhysics) return;
 
         var body = GetCurrentScene().PhysicsManager.Simulation.Bodies.GetBodyReference(GameObject.Physics.BodyHandle);

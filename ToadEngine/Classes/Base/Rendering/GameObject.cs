@@ -127,26 +127,26 @@ public class GameObject : RenderObject
         Children.Remove(child);
     }
 
-    public virtual void Enable()
+    public void Enable()
     {
         IsEnabled = true;
         GetCurrentScene().Instantiate(this);
     }
 
-    public virtual void Disable()
+    public void Disable()
     {
         IsEnabled = false;
         GetCurrentScene().DestroyObject(this);
     }
 
-    public override void Setup()
+    public void SetupBehaviours()
     {
-        base.Setup();
         _behaviours = GetComponents<Behaviour>()!;
         if (_behaviours.Count <= 0) return;
 
         foreach (var behaviour in _behaviours.OfType<Behaviour>())
         {
+            Console.WriteLine(behaviour.GetType());
             behaviour.GameObject = this;
             behaviour.GameObject.Obj = Obj;
             GUI.GuiCallBack += behaviour.OnGUI;
@@ -154,15 +154,13 @@ public class GameObject : RenderObject
         }
     }
 
-    public override void Update(float deltaTime)
+    public void UpdateBehaviours(float deltaTime)
     {
-        base.Update(deltaTime);
-
         foreach (var behaviour in _behaviours.OfType<Behaviour>())
         {
             Obj = behaviour.GameObject.Obj;
             behaviour.GameObject = this;
-            
+
             behaviour.DeltaTime = deltaTime;
             behaviour.Update(deltaTime);
         }
@@ -193,7 +191,6 @@ public class GameObject : RenderObject
 
     public override void Resize(FramebufferResizeEventArgs e)
     {
-        base.Resize(e);
         foreach (var behaviour in _behaviours.OfType<Behaviour>())
         {
             behaviour.Resize(e);
