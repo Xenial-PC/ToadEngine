@@ -12,7 +12,6 @@ public class PlayerHud : Behavior
 
     public override void OnGUI()
     {
-        base.OnGUI();
         if (PauseMenu.IsPaused) return;
 
         /*UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 40, 200, 20), Color.Gray, 12f).Expand(0.25f);

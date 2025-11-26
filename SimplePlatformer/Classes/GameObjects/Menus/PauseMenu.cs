@@ -9,15 +9,12 @@ public class PauseMenu : Behavior
 
     public override void Setup()
     {
-        base.Setup();
-
         IsPaused = false;
         IsDrawingPauseMenu = false;
     }
 
     public override void OnGUI()
     {
-        base.OnGUI();
         if ((!IsPaused && !IsDrawingPauseMenu) || EOLMenu.IsDrawingEOLMenu) return;
 
         using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Expand().Enter())
@@ -62,7 +59,6 @@ public class PauseMenu : Behavior
 
     public override void Update(float deltaTime)
     {
-        base.Update(deltaTime);
         if (Input.IsKeyPressed(Keys.Escape))
         {
             IsDrawingPauseMenu = !IsDrawingPauseMenu;
@@ -79,10 +75,5 @@ public class PauseMenu : Behavior
         WHandler.MousePosition = _mousePositionCache;
 
         if (IsPaused) _mousePositionCache = WHandler.MousePosition;
-    }
-
-    public override void Dispose()
-    {
-        base.Dispose();
     }
 }

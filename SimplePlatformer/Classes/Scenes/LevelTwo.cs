@@ -20,7 +20,6 @@ public class LevelTwo() : Scene("Level2")
 
     public override void Setup()
     {
-        base.Setup();
         var baseDirectory = $"{Directory.GetCurrentDirectory()}/Resources/";
 
         _skybox = new Skybox
@@ -48,40 +47,18 @@ public class LevelTwo() : Scene("Level2")
 
     public override void OnStart()
     {
-        base.OnStart();
         Instantiate(_skybox, InstantiateType.Late);
         Instantiate(_flashLight);
 
         Instantiate(_player.GameObject);
     }
 
-    public override void OnDraw(float deltaTime)
-    {
-        base.OnDraw(deltaTime);
-    }
-
     public override void OnUpdate(FrameEventArgs e)
     {
-        base.OnUpdate(e);
         _flashLight.Settings.Direction = _camera.Front;
         _flashLight.Settings.Position = _player.GameObject.Transform.Position;
         
         if (PauseMenu.IsPaused) return;
         _camera.Update(WHandler.KeyboardState, WHandler.MouseState, (float)e.Time);
-    }
-
-    public override void OnLateUpdate(FrameEventArgs e)
-    {
-        base.OnLateUpdate(e);
-    }
-
-    public override void OnResize(FramebufferResizeEventArgs e)
-    {
-        base.OnResize(e);
-    }
-
-    public override void Dispose()
-    {
-        base.Dispose();
     }
 }

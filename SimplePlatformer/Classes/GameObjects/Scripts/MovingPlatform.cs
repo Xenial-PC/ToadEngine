@@ -17,7 +17,6 @@ public class MovingPlatform : Behavior
 
     public override void Setup()
     {
-        base.Setup();
         _originalPosition = GameObject.Transform.Position;
     }
 
@@ -52,20 +51,13 @@ public class MovingPlatform : Behavior
 
     public override void OnTriggerEnter(GameObject other)
     {
-        base.OnTriggerEnter(other);
         if (other.GetComponent<FPController.FPControllerScript>() != null)
             _isPlayerOnTop = true;
     }
 
     public override void OnTriggerExit(GameObject other)
     {
-        base.OnTriggerExit(other);
         if (other.GetComponent<FPController.FPControllerScript>() != null)
             _isPlayerOnTop = false;
-    }
-
-    public override void Dispose()
-    {
-        base.Dispose();
     }
 }

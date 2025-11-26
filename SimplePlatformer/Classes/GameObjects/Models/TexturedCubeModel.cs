@@ -66,7 +66,6 @@ public class TexturedCubeModel(string diffuse = "", string specular = "", string
 
     public override void Setup()
     {
-        base.Setup();
         _vertexBufferObject = GL.GenBuffer();
         GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
         GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
@@ -103,7 +102,6 @@ public class TexturedCubeModel(string diffuse = "", string specular = "", string
 
     public override void Draw(float deltaTime)
     {
-        base.Draw(deltaTime);
         GetCoreShader().Use();
 
         if (diffuse != string.Empty)
@@ -124,11 +122,5 @@ public class TexturedCubeModel(string diffuse = "", string specular = "", string
 
         GL.BindVertexArray(_vaoModel);
         GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
-    }
-
-    public override void Update(float deltaTime)
-    {
-        base.Update(deltaTime);
-        //Transform.Rotation.X += 1.01f * (float)deltaTime;
     }
 }

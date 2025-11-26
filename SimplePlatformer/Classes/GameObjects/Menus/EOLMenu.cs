@@ -9,14 +9,11 @@ public class EOLMenu : Behavior
 
     public override void Setup()
     {
-        base.Setup();
         IsDrawingEOLMenu = false;
     }
 
     public override void OnGUI()
     {
-        base.OnGUI();
-
         if (!IsDrawingEOLMenu) return;
 
         using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Expand().Enter())
@@ -56,10 +53,5 @@ public class EOLMenu : Behavior
                 }
             }
         }
-    }
-
-    public override void Dispose()
-    {
-        base.Dispose();
     }
 }
