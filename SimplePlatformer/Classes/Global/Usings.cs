@@ -1,0 +1,16 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Text;
+global using System.Threading.Tasks;
+global using OpenTK.Graphics.OpenGL4;
+global using OpenTK.Windowing.Common;
+global using OpenTK.Windowing.Desktop;
+global using OpenTK.Windowing.GraphicsLibraryFramework;
+global using OpenTK.Mathematics;
+global using ToadEngine.Classes.Base.Rendering;
+global using ToadEngine.Classes.Base.Scripting;
+global using ToadEngine.Classes.Base.UI;
+global using ToadEngine.Classes.Base.Colliders;
+global using DearImPlot;
+global using DearImGui;

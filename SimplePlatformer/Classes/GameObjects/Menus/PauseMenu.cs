@@ -1,0 +1,87 @@
+﻿using Guinevere;
+
+namespace SimplePlatformer.Classes.GameObjects.Menus;
+
+public class PauseMenu : Behaviour
+{
+    public static bool IsPaused, IsDrawingPauseMenu;
+    private static Vector2 _mousePositionCache;
+
+    public override void Setup()
+    {
+        base.Setup();
+
+        IsPaused = false;
+        IsDrawingPauseMenu = false;
+    }
+
+    public override void OnGUI()
+    {
+        base.OnGUI();
+        if ((!IsPaused && !IsDrawingPauseMenu) || EOLMenu.IsDrawingEOLMenu) return;
+
+        using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Expand().Enter())
+        {
+            UI.DrawBackgroundRect(Color.FromArgb(128, 0, 0, 0));
+            using (UI.Node().Expand().Margin(150).Gap(5f).AlignContent(0.5f).Direction(Axis.Vertical).Enter())
+            {
+                var backgroundColor = Color.FromArgb(155, 25, 25, 25);
+                using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
+                {
+                    var onHover = UI.CurrentNode.GetInteractable().OnHover();
+                    UI.DrawBackgroundRect(backgroundColor, 12f);
+                    UI.DrawText("Resume", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
+
+                    if (UI.CurrentNode.GetInteractable().OnClick())
+                    {
+                        UpdatePausedState();
+                        IsDrawingPauseMenu = false;
+                    }
+                }
+
+                using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
+                {
+                    var onHover = UI.CurrentNode.GetInteractable().OnHover();
+                    UI.DrawBackgroundRect(backgroundColor, 12f);
+                    UI.DrawText("Settings", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
+
+                    if (UI.CurrentNode.GetInteractable().OnClick()) {}
+                }
+
+                using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
+                {
+                    var onHover = UI.CurrentNode.GetInteractable().OnHover();
+                    UI.DrawBackgroundRect(backgroundColor, 12f);
+                    UI.DrawText("Exit", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
+
+                    if (UI.CurrentNode.OnClick()) Environment.Exit(0);
+                }
+            }
+        }
+    }
+
+    public override void Update(float deltaTime)
+    {
+        base.Update(deltaTime);
+        if (Input.IsKeyPressed(Keys.Escape))
+        {
+            IsDrawingPauseMenu = !IsDrawingPauseMenu;
+            UpdatePausedState();
+        }
+    }
+
+    public static void UpdatePausedState()
+    {
+        IsPaused = !IsPaused;
+
+        WHandler.CursorState = IsPaused ? CursorState.Normal : CursorState.Grabbed;
+        WHandler.MousePosition = _mousePositionCache;
+
+        if (IsPaused) _mousePositionCache = WHandler.MousePosition;
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+    }
+}
