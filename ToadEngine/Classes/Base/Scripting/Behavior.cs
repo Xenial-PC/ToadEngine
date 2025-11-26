@@ -60,10 +60,6 @@ public abstract class Behavior : RenderObject, ICloneable
     public virtual void OnTriggerEnter(GameObject other) {}
     public virtual void OnTriggerExit(GameObject other) {}
 
-    public override void Dispose()
-    {
-    }
-
     public HitInfo SendRay(Vector3 origin, Vector3 direction, float maxT = 1000)
     {
         var ray = Raycast.SendRay(origin, direction, maxT);

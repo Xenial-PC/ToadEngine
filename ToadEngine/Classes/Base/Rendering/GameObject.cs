@@ -147,7 +147,6 @@ public class GameObject : RenderObject
 
         foreach (var behaviour in _behaviours.OfType<Behavior>())
         {
-            Console.WriteLine(behaviour.GetType());
             behaviour.GameObject = this;
             behaviour.GameObject.Obj = Obj;
             GUI.GuiCallBack += behaviour.OnGUI;
@@ -178,6 +177,12 @@ public class GameObject : RenderObject
         }
     }
 
+    public void ResizeBehaviours(FramebufferResizeEventArgs e)
+    {
+        foreach (var behaviour in _behaviours.OfType<Behavior>())
+            behaviour.Resize(e);
+    }
+
     public void UpdateWorldTransform()
     {
         if (!IsChild)
@@ -198,14 +203,6 @@ public class GameObject : RenderObject
             child.Transform.Position = Transform.Position + rotatedOffset;
             child.Transform.Rotation = Transform.Rotation + child.Transform.LocalRotation;
             child.Transform.SetScale(Transform.LocalScale * child.Transform.LocalScale);
-        }
-    }
-
-    public override void Resize(FramebufferResizeEventArgs e)
-    {
-        foreach (var behaviour in _behaviours.OfType<Behavior>())
-        {
-            behaviour.Resize(e);
         }
     }
 

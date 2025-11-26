@@ -243,10 +243,16 @@ public class Scene
     public virtual void OnResize(FramebufferResizeEventArgs e)
     {
         foreach (var render in RenderGameObjects)
+        {
             render.Value.OnResize(e);
+            render.Value.ResizeBehaviours(e);
+        }
 
         foreach (var render in RenderGameObjectsLast)
+        {
             render.Value.OnResize(e);
+            render.Value.ResizeBehaviours(e);
+        }
     }
 
     public void Load(NativeWindow state, Window.Window window)
