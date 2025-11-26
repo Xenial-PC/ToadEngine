@@ -7,51 +7,59 @@ using Vector3 = System.Numerics.Vector3;
 
 namespace ToadEngine.Classes.Base.Colliders;
 
-public class MeshCollider(Buffer<Triangle> triangles, float mass = 1f, bool isKinematic = false, bool isStatic = false, bool isTrigger = false) : Behaviour
+public class MeshCollider : Behaviour
 {
-    public int Handle;
     public BodyHandle Collider;
+    public int Handle;
+    private Buffer<Triangle> Triangles;
+    public ColliderType Type;
+    public float Mass = 1f;
+
+    public enum ColliderType
+    {
+        Kinematic,
+        Static,
+        Trigger,
+        Dynamic
+    }
 
     public override void Setup()
     {
         base.Setup();
-
-        if (isTrigger)
+        switch (Type)
         {
-            Collider = GetCurrentScene().PhysicsManager.CreateTriggerMesh(
-                (Vector3)GameObject.Transform.Position,
-                triangles, (Vector3)GameObject.Transform.LocalScale);
+            case ColliderType.Trigger:
+                Collider = GetCurrentScene().PhysicsManager.CreateTriggerMesh(
+                    (Vector3)GameObject.Transform.Position,
+                    Triangles, (Vector3)GameObject.Transform.LocalScale);
 
-            Handle = Collider.Value;
-            BodyToGameObject[Handle] = GameObject;
-            return;
+                Handle = Collider.Value;
+                BodyToGameObject[Handle] = GameObject;
+                return;
+            case ColliderType.Kinematic:
+                Collider = GetCurrentScene().PhysicsManager.CreateKinematicMesh((Vector3)GameObject.Transform.Position,
+                    Triangles, (Vector3)GameObject.Transform.LocalScale);
+
+                Handle = Collider.Value;
+                BodyToGameObject[Handle] = GameObject;
+                return;
+            case ColliderType.Dynamic:
+                Collider = GetCurrentScene().PhysicsManager.CreateMesh((Vector3)GameObject.Transform.Position,
+                    Triangles, (Vector3)GameObject.Transform.LocalScale, Mass);
+
+                Handle = Collider.Value;
+                BodyToGameObject[Handle] = GameObject;
+                return;
+            case ColliderType.Static:
+            {
+                var h = GetCurrentScene().PhysicsManager.CreateStaticMesh((Vector3)GameObject.Transform.Position,
+                    Triangles, (Vector3)GameObject.Transform.LocalScale);
+
+                Handle = h.Value;
+                BodyToGameObject[Handle] = GameObject;
+                break;
+            }
         }
-
-        if (isKinematic)
-        {
-            Collider = GetCurrentScene().PhysicsManager.CreateKinematicMesh((Vector3)GameObject.Transform.Position,
-                triangles, (Vector3)GameObject.Transform.LocalScale);
-
-            Handle = Collider.Value;
-            BodyToGameObject[Handle] = GameObject;
-            return;
-        }
-
-        if (!isStatic)
-        {
-            Collider = GetCurrentScene().PhysicsManager.CreateMesh((Vector3)GameObject.Transform.Position,
-                triangles, (Vector3)GameObject.Transform.LocalScale, mass);
-
-            Handle = Collider.Value;
-            BodyToGameObject[Handle] = GameObject;
-            return;
-        }
-
-        var h = GetCurrentScene().PhysicsManager.CreateStaticMesh((Vector3)GameObject.Transform.Position,
-            triangles, (Vector3)GameObject.Transform.LocalScale, mass);
-
-        Handle = h.Value;
-        BodyToGameObject[Handle] = GameObject;
     }
 
     public override void Update(float deltaTime)
@@ -61,9 +69,8 @@ public class MeshCollider(Buffer<Triangle> triangles, float mass = 1f, bool isKi
         var simulation = GetCurrentScene().PhysicsManager.Simulation;
         var body = simulation.Bodies.GetBodyReference(Collider);
 
-        if (isStatic) return;
-
-        if (isKinematic && !GameObject.IsChild)
+        if (Type == ColliderType.Static) return;
+        if (Type == ColliderType.Kinematic && !GameObject.IsChild)
         {
             body.Pose.Position = (Vector3)GameObject.Transform.Position;
 
@@ -75,7 +82,7 @@ public class MeshCollider(Buffer<Triangle> triangles, float mass = 1f, bool isKi
             return;
         }
 
-        if (GameObject.IsChild && isKinematic)
+        if (GameObject.IsChild && Type == ColliderType.Kinematic)
         {
             body.Pose.Position = (Vector3)GameObject.Transform.Position + (Vector3)GameObject.Transform.LocalPosition;
 

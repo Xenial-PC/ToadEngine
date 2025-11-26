@@ -6,50 +6,57 @@ using ToadEngine.Classes.Extensions;
 
 namespace ToadEngine.Classes.Base.Colliders;
 
-public class CylinderCollider(float radius, float mass = 1f, bool isKinematic = false, bool isStatic = false, bool isTrigger = false) : Behaviour
+public class CylinderCollider : Behaviour
 {
     public BodyHandle Collider;
     public int Handle;
+    public ColliderType Type;
+    public float Mass = 1f, Radius;
+
+    public enum ColliderType
+    {
+        Kinematic,
+        Static,
+        Trigger,
+        Dynamic
+    }
 
     public override void Setup()
     {
         base.Setup();
-
-        if (isTrigger)
+        switch (Type)
         {
-            Collider = GetCurrentScene().PhysicsManager.CreateTriggerCylinder((Vector3)GameObject.Transform.Position,
-                new Vector2(radius, GameObject.Transform.LocalScale.Y));
+            case ColliderType.Trigger:
+                Collider = GetCurrentScene().PhysicsManager.CreateTriggerCylinder((Vector3)GameObject.Transform.Position,
+                    new Vector2(Radius, GameObject.Transform.LocalScale.Y));
 
-            Handle = Collider.Value;
-            BodyToGameObject[Handle] = GameObject;
-            return;
-        }
-
-        if (isKinematic)
-        {
-            Collider = GetCurrentScene().PhysicsManager.CreateKinematicCylinder((Vector3)GameObject.Transform.Position,
-                new Vector2(radius, GameObject.Transform.LocalScale.Y));
-
-            Handle = Collider.Value;
+                Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
+            case ColliderType.Kinematic:
+                Collider = GetCurrentScene().PhysicsManager.CreateKinematicCylinder((Vector3)GameObject.Transform.Position,
+                    new Vector2(Radius, GameObject.Transform.LocalScale.Y));
+
+                Handle = Collider.Value;
+                BodyToGameObject[Handle] = GameObject;
+                return;
+            case ColliderType.Dynamic:
+                Collider = GetCurrentScene().PhysicsManager.CreateCylinder((Vector3)GameObject.Transform.Position,
+                    new Vector2(Radius, GameObject.Transform.LocalScale.Y), Mass);
+
+                Handle = Collider.Value;
+                BodyToGameObject[Handle] = GameObject;
+                return;
+            case ColliderType.Static:
+            {
+                var h = GetCurrentScene().PhysicsManager.CreateStaticCylinder((Vector3)GameObject.Transform.Position,
+                    new Vector2(Radius, GameObject.Transform.LocalScale.Y));
+
+                Handle = h.Value;
+                BodyToGameObject[Handle] = GameObject;
+                break;
+            }
         }
-
-        if (!isStatic)
-        {
-            Collider = GetCurrentScene().PhysicsManager.CreateCylinder((Vector3)GameObject.Transform.Position,
-                new Vector2(radius, GameObject.Transform.LocalScale.Y), mass);
-
-            Handle = Collider.Value;
-            BodyToGameObject[Handle] = GameObject;
-            return;
-        }
-
-        var h = GetCurrentScene().PhysicsManager.CreateStaticCylinder((Vector3)GameObject.Transform.Position,
-            new Vector2(radius, GameObject.Transform.LocalScale.Y), mass);
-
-        Handle = h.Value;
-        BodyToGameObject[Handle] = GameObject;
     }
 
     public override void Update(float deltaTime)
@@ -59,9 +66,9 @@ public class CylinderCollider(float radius, float mass = 1f, bool isKinematic = 
         var simulation = GetCurrentScene().PhysicsManager.Simulation;
         var body = simulation.Bodies.GetBodyReference(Collider);
 
-        if (isStatic) return;
+        if (Type == ColliderType.Static) return;
 
-        if (isKinematic && !GameObject.IsChild)
+        if (Type == ColliderType.Kinematic && !GameObject.IsChild)
         {
             body.Pose.Position = (Vector3)GameObject.Transform.Position;
 
@@ -73,7 +80,7 @@ public class CylinderCollider(float radius, float mass = 1f, bool isKinematic = 
             return;
         }
 
-        if (GameObject.IsChild && isKinematic)
+        if (GameObject.IsChild && Type == ColliderType.Kinematic)
         {
             body.Pose.Position = (Vector3)GameObject.Transform.Position + (Vector3)GameObject.Transform.LocalPosition;
 

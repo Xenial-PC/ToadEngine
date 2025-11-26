@@ -6,43 +6,55 @@ using Vector3 = System.Numerics.Vector3;
 
 namespace ToadEngine.Classes.Base.Colliders;
 
-public class SphereCollider(float radius, float mass = 1f, bool isKinematic = false, bool isStatic = false, bool isTrigger = false) : Behaviour
+public class SphereCollider : Behaviour
 {
+    public int Handle;
     public BodyHandle Collider;
+    public ColliderType Type;
+    public float Mass = 1f, Radius;
+
+    public enum ColliderType
+    {
+        Kinematic,
+        Static,
+        Trigger,
+        Dynamic
+    }
 
     public override void Setup()
     {
         base.Setup();
-
-        if (isTrigger)
+        switch (Type)
         {
-            Collider = GetCurrentScene().PhysicsManager.CreateTriggerSphere((Vector3)GameObject.Transform.Position,
-                radius);
+            case ColliderType.Trigger:
+                Collider = GetCurrentScene().PhysicsManager.CreateTriggerSphere((Vector3)GameObject.Transform.Position,
+                    Radius);
 
-            BodyToGameObject[Collider.Value] = GameObject;
-            return;
+                Handle = Collider.Value;
+                BodyToGameObject[Handle] = GameObject;
+                return;
+            case ColliderType.Kinematic:
+                Collider = GetCurrentScene().PhysicsManager.CreateKinematicSphere((Vector3)GameObject.Transform.Position,
+                    Radius);
+
+                Handle = Collider.Value;
+                BodyToGameObject[Handle] = GameObject;
+                return;
+            case ColliderType.Dynamic:
+                Collider = GetCurrentScene().PhysicsManager.CreateSphere((Vector3)GameObject.Transform.Position,
+                    Radius, Mass);
+
+                Handle = Collider.Value;
+                BodyToGameObject[Handle] = GameObject;
+                return;
+            case ColliderType.Static:
+                var h = GetCurrentScene().PhysicsManager.CreateStaticSphere((Vector3)GameObject.Transform.Position,
+                    Radius);
+
+                Handle = h.Value;
+                BodyToGameObject[Handle] = GameObject;
+                return;
         }
-
-        if (isKinematic)
-        {
-            Collider = GetCurrentScene().PhysicsManager.CreateKinematicSphere((Vector3)GameObject.Transform.Position,
-                radius);
-
-            BodyToGameObject[Collider.Value] = GameObject;
-            return;
-        }
-
-        if (!isStatic)
-        {
-            Collider = GetCurrentScene().PhysicsManager.CreateSphere((Vector3)GameObject.Transform.Position,
-                radius, mass);
-
-            BodyToGameObject[Collider.Value] = GameObject;
-            return;
-        }
-
-        GetCurrentScene().PhysicsManager.CreateStaticSphere((Vector3)GameObject.Transform.Position,
-            radius);
     }
 
     public override void Update(float deltaTime)
@@ -52,9 +64,8 @@ public class SphereCollider(float radius, float mass = 1f, bool isKinematic = fa
         var simulation = GetCurrentScene().PhysicsManager.Simulation;
         var body = simulation.Bodies.GetBodyReference(Collider);
 
-        if (isStatic) return;
-
-        if (isKinematic && !GameObject.IsChild)
+        if (Type == ColliderType.Static) return;
+        if (Type == ColliderType.Kinematic && !GameObject.IsChild)
         {
             body.Pose.Position = (Vector3)GameObject.Transform.Position;
 
@@ -66,7 +77,7 @@ public class SphereCollider(float radius, float mass = 1f, bool isKinematic = fa
             return;
         }
 
-        if (GameObject.IsChild && isKinematic)
+        if (GameObject.IsChild && Type == ColliderType.Kinematic)
         {
             body.Pose.Position = (Vector3)GameObject.Transform.Position + (Vector3)GameObject.Transform.LocalPosition;
 

@@ -244,7 +244,7 @@ public class PhysicsManager
         return Simulation.Bodies.Add(bodyDesc);
     }
 
-    public StaticHandle CreateStaticCylinder(Vector3 pos, Vector2 radLength, float mass = 1f)
+    public StaticHandle CreateStaticCylinder(Vector3 pos, Vector2 radLength)
     {
         var shape = new Cylinder(radLength.X, radLength.Y);
         var shapeIndex = Simulation.Shapes.Add(shape);
@@ -295,7 +295,7 @@ public class PhysicsManager
         return Simulation.Bodies.Add(bodyDesc);
     }
 
-    public StaticHandle CreateStaticMesh(Vector3 pos, Buffer<Triangle> triangles, Vector3 scale, float mass = 1f)
+    public StaticHandle CreateStaticMesh(Vector3 pos, Buffer<Triangle> triangles, Vector3 scale)
     {
         var shape = new Mesh(triangles, scale, BufferPool);
         var shapeIndex = Simulation.Shapes.Add(shape);
