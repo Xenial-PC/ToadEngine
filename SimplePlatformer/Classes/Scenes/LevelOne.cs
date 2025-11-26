@@ -103,7 +103,7 @@ public class LevelOne() : Scene("Level1")
     public override void OnUpdate(FrameEventArgs e)
     {
         base.OnUpdate(e);
-        var res = _outOfBoundsLava.Behaviour as RespawnScript;
+        var res = _outOfBoundsLava.Behavior as RespawnScript;
         res!.RespawnPosition = SavePointScript.SavePoint;
 
         if (PauseMenu.IsPaused) return;

@@ -3,7 +3,7 @@ using Quaternion = System.Numerics.Quaternion;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
-public class RespawnScript : Behaviour
+public class RespawnScript : Behavior
 {
     public FPController Player;
     public Vector3 RespawnPosition;

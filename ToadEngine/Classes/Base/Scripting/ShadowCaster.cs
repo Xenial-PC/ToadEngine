@@ -19,7 +19,6 @@ public class ShadowCaster : Behaviour
 
     public override void Setup()
     {
-        base.Setup();
         GL.GenFramebuffers(1, out CasterFBO);
 
         GL.GenTextures(1, out ShadowMap);

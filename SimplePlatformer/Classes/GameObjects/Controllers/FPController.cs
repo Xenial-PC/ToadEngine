@@ -23,10 +23,10 @@ public class FPController
         GameObject.Transform.LocalScale = size;
 
         PlayerHud = GameObject.AddComponent<PlayerHud>();
-        GameObject.AddComponent<Physics>();
+        GameObject.AddComponent<PhysicsBody>();
 
         var collider = GameObject.AddComponent<BoxCollider>();
-        collider.Type = BoxCollider.ColliderType.Dynamic;
+        collider.Type = ColliderType.Dynamic;
         collider.Size = size;
 
         Controller = GameObject.AddComponent<FPControllerScript>();

@@ -10,15 +10,15 @@ public class Lava
 
     private static int _lava;
 
-    public Behaviour Behaviour { get; private set; }
+    public Behavior Behavior { get; private set; }
 
-    public Lava(Vector3 size, Vector3 position, Behaviour behaviour)
+    public Lava(Vector3 size, Vector3 position, Behavior behavior)
     {
-        Behaviour = (behaviour.Clone() as Behaviour)!;
-        Load(size, position, Behaviour);
+        Behavior = (behavior.Clone() as Behavior)!;
+        Load(size, position, Behavior);
     }
 
-    public void Load(Vector3 size, Vector3 position, Behaviour behaviour)
+    public void Load(Vector3 size, Vector3 position, Behavior behavior)
     {
         GameObject = new TexturedCubeModel(
             diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava.jpg",
@@ -31,7 +31,7 @@ public class Lava
         var collider = GameObject.AddComponent<BoxCollider>();
         collider.Type = BoxCollider.ColliderType.Kinematic;
         TGameObject = new Trigger(GameObject.Transform.LocalScale, GameObject.Transform.Position,
-            $"lava_{_lava++}", behaviour);
+            $"lava_{_lava++}", behavior);
 
         GameObject.AddChild(TGameObject.GameObject);
         TGameObject.GameObject.Transform.LocalPosition.Y += 0.05f;

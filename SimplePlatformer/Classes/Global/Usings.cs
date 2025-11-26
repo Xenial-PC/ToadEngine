@@ -14,3 +14,4 @@ global using ToadEngine.Classes.Base.UI;
 global using ToadEngine.Classes.Base.Colliders;
 global using DearImPlot;
 global using DearImGui;
+global using static ToadEngine.Classes.Base.Colliders.BaseCollider;

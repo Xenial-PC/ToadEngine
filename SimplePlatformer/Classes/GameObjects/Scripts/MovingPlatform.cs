@@ -4,7 +4,7 @@ using static BepuPhysics.Collidables.CompoundBuilder;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
-public class MovingPlatform : Behaviour
+public class MovingPlatform : Behavior
 {
     public Vector3 MovingRange;
     public float MovingSpeed = 0.5f;

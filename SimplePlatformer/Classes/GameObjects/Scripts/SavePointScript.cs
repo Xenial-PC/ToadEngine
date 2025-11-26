@@ -3,7 +3,7 @@ using SimplePlatformer.Classes.GameObjects.Menus;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
-public class SavePointScript : Behaviour
+public class SavePointScript : Behavior
 {
     public static Vector3 SavePoint;
     public bool IsLastSavePoint;

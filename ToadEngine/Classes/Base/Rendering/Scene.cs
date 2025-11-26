@@ -280,10 +280,16 @@ public class Scene
         GUI.GuiCallBack = null!;
 
         foreach (var renderObject in RenderGameObjects)
+        {
+            renderObject.Value.CleanupBehaviours();
             renderObject.Value.Dispose();
+        }
 
         foreach (var renderObject in RenderGameObjectsLast)
+        {
+            renderObject.Value.CleanupBehaviours();
             renderObject.Value.Dispose();
+        }
 
         RenderGameObjects?.Clear();
         RenderGameObjectsLast?.Clear();

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
+using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.UI;
@@ -163,6 +164,17 @@ public class GameObject : RenderObject
 
             behaviour.DeltaTime = deltaTime;
             behaviour.Update(deltaTime);
+        }
+    }
+
+    public void CleanupBehaviours()
+    {
+        foreach (var behaviour in _behaviours.OfType<Behaviour>())
+        {
+            foreach (var source in behaviour.Sources)
+                source.Value.Dispose();
+
+            behaviour.Dispose();
         }
     }
 

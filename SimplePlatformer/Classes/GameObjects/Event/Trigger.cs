@@ -6,12 +6,12 @@ public class Trigger
 {
     public TriggerGameObject GameObject { get; private set; }
     
-    public Trigger(Vector3 size, Vector3 position, string name, Behaviour scriptBehaviour)
+    public Trigger(Vector3 size, Vector3 position, string name, Behavior scriptBehavior)
     {
-        Load(size, position, name, scriptBehaviour);
+        Load(size, position, name, scriptBehavior);
     }
 
-    public void Load(Vector3 size, Vector3 position, string name, Behaviour scriptBehaviour)
+    public void Load(Vector3 size, Vector3 position, string name, Behavior scriptBehavior)
     {
         GameObject = new TriggerGameObject() { Name = name };
         
@@ -19,7 +19,7 @@ public class Trigger
         GameObject.Transform.LocalScale = size;
 
         GameObject.AddComponent<BoxCollider>().Type = BoxCollider.ColliderType.Trigger;
-        GameObject.AddComponent(scriptBehaviour);
+        GameObject.AddComponent(scriptBehavior);
     }
 
     public class TriggerGameObject : GameObject;

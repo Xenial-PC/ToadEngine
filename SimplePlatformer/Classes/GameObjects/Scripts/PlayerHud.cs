@@ -5,7 +5,7 @@ using ToadEngine.Classes.Base.UI;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
-public class PlayerHud : Behaviour
+public class PlayerHud : Behavior
 {
     public static int Level = 1;
     private static float _doubleJumpStaminaSlider;

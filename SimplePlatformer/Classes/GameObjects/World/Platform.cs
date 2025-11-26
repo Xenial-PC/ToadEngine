@@ -8,7 +8,7 @@ public class Platform
     public TexturedCubeModel GameObject { get; private set; }
     public Trigger TGameObject { get; private set; }
 
-    public Behaviour? Script = null;
+    public Behavior? Script = null;
 
     private static int _index;
 
@@ -36,7 +36,7 @@ public class Platform
 
         GameObject.AddChild(TGameObject.GameObject);
 
-        var clone = (Script.Clone() as Behaviour);
+        var clone = (Script.Clone() as Behavior);
         clone!.GameObject = GameObject;
 
         GameObject.AddComponent(clone);

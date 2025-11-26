@@ -10,7 +10,7 @@ using Scene = ToadEngine.Classes.Base.Rendering.Scene;
 
 namespace ToadEngine.Classes.Base.Scripting;
 
-public abstract class Behaviour : RenderObject, ICloneable
+public abstract class Behavior : RenderObject, ICloneable
 {
     public RaycastManager Raycast = new(GetCurrentScene().PhysicsManager.BufferPool);
     public static readonly Dictionary<int, GameObject> BodyToGameObject = new();
@@ -25,21 +25,21 @@ public abstract class Behaviour : RenderObject, ICloneable
 
     public Source? GetSource(string name) => Sources.GetValueOrDefault(name);
 
-    public Gui UI => Base.UI.GUI.Paint;
+    public Gui UI => GUI.Paint;
 
     public float DeltaTime;
 
-    static Behaviour()
+    static Behavior()
     {
         Trigger.OnEnter += (a, b) =>
         {
             if (!BodyToGameObject.TryGetValue(a, out var objA) ||
                 !BodyToGameObject.TryGetValue(b, out var objB)) return;
 
-            foreach (var component in objA.GetComponents<Behaviour>())
+            foreach (var component in objA.GetComponents<Behavior>())
                 component?.OnTriggerEnter(objB);
 
-            foreach (var component in objB.GetComponents<Behaviour>())
+            foreach (var component in objB.GetComponents<Behavior>())
                 component?.OnTriggerEnter(objA);
         };
 
@@ -48,10 +48,10 @@ public abstract class Behaviour : RenderObject, ICloneable
             if (!BodyToGameObject.TryGetValue(a, out var objA) ||
                 !BodyToGameObject.TryGetValue(b, out var objB)) return;
 
-            foreach (var component in objA.GetComponents<Behaviour>())
+            foreach (var component in objA.GetComponents<Behavior>())
                 component?.OnTriggerExit(objB);
 
-            foreach (var component in objB.GetComponents<Behaviour>())
+            foreach (var component in objB.GetComponents<Behavior>())
                 component?.OnTriggerExit(objA);
         };
     }
@@ -62,10 +62,6 @@ public abstract class Behaviour : RenderObject, ICloneable
 
     public override void Dispose()
     {
-        foreach (var source in Sources)
-        {
-            source.Value.Dispose();
-        }
     }
 
     public HitInfo SendRay(Vector3 origin, Vector3 direction, float maxT = 1000)

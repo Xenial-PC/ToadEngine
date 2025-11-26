@@ -4,40 +4,14 @@ using ToadEngine.Classes.Base.Physics;
 
 namespace ToadEngine.Classes.Base.Scripting;
 
-public class Physics : Behaviour
+public class PhysicsBody : Behaviour
 {
     public override void Setup()
     {
-        base.Setup();
         var bodyHandle = new BodyHandle();
-
-        if (GameObject.GetComponent<BoxCollider>() != null)
+        if (GameObject.GetComponent<BaseCollider>() != null)
         {
-            var collider = GameObject.GetComponent<BoxCollider>()!;
-            bodyHandle = collider.Collider;
-        }
-
-        if (GameObject.GetComponent<CapsuleCollider>() != null)
-        {
-            var collider = GameObject.GetComponent<CapsuleCollider>()!;
-            bodyHandle = collider.Collider;
-        }
-
-        if (GameObject.GetComponent<CylinderCollider>() != null)
-        {
-            var collider = GameObject.GetComponent<CylinderCollider>()!;
-            bodyHandle = collider.Collider;
-        }
-
-        if (GameObject.GetComponent<SphereCollider>() != null)
-        {
-            var collider = GameObject.GetComponent<SphereCollider>()!;
-            bodyHandle = collider.Collider;
-        }
-
-        if (GameObject.GetComponent<MeshCollider>() != null)
-        {
-            var collider = GameObject.GetComponent<MeshCollider>()!;
+            var collider = GameObject.GetComponent<BaseCollider>()!;
             bodyHandle = collider.Collider;
         }
 
