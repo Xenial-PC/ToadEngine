@@ -71,11 +71,12 @@ public class FPController
 
     public class FPControllerScript : Behavior
     {
-        private FPCamera? _fpCamera;
-        
-        public float WalkSpeed = 2.5f, RunSpeed = 4.2f, JumpHeight = 8f;
-        public float Acceleration = 30f,
-            DeAcceleration = 10f;
+        private FPCamera _fpCamera = null!;
+        private PlayerHud _playerHud = null!;
+
+        public float WalkSpeed = 2.5f, RunSpeed = 10.2f, JumpHeight = 8f;
+        public float Acceleration = 45f,
+            DeAcceleration = 100f;
 
         private BoxCollider _collider = null!;
         private Simulation _simulation = null!;
@@ -84,23 +85,32 @@ public class FPController
         public float StepInterval = 0.45f;
         public float RunStepInterval = 0.33f;
 
-        public float JumpStamina = 100f, JumpStaminaMax = 100f;
+        public float JumpStamina = 100f, JumpStaminaMax = 100f,
+            Boost = 100f, BoostMax = 100f,
+            Health = 100f, HealthMax = 100f, 
+            Speed, MaxSpeed = 20f;
 
         private bool _wasGrounded;
-        private bool _isWalking, _isRunning;
+        private bool _isWalking, _isRunning, _isAbleToAddSpeed;
 
         private float _timer;
+        public bool IsRespawned = true;
+
+        private float _airSpeedBonus, _groundTime;
+        private const float AirSpeedGainRate = 1.5f;
+        private const float MaxAirSpeedBonus = 3f;
 
         public override void Setup()
         {
             _fpCamera = GameObject.GetComponent<FPCamera>("fpCamera");
+            _playerHud = GameObject.GetComponent<PlayerHud>()!;
 
             GameObject.UsePhysics = true;
 
             _simulation = GetCurrentScene().PhysicsManager.Simulation;
             _collider = GameObject.GetComponent<BoxCollider>()!;
-            Body = _simulation.Bodies.GetBodyReference(_collider.Collider);
 
+            Body = _simulation.Bodies.GetBodyReference(_collider.Collider);
             Body.GetDescription(out var desc);
 
             desc.LocalInertia.InverseInertiaTensor = default;
@@ -118,12 +128,19 @@ public class FPController
             Sources.Add("movement", new Source());
             Sources.Add("jump", new Source());
 
-            PlayerHud.UpdateStaminaUI(JumpStamina / 100f);
+            _playerHud.UpdateStaminaUI(JumpStamina / 100f);
+            _playerHud.UpdateBoostUI(Boost / 100f);
+            _playerHud.UpdateHealthUI(Health / 100f);
         }
 
         public override void Update(float deltaTime)
         {
             HandleMove(deltaTime);
+        }
+
+        private void HandleHealth()
+        {
+            
         }
 
         private void HandleMove(float deltaTime)
@@ -146,7 +163,12 @@ public class FPController
             var isGrounded = !isInAir;
             var moveDir = Vector3.Zero;
 
-            if (isGrounded && !_wasGrounded) playerSource.Play(GetSound("land"));
+            if (isGrounded && !_wasGrounded)
+            {
+                playerSource.Play(GetSound("land"));
+                IncreaseJumpStamina(65f);
+                AddBoost(45f);
+            }
 
             if (Input.IsKeyDown(Keys.W)) moveDir += camForward;
             if (Input.IsKeyDown(Keys.S)) moveDir -= camForward;
@@ -154,8 +176,9 @@ public class FPController
             if (Input.IsKeyDown(Keys.D)) moveDir -= camRight;
             if (Input.IsKeyPressed(Keys.Space) && JumpStamina > 0)
             {
-                DecreasePlayerJumpStamina(20f);
-                ResetTimer(1.5f);
+                PlayerHud.StartTimer();
+                DecreaseJumpStamina(75f);
+                ResetTimer(0.5f);
 
                 Body.Velocity.Linear.Y += JumpHeight;
                 jumpSource.Play(GetSound("jump"));
@@ -173,15 +196,26 @@ public class FPController
                 playerSource.Play(GetSound("step"), interval, deltaTime);
             }
 
+            if (!isGrounded && _isRunning)
+                DecreaseBoost(85f);
+
             var velocity = Body.Velocity.Linear;
-            var horizontalVel = new System.Numerics.Vector3(velocity.X, 0, velocity.Z);
-            var maxSpeed = Input.IsKeyDown(Keys.LeftShift) ? RunSpeed : WalkSpeed;
+            var horizontalVel = velocity with { Y = 0 };
+
+            HandleAirSpeed(deltaTime, isGrounded);
+
+            var baseSpeed = _isRunning
+                ? (Boost > 0 ? RunSpeed : WalkSpeed)
+                : WalkSpeed;
+
+            Speed = baseSpeed + _airSpeedBonus;
+            Speed = MathF.Min(Speed, MaxSpeed);
 
             var targetVel = System.Numerics.Vector3.Zero;
             if (moveDir.LengthSquared > 0)
             {
                 moveDir.Normalize();
-                targetVel = new System.Numerics.Vector3(moveDir.X, 0, moveDir.Z) * maxSpeed;
+                targetVel = new System.Numerics.Vector3(moveDir.X, 0, moveDir.Z) * Speed;
             }
 
             if (targetVel.LengthSquared() > 0)
@@ -222,36 +256,84 @@ public class FPController
             playerSource.SetPosition(GameObject.Transform.Position);
         }
 
+        private void HandleAirSpeed(float deltaTime, bool isGrounded)
+        {
+            if (IsRespawned) _isAbleToAddSpeed = isGrounded;
+            if (_isAbleToAddSpeed && IsRespawned)
+            {
+                Body.Velocity.Linear = new System.Numerics.Vector3(0f);
+                Speed = 0;
+                IsRespawned = false;
+            }
+
+            switch (isGrounded)
+            {
+                case true:
+                    _groundTime += deltaTime;
+                    break;
+                case false when _isAbleToAddSpeed:
+                    _groundTime = 0f;
+                    break;
+            }
+
+            if (!isGrounded && _isAbleToAddSpeed)
+            {
+                _airSpeedBonus += AirSpeedGainRate * deltaTime;
+                _airSpeedBonus = MathF.Min(_airSpeedBonus, MaxAirSpeedBonus);
+            }
+            else if (_groundTime >= 0.5f) _airSpeedBonus = 0f;
+        }
+
         private void RegenPlayerJumpStamina()
         {
             if (_timer > 0f) _timer -= 0.5f * DeltaTime;
             if (!(_timer <= 0) || !(JumpStamina < JumpStaminaMax)) return;
 
-            JumpStamina += 15f * DeltaTime;
-            PlayerHud.UpdateStaminaUI(JumpStamina / 100);
+            JumpStamina += (!IsInAir() ? 45f : 15f) * DeltaTime;
+            _playerHud.UpdateStaminaUI(JumpStamina / 100);
+        }
+
+        public void SetJumpStamina(float stamina)
+        {
+            JumpStamina = stamina;
+            _playerHud.UpdateStaminaUI(JumpStamina / 100);
+        }
+
+        public void IncreaseJumpStamina(float value)
+        {
+            JumpStamina += value;
+            _playerHud.UpdateStaminaUI(JumpStamina / 100);
+        }
+
+        public void DecreaseJumpStamina(float value)
+        {
+            JumpStamina -= value;
+            _playerHud.UpdateStaminaUI(JumpStamina / 100);
+        }
+
+        public void SetBoost(float stamina)
+        {
+            Boost = stamina;
+            _playerHud.UpdateBoostUI(Boost / 100);
+        }
+
+        public void AddBoost(float value)
+        {
+            Boost += value;
+            if (Boost >= BoostMax) Boost = BoostMax;
+            _playerHud.UpdateBoostUI(Boost / 100);
+        }
+
+        public void DecreaseBoost(float value)
+        {
+            Boost -= value * DeltaTime;
+            if (Boost <= 0f) Boost = 0f;
+            _playerHud.UpdateBoostUI(Boost / 100);
         }
 
         private void ResetTimer(float amount)
         {
             _timer = amount;
-        }
-
-        public void SetPlayerJumpStamina(float stamina)
-        {
-            JumpStamina = stamina;
-            PlayerHud.UpdateStaminaUI(JumpStamina / 100);
-        }
-
-        public void IncreasePlayerJumpStamina(float value)
-        {
-            JumpStamina += value;
-            PlayerHud.UpdateStaminaUI(JumpStamina / 100);
-        }
-
-        public void DecreasePlayerJumpStamina(float value)
-        {
-            JumpStamina -= value;
-            PlayerHud.UpdateStaminaUI(JumpStamina / 100);
         }
 
         private bool IsInAir()

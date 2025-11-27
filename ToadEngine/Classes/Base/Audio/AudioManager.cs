@@ -26,32 +26,32 @@ public class AudioManager
 
     public int LoadSound(string file, string name)
     {
-        if (Sounds.TryGetValue(name, out var sound)) return sound;
-        if (!File.Exists(file)) return -1;
+        if (Sounds.TryGetValue(name, out var existing))
+            return existing;
 
-        var buffer = AL.GenBuffer();
-        Sounds.TryAdd(name, buffer);
+        using var reader = new AudioFileReader(file);
+        var sampleRate = reader.WaveFormat.SampleRate;
+        var channels = reader.WaveFormat.Channels;
 
-        byte[] pcmData;
-        int channels;
-        int sampleRate;
-        int bitsPerSample;
+        var sampleProvider = reader.ToSampleProvider();
+        var buffer = new float[reader.Length / sizeof(float)];
+        var samplesRead = sampleProvider.Read(buffer, 0, buffer.Length);
 
-        using (var audioReader = CreateReader(file))
-        {
-            channels = audioReader.WaveFormat.Channels;
-            sampleRate = audioReader.WaveFormat.SampleRate;
-            bitsPerSample = audioReader.WaveFormat.BitsPerSample;
+        var pcm16 = new short[samplesRead];
+        for (var i = 0; i < samplesRead; i++)
+            pcm16[i] = (short)(buffer[i] * short.MaxValue);
 
-            using var ms = new MemoryStream();
-            audioReader.CopyTo(ms);
-            pcmData = ms.ToArray();
-        }
+        var alBuffer = AL.GenBuffer();
+        Sounds[name] = alBuffer;
 
-        var format = GetFormat(channels, bitsPerSample);
-        AL.BufferData(buffer, format, pcmData, sampleRate);
+        AL.BufferData(
+            alBuffer,
+            channels == 1 ? ALFormat.Mono16 : ALFormat.Stereo16,
+            pcm16,
+            sampleRate
+        );
 
-        return buffer;
+        return alBuffer;
     }
 
     /// <summary>

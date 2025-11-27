@@ -57,9 +57,7 @@ public class GameObject : RenderObject
         var rotatedLocalPos = Vector3.TransformPosition(Transform.LocalPosition, Matrix4.CreateFromQuaternion(worldQuat));
         var finalPosition = Transform.Position + rotatedLocalPos;
 
-        var finalSize = Transform.Scale;
-
-        Obj.Model = Matrix4.CreateScale(finalSize) *
+        Obj.Model = Matrix4.CreateScale(Transform.Scale) *
                          Matrix4.CreateFromQuaternion(finalRotation) *
                          Matrix4.CreateTranslation(finalPosition);
     }

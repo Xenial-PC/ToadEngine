@@ -18,7 +18,7 @@ public class Trigger
         GameObject.Transform.Position = position;
         GameObject.Transform.LocalScale = size;
 
-        GameObject.AddComponent<BoxCollider>().Type = BoxCollider.ColliderType.Trigger;
+        GameObject.AddComponent<BoxCollider>().Type = ColliderType.Trigger;
         GameObject.AddComponent(scriptBehavior);
     }
 

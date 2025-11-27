@@ -28,8 +28,7 @@ public class Lava
         GameObject.Transform.LocalScale = size;
         GameObject.Transform.Position = position;
 
-        var collider = GameObject.AddComponent<BoxCollider>();
-        collider.Type = BoxCollider.ColliderType.Kinematic;
+        GameObject.AddComponent<BoxCollider>().Type = ColliderType.Kinematic;
         TGameObject = new Trigger(GameObject.Transform.LocalScale, GameObject.Transform.Position,
             $"lava_{_lava++}", behavior);
 

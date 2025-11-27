@@ -16,6 +16,7 @@ public class SavePointScript : Behavior
         if (IsLastSavePoint)
         {
             EOLMenu.IsDrawingEOLMenu = true;
+            PlayerHud.StopTimer();
             PauseMenu.UpdatePausedState();
         }
     }

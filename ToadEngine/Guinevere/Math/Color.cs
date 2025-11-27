@@ -34,7 +34,7 @@ public readonly struct Color : IEquatable<Color>
     public static implicit operator System.Drawing.Color(Color value) => value._internalColor;
     public static implicit operator Color(System.Drawing.Color value) => new(value);
 
-    public static implicit operator SKColor(Color color) => new(color.B, color.G, color.R, color.A);
+    public static implicit operator SKColor(Color color) => new(color.R, color.G, color.B, color.A);
 
     private Color(System.Drawing.Color color)
     {
@@ -43,7 +43,7 @@ public readonly struct Color : IEquatable<Color>
 
     public Color(Color color, float alpha)
     {
-        FromArgb((int)(alpha * 255), color.B, color.G, color.R);
+        _internalColor = FromArgb((int)(alpha * 255), color.R, color.G, color.B);
     }
 
     /// <summary>

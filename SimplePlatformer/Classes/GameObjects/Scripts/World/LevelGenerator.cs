@@ -24,7 +24,7 @@ public class LevelGenerator
         _lastPosition = new Vector3(0f);
 
         var rand = new Random();
-        var parts = 1;
+        var parts = rand.Next(15, 20);
         for (var i = 0; i < parts; i++)
         {
             level.AddRange(GeneratePart(i == parts - 1));
@@ -37,7 +37,7 @@ public class LevelGenerator
     {
         var rand = new Random();
         var parts = new List<GameObject>();
-        for (var i = 0; i < /*rand.Next(4, 15)*/ 2; i++)
+        for (var i = 0; i < rand.Next(4, 15); i++)
         {
             var placement = rand.Next(-3, 3);
             if ((placement < 0 && !_lastWasLava) || _isFirstPlatform)

@@ -334,11 +334,13 @@ public class PhysicsManager
         return handle;
     }
 
-    struct NarrowPhaseCallbacks : INarrowPhaseCallbacks
+    struct NarrowPhaseCallbacks(float maximumRecoveryVelocity = 8f, float frictionCoefficient = 1f) : INarrowPhaseCallbacks
     {
+        public float MaximumRecoveryVelocity = maximumRecoveryVelocity, FrictionCoefficient = frictionCoefficient;
+
         public void Initialize(Simulation simulation)
         {
-
+            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -358,8 +360,8 @@ public class PhysicsManager
         public bool ConfigureContactManifold<TManifold>(int workerIndex, CollidablePair pair, ref TManifold manifold,
             out PairMaterialProperties pairMaterial) where TManifold : unmanaged, IContactManifold<TManifold>
         {
-            pairMaterial.FrictionCoefficient = 1f;
-            pairMaterial.MaximumRecoveryVelocity = 2f;
+            pairMaterial.FrictionCoefficient = FrictionCoefficient;
+            pairMaterial.MaximumRecoveryVelocity = MaximumRecoveryVelocity;
             pairMaterial.SpringSettings = new SpringSettings(30, 1);
 
             if (IsTrigger(pair.A) || IsTrigger(pair.B))
