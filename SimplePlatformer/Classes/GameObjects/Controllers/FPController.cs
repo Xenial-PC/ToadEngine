@@ -98,7 +98,7 @@ public class FPController
 
         private float _airSpeedBonus, _groundTime;
         private const float AirSpeedGainRate = 1.5f;
-        private const float MaxAirSpeedBonus = 5f;
+        private const float MaxAirSpeedBonus = 3.5f;
 
         public override void Setup()
         {
