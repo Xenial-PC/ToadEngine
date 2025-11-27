@@ -39,10 +39,12 @@ public class CanvasRenderer : ICanvasRenderer
         _canvas = null;
         _surface?.Dispose();
 
-        _surface = SKSurface.Create(new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Premul));
+        _surface = SKSurface.Create(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul));
         _canvas = _surface?.Canvas;
 
         GL.BindTexture(TextureTarget.Texture2D, _texture);
+        GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+
         GL.TexImage2D(TextureTarget.Texture2D,
             0, PixelInternalFormat.Rgba,
             _width, _height, 0,
@@ -161,7 +163,7 @@ public class CanvasRenderer : ICanvasRenderer
         GL.TexSubImage2D(TextureTarget.Texture2D,
             0, 0, 0,
             pixels.Width, pixels.Height,
-            PixelFormat.Rgba, PixelType.UnsignedByte,
+            PixelFormat.Bgra, PixelType.UnsignedByte,
             pixels.GetPixels());
 
         GL.UseProgram(_shaderProgram);

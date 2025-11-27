@@ -18,18 +18,16 @@ namespace Guinevere;
 public readonly struct Color : IEquatable<Color>
 {
     private readonly System.Drawing.Color _internalColor;
-
+    
     public static implicit operator Color(uint rgba) => FromArgb(
-        (byte)(rgba & 0xFF), // A
         (byte)((rgba >> 24) & 0xFF), // R
-        (byte)((rgba >> 16) & 0xFF), // G
-        (byte)(rgba >> 8) & 0xFF);
+            (int)((rgba >> 24) & 0xFF), // A
+            (int)((rgba >> 16) & 0xFF), // R
+            (int)((rgba >> 8) & 0xFF), // G
+            (int)(rgba & 0xFF));
 
-    public static implicit operator Color(int rgba) => FromArgb(
-        (byte)rgba, // A (Alpha) - lowest byte
-        (byte)(rgba >> 24), // R (Red) - highest byte
-        (byte)(rgba >> 16), // G (Green)
-        (byte)(rgba >> 8));
+    public static implicit operator Color(int rgba)
+        => ((uint)rgba);
 
     public static implicit operator System.Drawing.Color(Color value) => value._internalColor;
     public static implicit operator Color(System.Drawing.Color value) => new(value);
@@ -244,7 +242,7 @@ public readonly struct Color : IEquatable<Color>
 
     public static Color FromArgb(int alpha, Color baseColor)
     {
-        return System.Drawing.Color.FromArgb(alpha, baseColor._internalColor);
+        return System.Drawing.Color.FromArgb(alpha, FromArgb(baseColor._internalColor.A, baseColor._internalColor.R, baseColor._internalColor.G, baseColor._internalColor.B));
     }
 
     public static Color FromArgb(int red, int green, int blue)
