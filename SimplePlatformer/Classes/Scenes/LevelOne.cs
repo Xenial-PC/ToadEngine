@@ -10,7 +10,7 @@ using static ToadEngine.Classes.Base.Rendering.RenderObject;
 
 namespace SimplePlatformer.Classes.Scenes;
 
-public class LevelOne() : Scene("Level1")
+public class LevelOne : Scene
 {
     private Skybox _skybox = null!;
     private Camera _camera = null!;
@@ -21,8 +21,8 @@ public class LevelOne() : Scene("Level1")
     private Lava _outOfBoundsLava = null!;
     private List<GameObject> _level = null!;
 
-    private PauseMenu _pauseMenu = null!;
-    private EOLMenu _endOfLevelMenu = null!;
+    public PauseMenu PauseMenu = null!;
+    public EOLMenu EndOfLevelMenu = null!;
 
     public override void Setup()
     {
@@ -41,11 +41,11 @@ public class LevelOne() : Scene("Level1")
         _camera = new Camera(WHandler.Size.X / (float)WHandler.Size.Y);
         AddService(_camera);
 
-        _pauseMenu = new PauseMenu();
-        Scripts.AddComponent(_pauseMenu);
+        PauseMenu = new PauseMenu();
+        Scripts.AddComponent(PauseMenu);
 
-        _endOfLevelMenu = new EOLMenu();
-        Scripts.AddComponent(_endOfLevelMenu);
+        EndOfLevelMenu = new EOLMenu();
+        Scripts.AddComponent(EndOfLevelMenu);
 
         _player = new FPController(new Vector3(0.3f, 2f, 0.3f))
         {

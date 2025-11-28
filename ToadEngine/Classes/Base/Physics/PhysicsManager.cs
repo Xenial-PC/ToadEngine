@@ -56,20 +56,22 @@ public static class Trigger
         => ActiveOverlaps.Contains((a, b));
 }
 
-public class PhysicsManager
+public class PhysicsManager : IDisposable
 {
     public bool IsPhysicsPaused;
-    public Simulation Simulation { get; private set; }
-    public BufferPool BufferPool { get; private set; }
+    public Simulation Simulation { get; set; }
+    public BufferPool BufferPool { get; set; }
 
-    public ThreadDispatcher ThreadDispatcher = new ThreadDispatcher(int.Max(1,
-        Environment.ProcessorCount > 4 ? Environment.ProcessorCount - 2 : Environment.ProcessorCount - 1));
+    public ThreadDispatcher ThreadDispatcher;
 
     public PhysicsManager()
     {
+        ThreadDispatcher = new ThreadDispatcher(int.Max(1,
+            Environment.ProcessorCount > 4 ? Environment.ProcessorCount - 2 : Environment.ProcessorCount - 1));
+
         BufferPool = new BufferPool();
         Simulation = Simulation.Create(
-            BufferPool, new NarrowPhaseCallbacks(), new PoseIntegratorCallbacks(new System.Numerics.Vector3(0, -10, 0)), 
+            BufferPool, new NarrowPhaseCallbacks(), new PoseIntegratorCallbacks(new System.Numerics.Vector3(0, -10, 0)),
             new SolveDescription(8, 1));
     }
 
@@ -100,7 +102,6 @@ public class PhysicsManager
             new RigidPose(pos, Quaternion.Identity),
             shapeIndex
         );
-        
         return Simulation.Statics.Add(bodyDesc);
     }
 
@@ -417,5 +418,13 @@ public class PhysicsManager
         {
             velocity.Linear += _gravityWideDt;
         }
+    }
+
+    public void Dispose()
+    {
+        TriggerRegistry.Triggers.Clear();
+        ThreadDispatcher.Dispose();
+        Simulation.Dispose();
+        ((IDisposable)BufferPool).Dispose();
     }
 }

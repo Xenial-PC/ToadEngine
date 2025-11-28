@@ -5,8 +5,7 @@ namespace ToadEngine.Classes.Base.Rendering;
 
 public abstract class RenderObject
 {
-    public static Dictionary<string, Scene> Scenes { get; set; } = new();
-    private static readonly Dictionary<Type, object> Services = new();
+    public static Dictionary<Type, object> Services = new();
 
     private bool _isDisposing, _isSetup;
     public bool IsEnabled = true;
@@ -35,9 +34,14 @@ public abstract class RenderObject
         return Services[typeof(T)] as T;
     }
 
+    public static T GetCurrentScene<T>() where T : class
+    {
+        return (GetService<Scene>() as T)!;
+    }
+
     public static Scene GetCurrentScene()
     {
-        return GetService<Scene>()!;
+        return (GetService<Scene>())!;
     }
 
     private static NativeWindow GetNativeWindow()
@@ -48,11 +52,6 @@ public abstract class RenderObject
     public static Window.Window GetWindow()
     {
         return GetService<Window.Window>()!;
-    }
-
-    public static Scene GetScene(string sceneName)
-    {
-        return Scenes.Where(s => s.Key == sceneName).Select(sc => sc.Value).First();
     }
 
     public static Shader GetCoreShader()

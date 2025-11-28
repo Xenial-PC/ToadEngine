@@ -15,7 +15,7 @@ public class PauseMenu : Behavior
 
     public override void OnGUI()
     {
-        if ((!IsPaused && !IsDrawingPauseMenu) || EOLMenu.IsDrawingEOLMenu) return;
+        if ((!IsPaused && !IsDrawingPauseMenu) || EOLMenu.IsDrawingEOLMenu || EOLMenu.IsDrawingLoseScreen) return;
 
         using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Expand().Enter())
         {

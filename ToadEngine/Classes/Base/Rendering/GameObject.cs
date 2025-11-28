@@ -12,9 +12,8 @@ namespace ToadEngine.Classes.Base.Rendering;
 public class GameObject : RenderObject
 {
     private readonly Dictionary<string, object> _components = new();
-    private static int _globalIndex;
     private int _index;
-    public string Name;
+    public string? Name = null;
 
     public Structs.GameObj Obj = new();
     private List<Behavior?> _behaviours = new();
@@ -27,9 +26,10 @@ public class GameObject : RenderObject
 
     public Structs.Transform Transform = new();
 
+    public Scene Scene => GetCurrentScene();
+
     public GameObject(string? name = null)
     {
-        name ??= $"go_{_globalIndex++}";
         Name = name;
 
         Transform.Front = -Vector3.UnitZ;

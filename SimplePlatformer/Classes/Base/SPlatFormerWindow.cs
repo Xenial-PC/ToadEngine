@@ -7,16 +7,13 @@ public class SPlatFormerWindow(int width, int height, string title) : Window(wid
 {
     private bool _isFullScreen;
     
-    public LevelOne LevelOne { get; set; }
-    public LevelTwo LevelTwo { get; set; }
-
     public override void Setup()
     {
         base.Setup();
         VSync = VSyncMode.On;
 
-        LevelOne = new LevelOne();
-        LevelTwo = new LevelTwo();
+        SceneManager.Register<LevelOne>("Level1");
+        SceneManager.Register<LevelTwo>("Level2");
 
         LoadScene("Level1");
     }

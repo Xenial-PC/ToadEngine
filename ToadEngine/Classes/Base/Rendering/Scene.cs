@@ -13,6 +13,8 @@ public class Scene
     public Dictionary<string, GameObject> RenderGameObjects { get; set; } = new();
     public Dictionary<string, GameObject> RenderGameObjectsLast { get; set; } = new();
 
+    private int _goIndex;
+
     public NativeWindow WHandler;
     public Window.Window Window;
     public PhysicsManager PhysicsManager = new();
@@ -39,20 +41,10 @@ public class Scene
     public virtual void OnLateUpdate(FrameEventArgs e) { }
     public virtual void Dispose() { }
 
-    public Scene(string sceneName)
-    {
-        if (RenderObject.Scenes.ContainsValue(this)) return;
-        RenderObject.Scenes.Add(sceneName, this);
-
-        AudioManager = new AudioManager();
-        AudioManager.SetDistanceModel(ALDistanceModel.InverseDistanceClamped);
-
-        AudioManager.Init();
-    }
-
     public void Instantiate(GameObject gameObject, InstantiateType type = InstantiateType.Early)
     {
         gameObject.OnSetup();
+        gameObject.Name ??= $"go_{_goIndex++}";
 
         if (type == InstantiateType.Early)
         {
@@ -68,6 +60,7 @@ public class Scene
         foreach (var gameObject in gameObjects)
         {
             gameObject.OnSetup();
+            gameObject.Name ??= $"go_{_goIndex++}";
 
             if (type == InstantiateType.Early)
             {
@@ -85,12 +78,12 @@ public class Scene
 
         if (type == InstantiateType.Early)
         {
-            RenderGameObjects.Remove(gameObject.Name);
+            RenderGameObjects.Remove(gameObject.Name!);
             gameObject.Dispose();
             return;
         }
 
-        RenderGameObjectsLast.Remove(gameObject.Name);
+        RenderGameObjectsLast.Remove(gameObject.Name!);
         gameObject.Dispose();
     }
 
@@ -100,12 +93,12 @@ public class Scene
         {
             if (type == InstantiateType.Early)
             {
-                RenderGameObjects.Remove(gameObject.Name);
+                RenderGameObjects.Remove(gameObject.Name!);
                 gameObject.Dispose();
                 continue;
             }
 
-            RenderGameObjectsLast.Remove(gameObject.Name);
+            RenderGameObjectsLast.Remove(gameObject.Name!);
             gameObject.Dispose();
         }
     }
@@ -259,9 +252,14 @@ public class Scene
     {
         WHandler = state;
         Window = window;
-        
+
         AddService(WHandler);
         AddService(Window);
+
+        AudioManager = new AudioManager();
+        AudioManager.SetDistanceModel(ALDistanceModel.InverseDistanceClamped);
+
+        AudioManager.Init();
 
         ShadowMapShader = new Shader("shadowmap.vert", "shadowmap.frag");
 
@@ -289,18 +287,31 @@ public class Scene
         {
             renderObject.Value.CleanupBehaviours();
             renderObject.Value.Dispose();
+            DestroyObject(renderObject.Value);
         }
 
         foreach (var renderObject in RenderGameObjectsLast)
         {
             renderObject.Value.CleanupBehaviours();
             renderObject.Value.Dispose();
+            DestroyObject(renderObject.Value);
         }
 
         RenderGameObjects?.Clear();
         RenderGameObjectsLast?.Clear();
+
         AudioManager?.Dispose();
         ShadowMapShader?.Dispose();
+
+        PhysicsManager.Dispose();
+        PhysicsManager = new PhysicsManager();
+
+        Behavior.BodyToGameObject.Clear();
         Dispose();
+
+        Window?.CoreShader?.Dispose();
+        Services.Clear();
+
+        _goIndex = 0;
     }
 }

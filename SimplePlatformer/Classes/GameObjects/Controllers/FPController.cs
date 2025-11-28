@@ -39,8 +39,6 @@ public class FPController
 
         public override void Setup()
         {
-            base.Setup();
-
             Camera = GetService<Camera>();
             if (Camera is null)
             {
@@ -56,8 +54,6 @@ public class FPController
 
         public override void Update(float deltaTime)
         {
-            base.Update(deltaTime);
-
             if (PauseMenu.IsPaused) return;
             Camera!.Update(WHandler.KeyboardState, WHandler.MouseState, deltaTime);
         }
@@ -88,7 +84,7 @@ public class FPController
         public float JumpStamina = 100f, JumpStaminaMax = 100f,
             Boost = 100f, BoostMax = 100f,
             Health = 100f, HealthMax = 100f, 
-            Speed, MaxSpeed = 20f;
+            Speed, MaxSpeed = 20f, HealthDecreaseSpeed = 15.5f;
 
         private bool _wasGrounded;
         private bool _isWalking, _isRunning, _isAbleToAddSpeed;
@@ -97,7 +93,7 @@ public class FPController
         public bool IsRespawned = true;
 
         private float _airSpeedBonus, _groundTime;
-        private const float AirSpeedGainRate = 1.5f;
+        private const float AirSpeedGainRate = 2f;
         private const float MaxAirSpeedBonus = 3.5f;
 
         public override void Setup()
@@ -135,18 +131,25 @@ public class FPController
 
         public override void Update(float deltaTime)
         {
+            if (PauseMenu.IsPaused) return;
             HandleMove(deltaTime);
+            HandleHealth();
         }
 
         private void HandleHealth()
         {
-            
+            if (Health <= 0)
+            {
+                EOLMenu.IsDrawingLoseScreen = true;
+                PlayerHud.StopTimer();
+                PauseMenu.UpdatePausedState();
+                return;
+            }
+            DecreaseHealth(HealthDecreaseSpeed);
         }
 
         private void HandleMove(float deltaTime)
         {
-            if (PauseMenu.IsPaused) return;
-
             var playerSource = GetSource("movement")!;
             var jumpSource = GetSource("jump")!;
 
@@ -329,6 +332,26 @@ public class FPController
             Boost -= value * DeltaTime;
             if (Boost <= 0f) Boost = 0f;
             _playerHud.UpdateBoostUI(Boost / 100);
+        }
+
+        public void SetHealth(float value)
+        {
+            Health = value;
+            _playerHud.UpdateHealthUI(Health / 100);
+        }
+
+        public void IncreaseHealth(float value)
+        {
+            Health += value;
+            if (Health >= HealthMax) Health = HealthMax;
+            _playerHud.UpdateHealthUI(Health / 100);
+        }
+
+        public void DecreaseHealth(float value)
+        {
+            Health -= value * DeltaTime;
+            if (Health <= 0) Health = 0f;
+            _playerHud.UpdateHealthUI(Health / 100);
         }
 
         private void ResetTimer(float amount)

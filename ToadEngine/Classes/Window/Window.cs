@@ -13,7 +13,7 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
 
     public Shader CoreShader = null!;
 
-    public Scene CurrentScene { get; set; } = new(string.Empty);
+    public Scene CurrentScene { get; set; } = new();
 
     public Window(int width, int height, string title) :
         base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = (width, height), Title = title, NumberOfSamples = 4, Vsync = VSyncMode.Off })
@@ -40,14 +40,6 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
         GL.Enable(EnableCap.DepthTest);
         GL.Enable(EnableCap.Multisample);
         GL.Enable(EnableCap.FramebufferSrgb);
-
-        CoreShader = new Shader($"core.vert", $"lighting.frag");
-        CoreShader.Use();
-
-        RenderObject.AddService(CoreShader);
-
-        CurrentScene.Setup();
-        RenderObject.AddService(CurrentScene);
     }
 
     public virtual void OnInit()
@@ -135,7 +127,14 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
     public void LoadScene(string name)
     {
         CurrentScene.Destroy();
-        CurrentScene = RenderObject.GetScene(name);
+        CoreShader = new Shader($"core.vert", $"lighting.frag");
+        CoreShader.Use();
+
+        RenderObject.AddService(CoreShader);
+
+        CurrentScene = SceneManager.Create(name);
+        RenderObject.AddService(CurrentScene);
+
         CurrentScene.Load(this, this);
     }
 

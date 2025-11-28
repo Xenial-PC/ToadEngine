@@ -107,7 +107,7 @@ public class Shader : IDisposable
         GL.Uniform4(location, value);
     }
 
-    #region Dispose
+    #region Reset
 
     protected virtual void Dispose(bool isDisposing)
     {

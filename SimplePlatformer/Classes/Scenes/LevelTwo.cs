@@ -7,7 +7,7 @@ using static ToadEngine.Classes.Base.Rendering.RenderObject;
 
 namespace SimplePlatformer.Classes.Scenes;
 
-public class LevelTwo() : Scene("Level2")
+public class LevelTwo : Scene
 {
     private Skybox _skybox = null!;
     private Camera _camera = null!;
@@ -15,8 +15,8 @@ public class LevelTwo() : Scene("Level2")
     private SpotLight _flashLight;
     private FPController _player = null!;
 
-    private PauseMenu _pauseMenu = null!;
-    private EOLMenu _endOfLevelMenu = null!;
+    public PauseMenu PauseMenu = null!;
+    public EOLMenu EndOfLevelMenu = null!;
 
     public override void Setup()
     {
@@ -38,11 +38,11 @@ public class LevelTwo() : Scene("Level2")
         _flashLight = new SpotLight();
         _player = new FPController(new Vector3(0.3f, 3f, 0.3f));
 
-        _pauseMenu = new PauseMenu();
-        _endOfLevelMenu = new EOLMenu();
+        PauseMenu = new PauseMenu();
+        EndOfLevelMenu = new EOLMenu();
 
-        Scripts.AddComponent(_pauseMenu);
-        Scripts.AddComponent(_endOfLevelMenu);
+        Scripts.AddComponent(PauseMenu);
+        Scripts.AddComponent(EndOfLevelMenu);
     }
 
     public override void OnStart()

@@ -7,17 +7,23 @@ public class SavePointScript : Behavior
 {
     public static Vector3 SavePoint;
     public bool IsLastSavePoint;
+    private bool _hasHealed;
 
     public override void OnTriggerEnter(GameObject other)
     {
-        if (other.GetComponent<FPController.FPControllerScript>() == null) return;
+        var player = other.GetComponent<FPController.FPControllerScript>();
+        if (player == null) return;
         SavePoint = GameObject.Transform.Position;
 
-        if (IsLastSavePoint)
+        if (!_hasHealed)
         {
-            EOLMenu.IsDrawingEOLMenu = true;
-            PlayerHud.StopTimer();
-            PauseMenu.UpdatePausedState();
+            player.IncreaseHealth(35f);
+            _hasHealed = true;
         }
+
+        if (!IsLastSavePoint) return;
+        EOLMenu.IsDrawingEOLMenu = true;
+        PlayerHud.StopTimer();
+        PauseMenu.UpdatePausedState();
     }
 }

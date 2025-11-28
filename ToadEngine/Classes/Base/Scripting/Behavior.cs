@@ -13,10 +13,11 @@ namespace ToadEngine.Classes.Base.Scripting;
 public abstract class Behavior : RenderObject, ICloneable
 {
     public RaycastManager Raycast = new(GetCurrentScene().PhysicsManager.BufferPool);
-    public static readonly Dictionary<int, GameObject> BodyToGameObject = new();
+    public static Dictionary<int, GameObject> BodyToGameObject = new();
     public GameObject GameObject = null!;
 
     public Scene Scene => GetCurrentScene();
+    
     public AudioManager AudioManger => GetCurrentScene().AudioManager;
     public PhysicsManager PhysicsManager => GetCurrentScene().PhysicsManager;
 
