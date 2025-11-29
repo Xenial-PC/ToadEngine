@@ -1,4 +1,7 @@
 ﻿using BepuPhysics;
+using BepuPhysics.Collidables;
+using BepuUtilities;
+using System.Drawing;
 using Quaternion = System.Numerics.Quaternion;
 using Vector3 = System.Numerics.Vector3;
 
@@ -21,7 +24,7 @@ namespace ToadEngine.Classes.Base.Colliders
 
         public override void Update(float deltaTime)
         {
-            var simulation = GetCurrentScene().PhysicsManager.Simulation;
+            var simulation = PhysicsManager.Simulation;
             var body = simulation.Bodies.GetBodyReference(Collider);
 
             if (Type == ColliderType.Static) return;
@@ -68,6 +71,19 @@ namespace ToadEngine.Classes.Base.Colliders
             // GameObject doesn't use physics
             body.Pose.Position = (Vector3)GameObject.Transform.Position;
             body.Pose.Orientation = GameObject.Transform.Rotation.ToEuler();
+        }
+
+        public void Resize(dynamic shape)
+        {
+            var body = PhysicsManager.Simulation.Bodies.GetBodyReference(Collider);
+
+            PhysicsManager.Simulation.Shapes.Remove(body.Collidable.Shape);
+
+            var shapeIndex = PhysicsManager.Simulation.Shapes.Add(shape);
+            var inertia = shape.ComputeInertia(Mass);
+
+            body.SetShape(shapeIndex);
+            body.LocalInertia = inertia;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BepuPhysics;
 using BepuPhysics.Collidables;
+using System.Drawing;
 using ToadEngine.Classes.Extensions;
 using Quaternion = System.Numerics.Quaternion;
 using Vector3 = System.Numerics.Vector3;
@@ -10,8 +11,12 @@ public class SphereCollider : BaseCollider
 {
     public float Radius;
 
+    private float _lastRadius;
+
     public override void Setup()
     {
+        _lastRadius = Radius;
+
         switch (Type)
         {
             case ColliderType.Trigger:
@@ -39,5 +44,19 @@ public class SphereCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
         }
+    }
+
+    public override void Update(float deltaTime)
+    {
+        if (_lastRadius == Radius) return;
+        _lastRadius = Radius;
+
+        ResizeSphere();
+    }
+
+    private void ResizeSphere()
+    {
+        var shape = new Sphere(Radius);
+        Resize(shape);
     }
 }

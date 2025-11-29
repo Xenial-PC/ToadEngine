@@ -12,10 +12,14 @@ public class MeshCollider : BaseCollider
     public OpenTK.Mathematics.Vector3 Size = OpenTK.Mathematics.Vector3.Zero;
     public Buffer<Triangle> Triangles;
 
+    private OpenTK.Mathematics.Vector3 _lastSize;
+
     public override void Setup()
     {
         if (Size == OpenTK.Mathematics.Vector3.Zero)
             Size = GameObject.Transform.LocalScale;
+
+        _lastSize = Size;
 
         switch (Type)
         {
@@ -51,5 +55,19 @@ public class MeshCollider : BaseCollider
                 break;
             }
         }
+    }
+
+    public override void Update(float deltaTime)
+    {
+        if (_lastSize == Size) return;
+        _lastSize = Size;
+
+        ResizeMesh();
+    }
+
+    private void ResizeMesh()
+    {
+        var shape = new Mesh(Triangles, (Vector3)Size, PhysicsManager.BufferPool);
+        Resize(shape);
     }
 }
