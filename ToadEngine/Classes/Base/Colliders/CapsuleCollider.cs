@@ -45,9 +45,9 @@ public class CapsuleCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
-                var h = GetCurrentScene().PhysicsManager.CreateStaticCapsule((Vector3)GameObject.Transform.Position, Size);
+                SCollider = GetCurrentScene().PhysicsManager.CreateStaticCapsule((Vector3)GameObject.Transform.Position, Size);
 
-                Handle = h.Value;
+                Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
         }

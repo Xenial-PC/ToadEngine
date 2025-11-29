@@ -44,11 +44,11 @@ public class BoxCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
-                var h = GetCurrentScene().PhysicsManager.CreateStaticBox(
+                SCollider = GetCurrentScene().PhysicsManager.CreateStaticBox(
                     (Vector3)GameObject.Transform.Position,
                     (Vector3)Size);
 
-                Handle = h.Value;
+                Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
         }

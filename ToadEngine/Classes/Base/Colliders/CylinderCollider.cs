@@ -45,9 +45,9 @@ public class CylinderCollider : BaseCollider
                 return;
             case ColliderType.Static:
             {
-                var h = GetCurrentScene().PhysicsManager.CreateStaticCylinder((Vector3)GameObject.Transform.Position, Size);
+                SCollider = GetCurrentScene().PhysicsManager.CreateStaticCylinder((Vector3)GameObject.Transform.Position, Size);
 
-                Handle = h.Value;
+                Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             }

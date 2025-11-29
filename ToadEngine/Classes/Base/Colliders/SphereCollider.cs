@@ -38,9 +38,9 @@ public class SphereCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
-                var h = GetCurrentScene().PhysicsManager.CreateStaticSphere((Vector3)GameObject.Transform.Position, Radius);
+                SCollider = GetCurrentScene().PhysicsManager.CreateStaticSphere((Vector3)GameObject.Transform.Position, Radius);
 
-                Handle = h.Value;
+                Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
         }

@@ -47,10 +47,10 @@ public class MeshCollider : BaseCollider
                 return;
             case ColliderType.Static:
             {
-                var h = GetCurrentScene().PhysicsManager.CreateStaticMesh((Vector3)GameObject.Transform.Position,
+                SCollider = GetCurrentScene().PhysicsManager.CreateStaticMesh((Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size);
 
-                Handle = h.Value;
+                Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             }
