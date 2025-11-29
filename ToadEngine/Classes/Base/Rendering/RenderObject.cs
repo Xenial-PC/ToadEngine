@@ -1,14 +1,9 @@
-﻿using ToadEngine.Classes.Base.Physics;
-using ToadEngine.Classes.Shaders;
-
-namespace ToadEngine.Classes.Base.Rendering;
+﻿namespace ToadEngine.Classes.Base.Rendering;
 
 public abstract class RenderObject
 {
     private bool _isDisposing, _isSetup;
     public bool IsEnabled = true;
-
-    public static NativeWindow WHandler => Service.NativeWindow;
 
     public virtual void Setup() {}
     public virtual void Draw(float deltaTime) {}

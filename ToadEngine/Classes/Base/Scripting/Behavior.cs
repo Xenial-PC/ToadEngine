@@ -17,7 +17,8 @@ public abstract class Behavior : RenderObject, ICloneable
     public GameObject GameObject = null!;
 
     public Scene Scene => Service.Scene;
-    
+    public NativeWindow WHandler => Service.NativeWindow;
+
     public AudioManager AudioManger => Service.Scene.AudioManager;
     public PhysicsManager PhysicsManager => Service.Scene.PhysicsManager;
 
@@ -114,6 +115,8 @@ public abstract class Behavior : RenderObject, ICloneable
 
     public static class Input
     {
+        private static NativeWindow WHandler => Service.NativeWindow;
+
         public static bool IsKeyDown(Keys key)
         {
             return WHandler.KeyboardState.IsKeyDown(key);

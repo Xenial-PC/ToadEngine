@@ -9,6 +9,7 @@ public static class Service
 
     public static T? Get<T>() where T : class => Services[typeof(T)] as T;
     public static void Add<T>(T service) where T : class => Services[typeof(T)] = service;
+    public static void Clear() => Services.Clear();
 
     public static void Remove<T>(T service) where T : class
     {
@@ -23,9 +24,4 @@ public static class Service
     public static NativeWindow NativeWindow => Get<NativeWindow>()!;
     public static Window.Window Window => Get<Window.Window>()!;
     public static Shader CoreShader => Get<Shader>()!;
-
-    public static void Clear()
-    {
-        Services.Clear();
-    }
 }
