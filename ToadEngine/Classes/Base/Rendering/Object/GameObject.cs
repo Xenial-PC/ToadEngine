@@ -21,9 +21,6 @@ public class GameObject : RenderObject
     public GameObject Parent;
     public bool IsChild;
 
-    public Scene Scene => Service.Scene;
-    public Shader CoreShader => Service.CoreShader;
-
     public Matrix4 Model;
     public Textures Texture;
 
@@ -35,6 +32,9 @@ public class GameObject : RenderObject
         public Texture Diffuse;
         public Texture Specular;
     }
+
+    public Scene Scene => Service.Scene;
+    public Shader CoreShader => Service.CoreShader;
 
     public GameObject(string? name = null)
     {
@@ -70,9 +70,28 @@ public class GameObject : RenderObject
                          Matrix4.CreateTranslation(finalPosition);
     }
 
-    public void TransformPosition(Vector3 position) => Transform.LocalPosition = position;
-    public void TransformRotation(Vector3 rotation) => Transform.LocalRotation = rotation;
-    public void TransformSize(Vector3 size) => Transform.LocalScale = size;
+    public void UpdateWorldTransform()
+    {
+        if (!IsChild)
+            Transform.SetScale(Transform.LocalScale);
+
+        foreach (var child in Children)
+        {
+            child.IsChild = true;
+            child.Parent = this;
+
+            var parentRot = Quaternion.FromEulerAngles(
+                MathHelper.DegreesToRadians(Transform.Rotation.X),
+                MathHelper.DegreesToRadians(Transform.Rotation.Y),
+                MathHelper.DegreesToRadians(Transform.Rotation.Z));
+
+            var rotatedOffset = Vector3.Transform(child.Transform.LocalPosition, parentRot);
+
+            child.Transform.Position = Transform.Position + rotatedOffset;
+            child.Transform.Rotation = Transform.Rotation + child.Transform.LocalRotation;
+            child.Transform.SetScale(Transform.LocalScale * child.Transform.LocalScale);
+        }
+    }
 
     public void AddChild(GameObject child)
     {
@@ -136,28 +155,5 @@ public class GameObject : RenderObject
     {
         foreach (var behaviour in _behaviours.OfType<Behavior>())
             behaviour.Resize(e);
-    }
-
-    public void UpdateWorldTransform()
-    {
-        if (!IsChild)
-            Transform.SetScale(Transform.LocalScale);
-
-        foreach (var child in Children)
-        {
-            child.IsChild = true;
-            child.Parent = this;
-
-            var parentRot = Quaternion.FromEulerAngles(
-                MathHelper.DegreesToRadians(Transform.Rotation.X),
-                MathHelper.DegreesToRadians(Transform.Rotation.Y),
-                MathHelper.DegreesToRadians(Transform.Rotation.Z));
-
-            var rotatedOffset = Vector3.Transform(child.Transform.LocalPosition, parentRot);
-
-            child.Transform.Position = Transform.Position + rotatedOffset;
-            child.Transform.Rotation = Transform.Rotation + child.Transform.LocalRotation;
-            child.Transform.SetScale(Transform.LocalScale * child.Transform.LocalScale);
-        }
     }
 }

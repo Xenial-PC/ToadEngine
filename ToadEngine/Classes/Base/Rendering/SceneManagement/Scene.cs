@@ -11,30 +11,20 @@ namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
 
 public class Scene
 {
-    public Dictionary<string, GameObject> RenderGameObjects { get; set; } = new();
-    public Dictionary<string, GameObject> RenderGameObjectsLast { get; set; } = new();
-
-    private int _goIndex;
-
-    public NativeWindow WHandler;
-    public Window.Window Window;
-    public PhysicsManager PhysicsManager = new();
+    public NativeWindow WHandler = null!;
+    public Window.Window Window = null!;
 
     private float _accumulator;
     private const float FixedDelta = 1f / 60f;
 
-    public GameObject Scripts = new("Scripts");
-
+    public PhysicsManager PhysicsManager = new();
     public AudioManager AudioManager = null!;
+    public ObjectManager ObjectManager = new();
 
-    public static Shader ShadowMapShader = null!;
     public Shader CoreShader => Service.CoreShader;
+    public static Shader ShadowMapShader = null!;
 
-    public enum InstantiateType
-    {
-        Early,
-        Late
-    }
+    public GameObject Scripts = new("Scripts");
 
     public virtual void Setup() { }
     public virtual void OnStart() { }
@@ -43,93 +33,22 @@ public class Scene
     public virtual void OnLateUpdate(FrameEventArgs e) { }
     public virtual void Dispose() { }
 
-    public void Instantiate(GameObject gameObject, InstantiateType type = InstantiateType.Early)
-    {
-        gameObject.OnSetup();
-        gameObject.Name ??= $"go_{_goIndex++}";
+    public void Instantiate(GameObject go, ObjectManager.InstantiateType type = ObjectManager.InstantiateType.Early) => ObjectManager.Instantiate(go, type);
+    public void Instantiate(List<GameObject> gameObjects, ObjectManager.InstantiateType type = ObjectManager.InstantiateType.Early) => ObjectManager.Instantiate(gameObjects, type);
 
-        if (type == InstantiateType.Early)
-        {
-            RenderGameObjects.TryAdd(gameObject.Name, gameObject);
-            return;
-        }
-
-        RenderGameObjectsLast.TryAdd(gameObject.Name, gameObject);
-    }
-
-    public void Instantiate(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early)
-    {
-        foreach (var gameObject in gameObjects)
-        {
-            gameObject.OnSetup();
-            gameObject.Name ??= $"go_{_goIndex++}";
-
-            if (type == InstantiateType.Early)
-            {
-                RenderGameObjects.TryAdd(gameObject.Name, gameObject);
-                continue;
-            }
-
-            RenderGameObjectsLast.TryAdd(gameObject.Name, gameObject);
-        }
-    }
-
-    public void DestroyObject(GameObject? gameObject, InstantiateType type = InstantiateType.Early)
-    {
-        if (gameObject == null) return;
-
-        if (type == InstantiateType.Early)
-        {
-            RenderGameObjects.Remove(gameObject.Name!);
-            gameObject.Dispose();
-            return;
-        }
-
-        RenderGameObjectsLast.Remove(gameObject.Name!);
-        gameObject.Dispose();
-    }
-
-    public void DestroyObject(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early)
-    {
-        foreach (var gameObject in gameObjects)
-        {
-            if (type == InstantiateType.Early)
-            {
-                RenderGameObjects.Remove(gameObject.Name!);
-                gameObject.Dispose();
-                continue;
-            }
-
-            RenderGameObjectsLast.Remove(gameObject.Name!);
-            gameObject.Dispose();
-        }
-    }
-
-    public GameObject? FindGameObject(string name)
-    {
-        return RenderGameObjects.GetValueOrDefault(name);
-    }
+    public void DestroyObject(GameObject go, ObjectManager.InstantiateType type = ObjectManager.InstantiateType.Early) => ObjectManager.DestroyObject(go, type);
+    public void DestroyObject(List<GameObject> gameObjects, ObjectManager.InstantiateType type = ObjectManager.InstantiateType.Early) => ObjectManager.DestroyObject(gameObjects, type);
 
     public void Start()
     {
-        foreach (var render in RenderGameObjects)
-        {
-            render.Value.OnSetup();
-            render.Value.UpdateWorldTransform();
-        }
-
-        foreach (var render in RenderGameObjectsLast)
-        {
-            render.Value.OnSetup();
-            render.Value.UpdateWorldTransform();
-        }
+        ObjectManager.SetupGameObjects();
         OnStart();
     }
 
     public void Draw(float deltaTime)
     {
         SetCoreShader(ShadowMapShader);
-        foreach (var light in RenderGameObjects.Values.Where(l => l is DirectionLight))
+        foreach (var light in ObjectManager.GameObjects.Values.Where(l => l is DirectionLight))
         {
             var caster = light.Component.Get<ShadowCaster>();
             if (caster == null || !caster.IsCastingShadows) continue;
@@ -148,7 +67,7 @@ public class Scene
         SetCoreShader(Window.CoreShader);
 
         var textureIndex = 10;
-        foreach (var light in RenderGameObjects.Values.Where(l => l is DirectionLight))
+        foreach (var light in ObjectManager.GameObjects.Values.Where(l => l is DirectionLight))
         {
             GL.Viewport(0, 0, Window.Width, Window.Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -199,12 +118,7 @@ public class Scene
 
     private void DrawScene(float deltaTime)
     {
-        foreach (var render in RenderGameObjects)
-            render.Value.OnDraw(deltaTime);
-
-        foreach (var render in RenderGameObjectsLast)
-            render.Value.OnDraw(deltaTime);
-
+        ObjectManager.DrawGameObjects(deltaTime);
         OnDraw(deltaTime);
     }
 
@@ -219,35 +133,13 @@ public class Scene
         }
 
         OnUpdate(e);
-        foreach (var render in RenderGameObjects)
-        {
-            render.Value.OnUpdate((float)e.Time);
-            render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehaviours((float)e.Time);
-        }
-
-        foreach (var render in RenderGameObjectsLast)
-        {
-            render.Value.OnUpdate((float)e.Time);
-            render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehaviours((float)e.Time);
-        }
+        ObjectManager.UpdateGameObjects((float)e.Time);
         OnLateUpdate(e);
     }
 
     public virtual void OnResize(FramebufferResizeEventArgs e)
     {
-        foreach (var render in RenderGameObjects)
-        {
-            render.Value.OnResize(e);
-            render.Value.ResizeBehaviours(e);
-        }
-
-        foreach (var render in RenderGameObjectsLast)
-        {
-            render.Value.OnResize(e);
-            render.Value.ResizeBehaviours(e);
-        }
+        ObjectManager.ResizeGameObjects(e);
     }
 
     public void Load(NativeWindow state, Window.Window window)
@@ -268,39 +160,15 @@ public class Scene
         Setup();
         Start();
 
-        Instantiate(Scripts);
-        SetupBehaviours();
-    }
-
-    private void SetupBehaviours()
-    {
-        foreach (var render in RenderGameObjects)
-            render.Value.SetupBehaviours();
-
-        foreach (var render in RenderGameObjectsLast)
-            render.Value.SetupBehaviours();
+        ObjectManager.Instantiate(Scripts);
+        ObjectManager.SetupBehaviors();
     }
 
     public void Destroy()
     {
         GUI.GuiCallBack = null!;
 
-        foreach (var renderObject in RenderGameObjects)
-        {
-            renderObject.Value.CleanupBehaviours();
-            renderObject.Value.Dispose();
-            DestroyObject(renderObject.Value);
-        }
-
-        foreach (var renderObject in RenderGameObjectsLast)
-        {
-            renderObject.Value.CleanupBehaviours();
-            renderObject.Value.Dispose();
-            DestroyObject(renderObject.Value);
-        }
-
-        RenderGameObjects?.Clear();
-        RenderGameObjectsLast?.Clear();
+        ObjectManager.Dispose();
 
         AudioManager?.Dispose();
         ShadowMapShader?.Dispose();
@@ -308,12 +176,9 @@ public class Scene
         PhysicsManager.Dispose();
         PhysicsManager = new PhysicsManager();
 
-        Behavior.BodyToGameObject.Clear();
-        Dispose();
-
         Window?.CoreShader?.Dispose();
         Service.Clear();
 
-        _goIndex = 0;
+        Dispose();
     }
 }
