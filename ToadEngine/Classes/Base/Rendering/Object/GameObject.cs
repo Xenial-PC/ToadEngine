@@ -54,7 +54,7 @@ public class GameObject : RenderObject
     public void AddComponent(string name, object obj) => Component.Add(name, obj);
     public void AddComponent(object obj) => Component.Add(obj);
 
-    public T GetComponent<T>() where T : class => Component.Get<T>()!;
+    public T? GetComponent<T>() where T : class => Component.Get<T>();
     public T GetComponent<T>(string name) where T : class => Component.Get<T>(name);
     public List<T> GetComponentsOfType<T>(string name) where T : class => Component.GetOfType<T>();
     public List<object> Components => Component.Components;

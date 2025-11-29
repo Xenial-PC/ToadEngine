@@ -15,7 +15,7 @@ public class RespawnScript : Behavior
         
         Player.Controller.Body.Pose.Position = new System.Numerics.Vector3(RespawnPosition.X, RespawnPosition.Y + 14f, RespawnPosition.Z);
         Player.GameObject.Camera!.Transform.LocalRotation = new Vector3(0, 90, 0);
-        Player.Controller.SetJumpStamina(Player.Controller.JumpStaminaMax);
-        Player.Controller.IsRespawned = true;
+        Player.PController.SetJumpStamina(Player.PController.JumpStaminaMax);
+        Player.PController.IsRespawned = true;
     }
 }

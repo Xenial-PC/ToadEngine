@@ -12,8 +12,9 @@ public class SavePointScript : Behavior
 
     public override void OnTriggerEnter(GameObject other)
     {
-        var player = other.GetComponent<FPController.FPControllerScript>();
+        var player = other.GetComponent<PlatformerController>();
         if (player == null) return;
+
         SavePoint = GameObject.Transform.Position;
 
         if (!_hasHealed)
