@@ -46,15 +46,7 @@ public class SphereCollider : BaseCollider
         }
     }
 
-    public override void Update(float deltaTime)
-    {
-        if (_lastRadius == Radius) return;
-        _lastRadius = Radius;
-
-        ResizeSphere();
-    }
-
-    private void ResizeSphere()
+    public void UpdateBoundingBox()
     {
         var shape = new Sphere(Radius);
         Resize(shape);

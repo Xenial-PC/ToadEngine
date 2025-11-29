@@ -57,15 +57,7 @@ public class MeshCollider : BaseCollider
         }
     }
 
-    public override void Update(float deltaTime)
-    {
-        if (_lastSize == Size) return;
-        _lastSize = Size;
-
-        ResizeMesh();
-    }
-
-    private void ResizeMesh()
+    public void UpdateBoundingBox()
     {
         var shape = new Mesh(Triangles, (Vector3)Size, PhysicsManager.BufferPool);
         Resize(shape);

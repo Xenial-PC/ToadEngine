@@ -53,16 +53,7 @@ public class CapsuleCollider : BaseCollider
         }
     }
 
-    public override void Update(float deltaTime)
-    {
-        if (_lastSize == Size && _lastRadius == Radius) return;
-        _lastSize = Size;
-        _lastRadius = Radius;
-
-        ResizeCapsule();
-    }
-
-    private void ResizeCapsule()
+    public void UpdateBoundingBox()
     {
         var shape = new Capsule(Radius, Size.Y);
         Resize(shape);

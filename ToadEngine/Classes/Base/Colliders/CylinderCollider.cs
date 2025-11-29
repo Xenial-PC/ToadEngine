@@ -54,16 +54,7 @@ public class CylinderCollider : BaseCollider
         }
     }
 
-    public override void Update(float deltaTime)
-    {
-        if (_lastSize == Size && _lastRadius == Radius) return;
-        _lastSize = Size;
-        _lastRadius = Radius;
-
-        ResizeCylinder();
-    }
-
-    private void ResizeCylinder()
+    public void UpdateBoundingBox()
     {
         var shape = new Cylinder(Radius, Size.Y);
         Resize(shape);

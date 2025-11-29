@@ -54,15 +54,7 @@ public class BoxCollider : BaseCollider
         }
     }
 
-    public override void Update(float deltaTime)
-    {
-        if (_lastSize == Size) return;
-        _lastSize = Size;
-
-        ResizeBox();
-    }
-
-    private void ResizeBox()
+    public void UpdateBoundingBox()
     {
         var shape = new Box(Size.X, Size.Y, Size.Z);
         Resize(shape);
