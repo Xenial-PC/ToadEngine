@@ -10,6 +10,7 @@ namespace ToadEngine.Classes.Base.Colliders
     public class BaseCollider : Behavior
     {
         public BodyHandle Collider;
+        public StaticHandle SCollider;
         public int Handle;
         public ColliderType Type;
         public float Mass = 1f;
@@ -75,13 +76,19 @@ namespace ToadEngine.Classes.Base.Colliders
 
         public void Resize(dynamic shape)
         {
-            var body = PhysicsManager.Simulation.Bodies.GetBodyReference(Collider);
-
-            PhysicsManager.Simulation.Shapes.Remove(body.Collidable.Shape);
-
             var shapeIndex = PhysicsManager.Simulation.Shapes.Add(shape);
             var inertia = shape.ComputeInertia(Mass);
 
+            if (Type == ColliderType.Static)
+            {
+                var sBody = PhysicsManager.Simulation.Statics.GetStaticReference(SCollider);
+                PhysicsManager.Simulation.Shapes.Remove(sBody.Shape);
+                sBody.SetShape(shapeIndex);
+                return;
+            }
+
+            var body = PhysicsManager.Simulation.Bodies.GetBodyReference(Collider);
+            PhysicsManager.Simulation.Shapes.Remove(body.Collidable.Shape);
             body.SetShape(shapeIndex);
             body.LocalInertia = inertia;
         }
