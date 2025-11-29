@@ -12,14 +12,14 @@ namespace ToadEngine.Classes.Base.Scripting;
 
 public abstract class Behavior : RenderObject, ICloneable
 {
-    public RaycastManager Raycast = new(GetCurrentScene().PhysicsManager.BufferPool);
+    public RaycastManager Raycast = new(Service.Scene.PhysicsManager.BufferPool);
     public static Dictionary<int, GameObject> BodyToGameObject = new();
     public GameObject GameObject = null!;
 
-    public Scene Scene => GetCurrentScene();
+    public Scene Scene => Service.Scene;
     
-    public AudioManager AudioManger => GetCurrentScene().AudioManager;
-    public PhysicsManager PhysicsManager => GetCurrentScene().PhysicsManager;
+    public AudioManager AudioManger => Service.Scene.AudioManager;
+    public PhysicsManager PhysicsManager => Service.Scene.PhysicsManager;
 
     public int GetSound(string name) => AudioManger.GetSound(name);
     public Dictionary<string, Source> Sources = new();

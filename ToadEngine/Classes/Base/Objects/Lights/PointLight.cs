@@ -42,7 +42,7 @@ public class PointLight : GameObject
 
         UpdateModelMatrix();
 
-        var camera = GetService<Camera>()!;
+        var camera = Service.Get<Camera>()!;
 
         GetCoreShader().SetMatrix4("model", Obj.Model);
         GetCoreShader().SetMatrix4("view", camera.GetViewMatrix());

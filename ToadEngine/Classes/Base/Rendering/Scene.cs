@@ -27,7 +27,8 @@ public class Scene
     public AudioManager AudioManager = null!;
 
     public static Shader ShadowMapShader = null!;
-    
+    public Shader CoreShader => Service.CoreShader;
+
     public enum InstantiateType
     {
         Early,
@@ -133,7 +134,7 @@ public class Scene
             if (caster == null || !caster.IsCastingShadows) continue;
 
             caster.ConfigureShaderAndMatrices();
-            GetCoreShader().SetMatrix4("lightSpaceMatrix", caster.LightSpaceMatrix);
+            CoreShader.SetMatrix4("lightSpaceMatrix", caster.LightSpaceMatrix);
 
             GL.Viewport(0, 0, caster.ShadowWidth, caster.ShadowHeight);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, caster.CasterFBO);
@@ -163,22 +164,22 @@ public class Scene
             switch (light)
             {
                 case DirectionLight dirLight:
-                    GetCoreShader().SetMatrix4($"dirLight.fragPosLightSpace", caster.LightSpaceMatrix);
-                    GetCoreShader().SetInt1($"dirLight.shadowMap", ++textureIndex);
+                    CoreShader.SetMatrix4($"dirLight.fragPosLightSpace", caster.LightSpaceMatrix);
+                    CoreShader.SetInt1($"dirLight.shadowMap", ++textureIndex);
                     
                     GL.ActiveTexture(TextureUnit.Texture0 + textureIndex);
                     GL.BindTexture(TextureTarget.Texture2D, caster.ShadowMap);
                     continue;
                 case PointLight pointLight:
-                    GetCoreShader().SetMatrix4($"pointLights[{pointLight.CurrentIndex}].fragPosLightSpace", caster.LightSpaceMatrix);
-                    GetCoreShader().SetInt1($"pointLights[{pointLight.CurrentIndex}].shadowMap", ++textureIndex);
+                    CoreShader.SetMatrix4($"pointLights[{pointLight.CurrentIndex}].fragPosLightSpace", caster.LightSpaceMatrix);
+                    CoreShader.SetInt1($"pointLights[{pointLight.CurrentIndex}].shadowMap", ++textureIndex);
 
                     GL.ActiveTexture(TextureUnit.Texture0 + textureIndex);
                     GL.BindTexture(TextureTarget.Texture2D, caster.ShadowMap);
                     continue;
                 case SpotLight spotLight:
-                    GetCoreShader().SetMatrix4($"spotLights[{spotLight.CurrentIndex}].fragPosLightSpace", caster.LightSpaceMatrix);
-                    GetCoreShader().SetInt1($"spotLights[{spotLight.CurrentIndex}].shadowMap", ++textureIndex);
+                    CoreShader.SetMatrix4($"spotLights[{spotLight.CurrentIndex}].fragPosLightSpace", caster.LightSpaceMatrix);
+                    CoreShader.SetInt1($"spotLights[{spotLight.CurrentIndex}].shadowMap", ++textureIndex);
 
                     GL.ActiveTexture(TextureUnit.Texture0 + textureIndex);
                     GL.BindTexture(TextureTarget.Texture2D, caster.ShadowMap);
@@ -190,8 +191,8 @@ public class Scene
 
     private void SetCoreShader(Shader shader)
     {
-        RemoveService(shader!);
-        AddService(shader);
+        Service.Remove(shader!);
+        Service.Add(shader);
         shader.Use();
     }
 
@@ -211,8 +212,8 @@ public class Scene
         _accumulator += (float)e.Time;
         while (_accumulator >= FixedDelta)
         {
-            if (!GetCurrentScene().PhysicsManager.IsPhysicsPaused)
-                GetCurrentScene().PhysicsManager.Step(FixedDelta);
+            if (!Service.Scene.PhysicsManager.IsPhysicsPaused)
+                Service.Scene.PhysicsManager.Step(FixedDelta);
             _accumulator -= FixedDelta;
         }
 
@@ -253,8 +254,8 @@ public class Scene
         WHandler = state;
         Window = window;
 
-        AddService(WHandler);
-        AddService(Window);
+        Service.Add(WHandler);
+        Service.Add(Window);
 
         AudioManager = new AudioManager();
         AudioManager.SetDistanceModel(ALDistanceModel.InverseDistanceClamped);
@@ -310,7 +311,7 @@ public class Scene
         Dispose();
 
         Window?.CoreShader?.Dispose();
-        Services.Clear();
+        Service.Clear();
 
         _goIndex = 0;
     }

@@ -130,10 +130,10 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
         CoreShader = new Shader($"core.vert", $"lighting.frag");
         CoreShader.Use();
 
-        RenderObject.AddService(CoreShader);
+        Service.Add(CoreShader);
 
         CurrentScene = SceneManager.Create(name);
-        RenderObject.AddService(CurrentScene);
+        Service.Add(CurrentScene);
 
         CurrentScene.Load(this, this);
     }

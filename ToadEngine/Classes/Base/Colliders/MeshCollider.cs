@@ -24,7 +24,7 @@ public class MeshCollider : BaseCollider
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = GetCurrentScene().PhysicsManager.CreateTriggerMesh(
+                Collider = Scene.PhysicsManager.CreateTriggerMesh(
                     (Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size);
 
@@ -32,14 +32,14 @@ public class MeshCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
-                Collider = GetCurrentScene().PhysicsManager.CreateKinematicMesh((Vector3)GameObject.Transform.Position,
+                Collider = Scene.PhysicsManager.CreateKinematicMesh((Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
-                Collider = GetCurrentScene().PhysicsManager.CreateMesh((Vector3)GameObject.Transform.Position,
+                Collider = Scene.PhysicsManager.CreateMesh((Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size, Mass);
 
                 Handle = Collider.Value;
@@ -47,7 +47,7 @@ public class MeshCollider : BaseCollider
                 return;
             case ColliderType.Static:
             {
-                SCollider = GetCurrentScene().PhysicsManager.CreateStaticMesh((Vector3)GameObject.Transform.Position,
+                SCollider = Scene.PhysicsManager.CreateStaticMesh((Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size);
 
                 Handle = SCollider.Value;

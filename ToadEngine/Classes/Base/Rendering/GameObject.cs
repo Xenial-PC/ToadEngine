@@ -4,6 +4,7 @@ using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.UI;
+using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
 using static ToadEngine.Classes.Base.Rendering.GameObject.Structs;
 
@@ -26,7 +27,8 @@ public class GameObject : RenderObject
 
     public Structs.Transform Transform = new();
 
-    public Scene Scene => GetCurrentScene();
+    public Scene Scene => Service.Scene;
+    public Shader GetCoreShader() => Service.CoreShader;
 
     public GameObject(string? name = null)
     {
@@ -129,13 +131,13 @@ public class GameObject : RenderObject
     public void Enable()
     {
         IsEnabled = true;
-        GetCurrentScene().Instantiate(this);
+        Scene.Instantiate(this);
     }
 
     public void Disable()
     {
         IsEnabled = false;
-        GetCurrentScene().DestroyObject(this);
+        Scene.DestroyObject(this);
     }
 
     public void SetupBehaviours()

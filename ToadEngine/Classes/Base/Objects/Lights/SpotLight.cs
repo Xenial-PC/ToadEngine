@@ -46,7 +46,7 @@ public class SpotLight : GameObject
 
         UpdateModelMatrix();
 
-        var camera = GetService<Camera>()!;
+        var camera = Service.MainCamera;
 
         GetCoreShader().SetMatrix4("model", Obj.Model);
         GetCoreShader().SetMatrix4("view", camera.GetViewMatrix());

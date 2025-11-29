@@ -20,25 +20,25 @@ public class SphereCollider : BaseCollider
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = GetCurrentScene().PhysicsManager.CreateTriggerSphere((Vector3)GameObject.Transform.Position, Radius);
+                Collider = Scene.PhysicsManager.CreateTriggerSphere((Vector3)GameObject.Transform.Position, Radius);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
-                Collider = GetCurrentScene().PhysicsManager.CreateKinematicSphere((Vector3)GameObject.Transform.Position, Radius);
+                Collider = Scene.PhysicsManager.CreateKinematicSphere((Vector3)GameObject.Transform.Position, Radius);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
-                Collider = GetCurrentScene().PhysicsManager.CreateSphere((Vector3)GameObject.Transform.Position, Radius, Mass);
+                Collider = Scene.PhysicsManager.CreateSphere((Vector3)GameObject.Transform.Position, Radius, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
-                SCollider = GetCurrentScene().PhysicsManager.CreateStaticSphere((Vector3)GameObject.Transform.Position, Radius);
+                SCollider = Scene.PhysicsManager.CreateStaticSphere((Vector3)GameObject.Transform.Position, Radius);
 
                 Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;

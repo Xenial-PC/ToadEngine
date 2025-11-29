@@ -27,25 +27,25 @@ public class CapsuleCollider : BaseCollider
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = GetCurrentScene().PhysicsManager.CreateTriggerCapsule((Vector3)GameObject.Transform.Position, Size);
+                Collider = Scene.PhysicsManager.CreateTriggerCapsule((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
-                Collider = GetCurrentScene().PhysicsManager.CreateKinematicCapsule((Vector3)GameObject.Transform.Position, Size);
+                Collider = Scene.PhysicsManager.CreateKinematicCapsule((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
-                Collider = GetCurrentScene().PhysicsManager.CreateCapsule((Vector3)GameObject.Transform.Position, Size, Mass);
+                Collider = Scene.PhysicsManager.CreateCapsule((Vector3)GameObject.Transform.Position, Size, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
-                SCollider = GetCurrentScene().PhysicsManager.CreateStaticCapsule((Vector3)GameObject.Transform.Position, Size);
+                SCollider = Scene.PhysicsManager.CreateStaticCapsule((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;

@@ -86,7 +86,7 @@ public class Skybox(List<string> textures) : GameObject
 
     public override void Draw(float deltaTime)
     {
-        var camera = GetService<Camera>()!;
+        var camera = Service.MainCamera;
 
         GL.DepthFunc(DepthFunction.Lequal);
         GL.DepthMask(false);

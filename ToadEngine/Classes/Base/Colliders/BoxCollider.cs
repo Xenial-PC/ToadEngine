@@ -20,7 +20,7 @@ public class BoxCollider : BaseCollider
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = GetCurrentScene().PhysicsManager.CreateTriggerBox(
+                Collider = Scene.PhysicsManager.CreateTriggerBox(
                     (Vector3)GameObject.Transform.Position,
                     (Vector3)Size);
 
@@ -28,7 +28,7 @@ public class BoxCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
-                Collider = GetCurrentScene().PhysicsManager.CreateKinematicBox(
+                Collider = Scene.PhysicsManager.CreateKinematicBox(
                     (Vector3)GameObject.Transform.Position,
                     (Vector3)Size);
 
@@ -36,7 +36,7 @@ public class BoxCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
-                Collider = GetCurrentScene().PhysicsManager.CreateBox(
+                Collider = Scene.PhysicsManager.CreateBox(
                     (Vector3)GameObject.Transform.Position,
                     (Vector3)Size, Mass);
 
@@ -44,7 +44,7 @@ public class BoxCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
-                SCollider = GetCurrentScene().PhysicsManager.CreateStaticBox(
+                SCollider = Scene.PhysicsManager.CreateStaticBox(
                     (Vector3)GameObject.Transform.Position,
                     (Vector3)Size);
 

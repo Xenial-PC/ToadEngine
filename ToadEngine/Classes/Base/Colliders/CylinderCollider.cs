@@ -26,26 +26,26 @@ public class CylinderCollider : BaseCollider
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = GetCurrentScene().PhysicsManager.CreateTriggerCylinder((Vector3)GameObject.Transform.Position, Size);
+                Collider = Scene.PhysicsManager.CreateTriggerCylinder((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
-                Collider = GetCurrentScene().PhysicsManager.CreateKinematicCylinder((Vector3)GameObject.Transform.Position, Size);
+                Collider = Scene.PhysicsManager.CreateKinematicCylinder((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
-                Collider = GetCurrentScene().PhysicsManager.CreateCylinder((Vector3)GameObject.Transform.Position, Size, Mass);
+                Collider = Scene.PhysicsManager.CreateCylinder((Vector3)GameObject.Transform.Position, Size, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
             {
-                SCollider = GetCurrentScene().PhysicsManager.CreateStaticCylinder((Vector3)GameObject.Transform.Position, Size);
+                SCollider = Scene.PhysicsManager.CreateStaticCylinder((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;
