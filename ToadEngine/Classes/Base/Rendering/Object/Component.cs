@@ -7,10 +7,18 @@ public class Component
 
     public void Add(string name, object obj) => _components.TryAdd(name, obj);
     public void Add(object obj) => _components.TryAdd($"component_{_index++}", obj);
+    
     public T Add<T>() where T : new()
     {
         var component = new T();
         _components.TryAdd($"component_{_index++}", component);
+        return component;
+    }
+
+    public T Add<T>(string name) where T : new()
+    {
+        var component = new T();
+        _components.TryAdd(name, component);
         return component;
     }
 

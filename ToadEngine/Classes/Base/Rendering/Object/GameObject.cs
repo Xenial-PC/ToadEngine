@@ -35,6 +35,7 @@ public class GameObject : RenderObject
 
     public Scene Scene => Service.Scene;
     public Shader CoreShader => Service.CoreShader;
+    public NativeWindow WHandler => Service.NativeWindow;
 
     public GameObject(string? name = null)
     {
@@ -47,6 +48,16 @@ public class GameObject : RenderObject
         Transform.LocalScale = new Vector3(1f);
         Transform.Rotation = new Vector3(0f);
     }
+
+    public T AddComponent<T>() where T : new() => Component.Add<T>();
+    public T AddComponent<T>(string name) where T : new() => Component.Add<T>(name);
+    public void AddComponent(string name, object obj) => Component.Add(name, obj);
+    public void AddComponent(object obj) => Component.Add(obj);
+
+    public T GetComponent<T>() where T : class => Component.Get<T>()!;
+    public T GetComponent<T>(string name) where T : class => Component.Get<T>(name);
+    public List<T> GetComponentsOfType<T>(string name) where T : class => Component.GetOfType<T>();
+    public List<object> Components => Component.Components;
 
     public void UpdateModelMatrix()
     {

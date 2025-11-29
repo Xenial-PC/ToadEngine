@@ -40,11 +40,11 @@ public class FPController // TODO: Clean up first person controller (Split contr
 
         public override void Setup()
         {
-            Camera = GetService<Camera>();
+            Camera = Service.MainCamera;
             if (Camera is null)
             {
                 Camera = new Camera(WHandler.Size.X / (float)WHandler.Size.Y);
-                AddService(Camera);
+                Service.Add(Camera);
             }
 
             AddChild(Camera);
@@ -104,7 +104,7 @@ public class FPController // TODO: Clean up first person controller (Split contr
 
             GameObject.UsePhysics = true;
 
-            _simulation = GetCurrentScene().PhysicsManager.Simulation;
+            _simulation = Scene.PhysicsManager.Simulation;
             _collider = GameObject.GetComponent<BoxCollider>()!;
 
             Body = _simulation.Bodies.GetBodyReference(_collider.Collider);

@@ -19,7 +19,7 @@ public abstract class Behavior : RenderObject, ICloneable
 
     public Scene Scene => Service.Scene;
     public NativeWindow WHandler => Service.NativeWindow;
-
+    
     public AudioManager AudioManger => Service.Scene.AudioManager;
     public PhysicsManager PhysicsManager => Service.Scene.PhysicsManager;
 
@@ -62,6 +62,8 @@ public abstract class Behavior : RenderObject, ICloneable
     public virtual void OnGUI() {}
     public virtual void OnTriggerEnter(GameObject other) {}
     public virtual void OnTriggerExit(GameObject other) {}
+
+    public void LoadScene(string name) => Service.Window.LoadScene(name);
 
     public HitInfo SendRay(Vector3 origin, Vector3 direction, float maxT = 1000)
     {

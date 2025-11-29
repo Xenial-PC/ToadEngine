@@ -34,7 +34,7 @@ public class LevelTwo : Scene
         ]);
 
         _camera = new Camera(WHandler.Size.X / (float)WHandler.Size.Y);
-        AddService(_camera);
+        Service.Add(_camera);
 
         _flashLight = new SpotLight();
         _player = new FPController(new Vector3(0.3f, 3f, 0.3f));

@@ -44,7 +44,7 @@ public class EOLMenu : Behavior
                         PauseMenu.UpdatePausedState();
                         PlayerHud.Level++;
 
-                        GetWindow().LoadScene($"Level{PlayerHud.Level}");
+                        LoadScene($"Level{PlayerHud.Level}");
                         IsDrawingEOLMenu = false;
                     }
                 }
@@ -85,7 +85,7 @@ public class EOLMenu : Behavior
                         PauseMenu.UpdatePausedState();
 
                         SavePointScript.SavePoint = new Vector3(0f, 14f, 0f);
-                        GetWindow().LoadScene($"Level{PlayerHud.Level}");
+                        LoadScene($"Level{PlayerHud.Level}");
                         IsDrawingLoseScreen = false;
                     }
                 }

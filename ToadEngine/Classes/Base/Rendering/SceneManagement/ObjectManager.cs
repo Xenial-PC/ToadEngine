@@ -1,7 +1,11 @@
 ﻿using ToadEngine.Classes.Base.Rendering.Object;
-using static ToadEngine.Classes.Base.Rendering.SceneManagement.Scene;
-
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
+
+public enum InstantiateType
+{
+    Early,
+    Late
+}
 
 public class ObjectManager
 {
@@ -9,12 +13,6 @@ public class ObjectManager
     public Dictionary<string, GameObject> GameObjectsLast { get; set; } = new();
 
     private int _goIndex;
-
-    public enum InstantiateType
-    {
-        Early,
-        Late
-    }
 
     public GameObject? FindGameObject(string name) => GameObjects.GetValueOrDefault(name);
 

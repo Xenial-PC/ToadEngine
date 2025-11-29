@@ -41,7 +41,7 @@ public class LevelOne : Scene
         ]);
 
         _camera = new Camera(WHandler.Size.X / (float)WHandler.Size.Y);
-        AddService(_camera);
+        Service.Add(_camera);
 
         PauseMenu = new PauseMenu();
         Scripts.AddComponent(PauseMenu);

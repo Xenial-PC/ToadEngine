@@ -71,9 +71,10 @@ public class PauseMenu : Behavior
     {
         IsPaused = !IsPaused;
 
-        WHandler.CursorState = IsPaused ? CursorState.Normal : CursorState.Grabbed;
-        WHandler.MousePosition = _mousePositionCache;
+        var nativeWindow = Service.NativeWindow;
+        nativeWindow.CursorState = IsPaused ? CursorState.Normal : CursorState.Grabbed;
+        nativeWindow.MousePosition = _mousePositionCache;
 
-        if (IsPaused) _mousePositionCache = WHandler.MousePosition;
+        if (IsPaused) _mousePositionCache = nativeWindow.MousePosition;
     }
 }

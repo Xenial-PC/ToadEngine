@@ -1,11 +1,9 @@
 ﻿using OpenTK.Audio.OpenAL;
-using System.Reflection.PortableExecutable;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Shaders;
-using static ToadEngine.Classes.Base.Rendering.Object.RenderObject;
 
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
 
@@ -33,11 +31,11 @@ public class Scene
     public virtual void OnLateUpdate(FrameEventArgs e) { }
     public virtual void Dispose() { }
 
-    public void Instantiate(GameObject go, ObjectManager.InstantiateType type = ObjectManager.InstantiateType.Early) => ObjectManager.Instantiate(go, type);
-    public void Instantiate(List<GameObject> gameObjects, ObjectManager.InstantiateType type = ObjectManager.InstantiateType.Early) => ObjectManager.Instantiate(gameObjects, type);
+    public void Instantiate(GameObject go, InstantiateType type = InstantiateType.Early) => ObjectManager.Instantiate(go, type);
+    public void Instantiate(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early) => ObjectManager.Instantiate(gameObjects, type);
 
-    public void DestroyObject(GameObject go, ObjectManager.InstantiateType type = ObjectManager.InstantiateType.Early) => ObjectManager.DestroyObject(go, type);
-    public void DestroyObject(List<GameObject> gameObjects, ObjectManager.InstantiateType type = ObjectManager.InstantiateType.Early) => ObjectManager.DestroyObject(gameObjects, type);
+    public void DestroyObject(GameObject go, InstantiateType type = InstantiateType.Early) => ObjectManager.DestroyObject(go, type);
+    public void DestroyObject(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early) => ObjectManager.DestroyObject(gameObjects, type);
 
     public void Start()
     {
