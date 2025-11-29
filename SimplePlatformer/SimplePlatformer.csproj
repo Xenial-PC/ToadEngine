@@ -17,7 +17,6 @@
   <ItemGroup>
     <Folder Include="Classes\Fonts\" />
     <Folder Include="Classes\Shaders\" />
-    <Folder Include="Resources\Textures\UI\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -101,6 +100,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Textures\level_one_skybox\top.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Textures\UI\boost.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Textures\UI\health.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Textures\UI\jumpStamina.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Textures\UI\timer.png">

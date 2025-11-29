@@ -9,17 +9,17 @@ public class ImageDrawable : IDrawable
 
     public SKPaint? Paint { get; }
 
-    public ImageDrawable(SKImage image, Rect dest)
+    public ImageDrawable(SKImage image, Rect dest, SKPaint paint)
     {
         Image = image;
         Destination = dest;
+        Paint = paint;
     }
 
     public void Render(Gui gui, LayoutNode node, SKCanvas canvas)
     {
         var r = Destination;
         var skRect = new SKRect(r.X, r.Y, r.X + r.W, r.Y + r.H);
-
-        canvas.DrawImage(Image, skRect);
+        canvas.DrawImage(Image, skRect, Paint);
     }
 }

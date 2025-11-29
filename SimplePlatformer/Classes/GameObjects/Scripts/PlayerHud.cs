@@ -45,12 +45,15 @@ public class PlayerHud : Behavior
             var width = UI.CurrentNode.Rect.W * 0.30f;
             UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 40, width, 20), Color.Gray, 12f);
             UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 40, _doubleJumpSlider * width, 20), Color.Purple, 12f);
+            UI.DrawImage($"Resources/Textures/UI/jumpStamina.png", 20, UI.ScreenRect.Height - 42, 25, 25);
 
             UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 65, width, 20), Color.Gray, 12f);
-            UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 65, _boostSlider * width, 20), Color.Goldenrod, 12f);
+            UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 65, _boostSlider * width, 20), Color.Yellow, 12f);
+            UI.DrawImage($"Resources/Textures/UI/boost.png", 15, UI.ScreenRect.Height - 85, 45, 45, Color.Black);
 
             UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 90, width, 20), Color.Gray, 12f);
             UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 90, _healthSlider * width, 20), Color.DarkRed, 12f);
+            //UI.DrawImage($"Resources/Textures/UI/health.png", 15, UI.ScreenRect.Height - 93, 35, 30);
         }
 
         UI.DrawCircleFilled(new Vector2((UI.ScreenRect.Width / 2f), (UI.ScreenRect.Height / 2f)), 3f, Color.GhostWhite);

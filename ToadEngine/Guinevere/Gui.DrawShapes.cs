@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Runtime.CompilerServices;
 
 namespace Guinevere;
@@ -276,6 +277,7 @@ public partial class Gui
         float y,
         float width,
         float height,
+        Color? color = null,
         bool clip = false)
     {
         if (!_imageList.TryGetValue(image, out var eImage))
@@ -284,8 +286,9 @@ public partial class Gui
             _imageList.Add(image, eImage);
         }
 
+        var paint = new SKPaint { IsAntialias = true, Color = color ?? Color.White };
         var rect = new Rect(x, y, width, height);
-        var drawable = new ImageDrawable(eImage, rect);
+        var drawable = new ImageDrawable(eImage, rect, paint);
 
         AddDraw(drawable, clip, CurrentNode);
     }
@@ -305,10 +308,12 @@ public partial class Gui
         float y,
         float width,
         float height,
+        Color? color = null,
         bool clip = false)
     {
+        var paint = new SKPaint { IsAntialias = true, Color = color ?? Color.White };
         var rect = new Rect(x, y, width, height);
-        var drawable = new ImageDrawable(image, rect);
+        var drawable = new ImageDrawable(image, rect, paint);
 
         AddDraw(drawable, clip, CurrentNode);
     }

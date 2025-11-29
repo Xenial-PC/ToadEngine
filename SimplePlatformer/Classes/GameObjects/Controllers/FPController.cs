@@ -6,7 +6,7 @@ using ToadEngine.Classes.Base.Objects.View;
 
 namespace SimplePlatformer.Classes.GameObjects.Controllers;
 
-public class FPController
+public class FPController // TODO: Clean up first person controller (Split controller and game)
 {
     public FPCamera GameObject { get; private set; }
     public FPControllerScript Controller { get; private set; }
@@ -84,7 +84,7 @@ public class FPController
         public float JumpStamina = 100f, JumpStaminaMax = 100f,
             Boost = 100f, BoostMax = 100f,
             Health = 100f, HealthMax = 100f, 
-            Speed, MaxSpeed = 20f, HealthDecreaseSpeed = 15.5f;
+            Speed, MaxSpeed = 20f, HealthDecreaseSpeed = 1.5f;
 
         private bool _wasGrounded;
         private bool _isWalking, _isRunning, _isAbleToAddSpeed;
@@ -145,6 +145,8 @@ public class FPController
                 PauseMenu.UpdatePausedState();
                 return;
             }
+
+            if (!PlayerHud.LevelTimer.Enabled) return;
             DecreaseHealth(HealthDecreaseSpeed);
         }
 
@@ -169,8 +171,8 @@ public class FPController
             if (isGrounded && !_wasGrounded)
             {
                 playerSource.Play(GetSound("land"));
-                IncreaseJumpStamina(65f);
-                AddBoost(45f);
+                IncreaseJumpStamina(75f);
+                AddBoost(50f);
             }
 
             if (Input.IsKeyDown(Keys.W)) moveDir += camForward;
@@ -180,6 +182,7 @@ public class FPController
             if (Input.IsKeyPressed(Keys.Space) && JumpStamina > 0)
             {
                 PlayerHud.StartTimer();
+
                 DecreaseJumpStamina(75f);
                 ResetTimer(0.5f);
 
