@@ -1,5 +1,6 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
 using SimplePlatformer.Classes.GameObjects.Menus;
+using ToadEngine.Classes.Base.Rendering.Object;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 

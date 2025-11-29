@@ -5,8 +5,9 @@ using Guinevere;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Raycasting;
+using ToadEngine.Classes.Base.Rendering.Object;
 using MouseButton = OpenTK.Windowing.GraphicsLibraryFramework.MouseButton;
-using Scene = ToadEngine.Classes.Base.Rendering.Scene;
+using Scene = ToadEngine.Classes.Base.Rendering.SceneManagement.Scene;
 
 namespace ToadEngine.Classes.Base.Scripting;
 
@@ -38,10 +39,10 @@ public abstract class Behavior : RenderObject, ICloneable
             if (!BodyToGameObject.TryGetValue(a, out var objA) ||
                 !BodyToGameObject.TryGetValue(b, out var objB)) return;
 
-            foreach (var component in objA.GetComponents<Behavior>())
+            foreach (var component in objA.Component.GetOfType<Behavior>())
                 component?.OnTriggerEnter(objB);
 
-            foreach (var component in objB.GetComponents<Behavior>())
+            foreach (var component in objB.Component.GetOfType<Behavior>())
                 component?.OnTriggerEnter(objA);
         };
 
@@ -50,10 +51,10 @@ public abstract class Behavior : RenderObject, ICloneable
             if (!BodyToGameObject.TryGetValue(a, out var objA) ||
                 !BodyToGameObject.TryGetValue(b, out var objB)) return;
 
-            foreach (var component in objA.GetComponents<Behavior>())
+            foreach (var component in objA.Component.GetOfType<Behavior>())
                 component?.OnTriggerExit(objB);
 
-            foreach (var component in objB.GetComponents<Behavior>())
+            foreach (var component in objB.Component.GetOfType<Behavior>())
                 component?.OnTriggerExit(objA);
         };
     }

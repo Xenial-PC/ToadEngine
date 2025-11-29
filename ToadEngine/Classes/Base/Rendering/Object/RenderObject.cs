@@ -1,15 +1,15 @@
-﻿namespace ToadEngine.Classes.Base.Rendering;
+﻿namespace ToadEngine.Classes.Base.Rendering.Object;
 
 public abstract class RenderObject
 {
     private bool _isDisposing, _isSetup;
     public bool IsEnabled = true;
 
-    public virtual void Setup() {}
-    public virtual void Draw(float deltaTime) {}
-    public virtual void Update(float deltaTime) {}
-    public virtual void Resize(FramebufferResizeEventArgs e) {}
-    public virtual void Dispose() {}
+    public virtual void Setup() { }
+    public virtual void Draw(float deltaTime) { }
+    public virtual void Update(float deltaTime) { }
+    public virtual void Resize(FramebufferResizeEventArgs e) { }
+    public virtual void Dispose() { }
 
     public void OnSetup()
     {

@@ -9,9 +9,9 @@ public class PhysicsBody : Behavior
     public override void Setup()
     {
         var bodyHandle = new BodyHandle();
-        if (GameObject.GetComponent<BaseCollider>() != null)
+        if (GameObject.Component.Get<BaseCollider>() != null)
         {
-            var collider = GameObject.GetComponent<BaseCollider>()!;
+            var collider = GameObject.Component.Get<BaseCollider>()!;
             bodyHandle = collider.Collider;
         }
 

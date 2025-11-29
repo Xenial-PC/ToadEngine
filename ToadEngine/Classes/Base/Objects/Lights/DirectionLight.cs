@@ -1,5 +1,5 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
-using ToadEngine.Classes.Base.Rendering;
+using ToadEngine.Classes.Base.Rendering.Object;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
 
@@ -17,7 +17,7 @@ public class DirectionLight : GameObject
 
     public void AddShadowCaster()
     {
-        ShadowCaster = AddComponent<ShadowCaster>();
+        ShadowCaster = Component.Add<ShadowCaster>();
         ShadowCaster.IsCastingShadows = true;
         ShadowCaster.Distance = 80f;
         ShadowCaster.SceneSize = 50f;
@@ -27,23 +27,23 @@ public class DirectionLight : GameObject
 
     public override void Draw(float deltaTime)
     {
-        GetCoreShader().Use();
-        GetCoreShader().SetInt1("spotLightAmount", SpotLight.LightIndex);
-        GetCoreShader().SetInt1("pointLightAmount", PointLight.LightIndex);
+        CoreShader.Use();
+        CoreShader.SetInt1("spotLightAmount", SpotLight.LightIndex);
+        CoreShader.SetInt1("pointLightAmount", PointLight.LightIndex);
 
         UpdateModelMatrix();
 
         var camera = Service.Get<Camera>()!;
 
-        GetCoreShader().SetMatrix4("model", Obj.Model);
-        GetCoreShader().SetMatrix4("view", camera.GetViewMatrix());
-        GetCoreShader().SetMatrix4("projection", camera.GetProjectionMatrix());
-        GetCoreShader().SetVector3("viewPos", camera.Transform.LocalPosition);
+        CoreShader.SetMatrix4("model", Model);
+        CoreShader.SetMatrix4("view", camera.GetViewMatrix());
+        CoreShader.SetMatrix4("projection", camera.GetProjectionMatrix());
+        CoreShader.SetVector3("viewPos", camera.Transform.LocalPosition);
 
-        GetCoreShader().SetVector3($"dirLight.direction", Settings.Direction);
-        GetCoreShader().SetVector3($"dirLight.ambient", Settings.Ambient);
-        GetCoreShader().SetVector3($"dirLight.diffuse", Settings.Diffuse);
-        GetCoreShader().SetVector3($"dirLight.specular", Settings.Specular);
+        CoreShader.SetVector3($"dirLight.direction", Settings.Direction);
+        CoreShader.SetVector3($"dirLight.ambient", Settings.Ambient);
+        CoreShader.SetVector3($"dirLight.diffuse", Settings.Diffuse);
+        CoreShader.SetVector3($"dirLight.specular", Settings.Specular);
     }
 
     public override void Update(float deltaTime)

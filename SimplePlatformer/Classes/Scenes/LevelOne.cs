@@ -6,7 +6,9 @@ using SimplePlatformer.Classes.GameObjects.Scripts.World;
 using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Objects.Skybox;
 using ToadEngine.Classes.Base.Objects.View;
-using static ToadEngine.Classes.Base.Rendering.RenderObject;
+using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Rendering.SceneManagement;
+using static ToadEngine.Classes.Base.Rendering.Object.RenderObject;
 
 namespace SimplePlatformer.Classes.Scenes;
 

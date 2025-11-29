@@ -1,5 +1,6 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
 using ToadEngine.Classes.Base.Audio;
+using ToadEngine.Classes.Base.Rendering.Object;
 using static BepuPhysics.Collidables.CompoundBuilder;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;

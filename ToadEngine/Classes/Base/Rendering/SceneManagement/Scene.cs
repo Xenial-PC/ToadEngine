@@ -3,10 +3,11 @@ using System.Reflection.PortableExecutable;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Physics;
+using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Shaders;
-using static ToadEngine.Classes.Base.Rendering.RenderObject;
+using static ToadEngine.Classes.Base.Rendering.Object.RenderObject;
 
-namespace ToadEngine.Classes.Base.Rendering;
+namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
 
 public class Scene
 {
@@ -130,7 +131,7 @@ public class Scene
         SetCoreShader(ShadowMapShader);
         foreach (var light in RenderGameObjects.Values.Where(l => l is DirectionLight))
         {
-            var caster = light.GetComponent<ShadowCaster>();
+            var caster = light.Component.Get<ShadowCaster>();
             if (caster == null || !caster.IsCastingShadows) continue;
 
             caster.ConfigureShaderAndMatrices();
@@ -152,7 +153,7 @@ public class Scene
             GL.Viewport(0, 0, Window.Width, Window.Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            var caster = light.GetComponent<ShadowCaster>();
+            var caster = light.Component.Get<ShadowCaster>();
             if (caster == null || !caster.IsCastingShadows) continue;
 
             if (textureIndex >= 31)
@@ -166,7 +167,7 @@ public class Scene
                 case DirectionLight dirLight:
                     CoreShader.SetMatrix4($"dirLight.fragPosLightSpace", caster.LightSpaceMatrix);
                     CoreShader.SetInt1($"dirLight.shadowMap", ++textureIndex);
-                    
+
                     GL.ActiveTexture(TextureUnit.Texture0 + textureIndex);
                     GL.BindTexture(TextureTarget.Texture2D, caster.ShadowMap);
                     continue;

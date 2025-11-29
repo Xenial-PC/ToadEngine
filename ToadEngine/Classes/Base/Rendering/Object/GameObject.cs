@@ -1,23 +1,19 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using ToadEngine.Classes.Base.Audio;
-using ToadEngine.Classes.Base.Objects.Lights;
-using ToadEngine.Classes.Base.Physics;
-using ToadEngine.Classes.Base.UI;
+﻿using ToadEngine.Classes.Base.Physics;
+using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
-using static ToadEngine.Classes.Base.Rendering.GameObject.Structs;
 
-namespace ToadEngine.Classes.Base.Rendering;
+namespace ToadEngine.Classes.Base.Rendering.Object;
 
 public class GameObject : RenderObject
 {
-    private readonly Dictionary<string, object> _components = new();
-    private int _index;
-    public string? Name = null;
+    public string? Name;
 
-    public Structs.GameObj Obj = new();
     private List<Behavior?> _behaviours = new();
+
+    public Component Component = new();
+    public Transform Transform = new();
+
     public PhysicsComponent Physics = new();
     public bool UsePhysics = false;
 
@@ -25,10 +21,20 @@ public class GameObject : RenderObject
     public GameObject Parent;
     public bool IsChild;
 
-    public Structs.Transform Transform = new();
-
     public Scene Scene => Service.Scene;
-    public Shader GetCoreShader() => Service.CoreShader;
+    public Shader CoreShader => Service.CoreShader;
+
+    public Matrix4 Model;
+    public Textures Texture;
+
+    public Matrix4 ProjectionMatrix;
+    public Matrix4 ViewMatrix;
+
+    public struct Textures
+    {
+        public Texture Diffuse;
+        public Texture Specular;
+    }
 
     public GameObject(string? name = null)
     {
@@ -59,62 +65,14 @@ public class GameObject : RenderObject
         var rotatedLocalPos = Vector3.TransformPosition(Transform.LocalPosition, Matrix4.CreateFromQuaternion(worldQuat));
         var finalPosition = Transform.Position + rotatedLocalPos;
 
-        Obj.Model = Matrix4.CreateScale(Transform.Scale) *
+        Model = Matrix4.CreateScale(Transform.Scale) *
                          Matrix4.CreateFromQuaternion(finalRotation) *
                          Matrix4.CreateTranslation(finalPosition);
     }
 
-    public void AddComponent(string name, object obj)
-    {
-        _components.TryAdd(name, obj);
-    }
-
-    public void AddComponent(object obj)
-    {
-        _components.TryAdd($"component_{_index++}", obj);
-    }
-
-    public T AddComponent<T>() where T : new()
-    {
-        var component = new T();
-        _components.TryAdd($"component_{_index++}", component);
-        return component;
-    }
-
-    public T GetComponent<T>(string name) where T : class
-    {
-        return (_components[name] as T)!;
-    }
-
-    public T? GetComponent<T>() where T : class
-    {
-        return _components.Select(t => t.Value).OfType<T>().FirstOrDefault();
-    }
-
-    public List<T> GetComponents<T>() where T : class
-    {
-        return _components.Select(t => t.Value).OfType<T>().ToList();
-    }
-
-    public List<object> GetComponents()
-    {
-        return _components.Select(t => t.Value).ToList();
-    }
-
-    public void TransformPosition(Vector3 position)
-    {
-        Transform.LocalPosition = position;
-    }
-
-    public void TransformRotation(Vector3 rotation)
-    {
-        Transform.LocalRotation = rotation;
-    }
-
-    public void TransformSize(Vector3 size)
-    {
-        Transform.LocalScale = size;
-    }
+    public void TransformPosition(Vector3 position) => Transform.LocalPosition = position;
+    public void TransformRotation(Vector3 rotation) => Transform.LocalRotation = rotation;
+    public void TransformSize(Vector3 size) => Transform.LocalScale = size;
 
     public void AddChild(GameObject child)
     {
@@ -142,13 +100,12 @@ public class GameObject : RenderObject
 
     public void SetupBehaviours()
     {
-        _behaviours = GetComponents<Behavior>()!;
+        _behaviours = Component.GetOfType<Behavior>()!;
         if (_behaviours.Count <= 0) return;
 
         foreach (var behaviour in _behaviours.OfType<Behavior>())
         {
             behaviour.GameObject = this;
-            behaviour.GameObject.Obj = Obj;
             GUI.GuiCallBack += behaviour.OnGUI;
             behaviour.Setup();
         }
@@ -158,9 +115,7 @@ public class GameObject : RenderObject
     {
         foreach (var behaviour in _behaviours.OfType<Behavior>())
         {
-            Obj = behaviour.GameObject.Obj;
             behaviour.GameObject = this;
-
             behaviour.DeltaTime = deltaTime;
             behaviour.Update(deltaTime);
         }
@@ -203,44 +158,6 @@ public class GameObject : RenderObject
             child.Transform.Position = Transform.Position + rotatedOffset;
             child.Transform.Rotation = Transform.Rotation + child.Transform.LocalRotation;
             child.Transform.SetScale(Transform.LocalScale * child.Transform.LocalScale);
-        }
-    }
-
-    public class Structs
-    {
-        public class Transform
-        {
-            public Vector3 Position = Vector3.Zero;
-            public Vector3 Rotation = Vector3.Zero;
-            public Vector3 Scale { get; private set; } = Vector3.Zero;
-
-            public Vector3 LocalPosition = Vector3.Zero;
-            public Vector3 LocalRotation = Vector3.Zero;
-            public Vector3 LocalScale = Vector3.Zero;
-
-            public Vector3 Front = Vector3.Zero;
-            public Vector3 Up = Vector3.Zero;
-            public Vector3 Right = Vector3.Zero;
-
-            public void SetScale(Vector3 scale)
-            {
-                Scale = scale;
-            }
-        }
-
-        public struct GameObj
-        {
-            public Matrix4 Model;
-            public Textures Texture;
-
-            public Matrix4 ProjectionMatrix;
-            public Matrix4 ViewMatrix;
-
-            public struct Textures
-            {
-                public Texture Diffuse;
-                public Texture Specular;
-            }
         }
     }
 }

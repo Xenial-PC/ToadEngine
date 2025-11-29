@@ -1,4 +1,5 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
+using ToadEngine.Classes.Base.Rendering.Object;
 using Quaternion = System.Numerics.Quaternion;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;

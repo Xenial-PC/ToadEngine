@@ -1,4 +1,4 @@
-﻿using ToadEngine.Classes.Base.Rendering;
+﻿using ToadEngine.Classes.Base.Rendering.Object;
 using Vector2 = OpenTK.Mathematics.Vector2;
 using Vector3 = OpenTK.Mathematics.Vector3;
 

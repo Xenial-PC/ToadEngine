@@ -1,5 +1,5 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
-using ToadEngine.Classes.Base.Rendering;
+using ToadEngine.Classes.Base.Rendering.Object;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
 
@@ -28,7 +28,7 @@ public class SpotLight : GameObject
 
     public void AddShadowCaster()
     {
-        ShadowCaster = AddComponent<ShadowCaster>();
+        ShadowCaster = Component.Add<ShadowCaster>();
         ShadowCaster.IsCastingShadows = true;
     }
 
@@ -40,32 +40,32 @@ public class SpotLight : GameObject
 
     public override void Draw(float deltaTime)
     {
-        GetCoreShader().Use();
-        GetCoreShader().SetInt1("spotLightAmount", SpotLight.LightIndex);
-        GetCoreShader().SetInt1("pointLightAmount", PointLight.LightIndex);
+        CoreShader.Use();
+        CoreShader.SetInt1("spotLightAmount", SpotLight.LightIndex);
+        CoreShader.SetInt1("pointLightAmount", PointLight.LightIndex);
 
         UpdateModelMatrix();
 
         var camera = Service.MainCamera;
 
-        GetCoreShader().SetMatrix4("model", Obj.Model);
-        GetCoreShader().SetMatrix4("view", camera.GetViewMatrix());
-        GetCoreShader().SetMatrix4("projection", camera.GetProjectionMatrix());
-        GetCoreShader().SetVector3("viewPos", camera.Transform.LocalPosition);
+        CoreShader.SetMatrix4("model", Model);
+        CoreShader.SetMatrix4("view", camera.GetViewMatrix());
+        CoreShader.SetMatrix4("projection", camera.GetProjectionMatrix());
+        CoreShader.SetVector3("viewPos", camera.Transform.LocalPosition);
 
-        GetCoreShader().SetVector3($"spotLights[{CurrentIndex}].position", Settings.Position);
-        GetCoreShader().SetVector3($"spotLights[{CurrentIndex}].direction", Settings.Direction);
+        CoreShader.SetVector3($"spotLights[{CurrentIndex}].position", Settings.Position);
+        CoreShader.SetVector3($"spotLights[{CurrentIndex}].direction", Settings.Direction);
 
-        GetCoreShader().SetFloat1($"spotLights[{CurrentIndex}].cutOff", Settings.CutOff);
-        GetCoreShader().SetFloat1($"spotLights[{CurrentIndex}].outerCutOff", Settings.OuterCutOff);
+        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].cutOff", Settings.CutOff);
+        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].outerCutOff", Settings.OuterCutOff);
 
-        GetCoreShader().SetFloat1($"spotLights[{CurrentIndex}].constant", Settings.Constant);
-        GetCoreShader().SetFloat1($"spotLights[{CurrentIndex}].linear", Settings.Linear);
-        GetCoreShader().SetFloat1($"spotLights[{CurrentIndex}].quadratic", Settings.Quadratic);
+        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].constant", Settings.Constant);
+        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].linear", Settings.Linear);
+        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].quadratic", Settings.Quadratic);
 
-        GetCoreShader().SetVector3($"spotLights[{CurrentIndex}].ambient", Settings.Ambient);
-        GetCoreShader().SetVector3($"spotLights[{CurrentIndex}].diffuse", Settings.Diffuse);
-        GetCoreShader().SetVector3($"spotLights[{CurrentIndex}].specular", Settings.Specular);
+        CoreShader.SetVector3($"spotLights[{CurrentIndex}].ambient", Settings.Ambient);
+        CoreShader.SetVector3($"spotLights[{CurrentIndex}].diffuse", Settings.Diffuse);
+        CoreShader.SetVector3($"spotLights[{CurrentIndex}].specular", Settings.Specular);
     }
 
     public override void Update(float deltaTime)

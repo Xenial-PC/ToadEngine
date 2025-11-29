@@ -1,4 +1,5 @@
 ﻿using SimplePlatformer.Classes.Scenes;
+using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using Window = ToadEngine.Classes.Window.Window;
 
 namespace SimplePlatformer.Classes.Base;

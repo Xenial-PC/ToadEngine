@@ -1,4 +1,4 @@
-﻿namespace ToadEngine.Classes.Base.Rendering;
+﻿namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
 
 public static class SceneManager
 {

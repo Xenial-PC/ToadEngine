@@ -2,6 +2,7 @@
 using SimplePlatformer.Classes.GameObjects.Controllers;
 using SimplePlatformer.Classes.GameObjects.Event;
 using System.Collections.Generic;
+using ToadEngine.Classes.Base.Rendering.Object;
 using Platform = SimplePlatformer.Classes.GameObjects.World.Platform;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts.World;

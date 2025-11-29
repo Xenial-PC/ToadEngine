@@ -1,4 +1,5 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Models;
+using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting;
 
 namespace SimplePlatformer.Classes.GameObjects.Event;
