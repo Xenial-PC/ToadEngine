@@ -1,5 +1,6 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
 
@@ -85,7 +86,7 @@ public class Skybox(List<string> textures) : GameObject
         _skybox.SetInt1("skybox", 0);
     }
 
-    public override void Draw(float deltaTime)
+    public override void Draw()
     {
         var camera = Service.MainCamera;
 
@@ -107,7 +108,7 @@ public class Skybox(List<string> textures) : GameObject
         GL.DepthFunc(DepthFunction.Less);
     }
 
-    public override void Update(float deltaTime)
+    public override void Update()
     {
     }
 

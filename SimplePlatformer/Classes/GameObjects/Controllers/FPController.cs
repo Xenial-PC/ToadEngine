@@ -4,6 +4,7 @@ using SimplePlatformer.Classes.GameObjects.Scripts;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Controllers;
 
@@ -57,10 +58,10 @@ public class FPController
             Camera.Transform.LocalRotation = new Vector3(0f, 90f, 0f);
         }
 
-        public override void Update(float deltaTime)
+        public override void Update()
         {
             if (PauseMenu.IsPaused) return;
-            Camera!.Update(WHandler.KeyboardState, WHandler.MouseState, deltaTime);
+            Camera!.Update(WHandler.KeyboardState, WHandler.MouseState, Time.DeltaTime);
         }
 
         public override void Resize(FramebufferResizeEventArgs e)
@@ -87,7 +88,7 @@ public class FPController
         public float StepInterval = 0.45f;
         public float RunStepInterval = 0.33f;
 
-        public bool IsAbleToMove = true, IsWalking, IsRunning, IsAllowedToJump,
+        public bool IsAbleToMove = true, IsWalking, IsRunning, IsAllowedToJump = true,
             IsGrounded, HasHitGround, OverrideBaseMovement;
 
         private bool _wasGrounded;
@@ -119,13 +120,13 @@ public class FPController
             Sources.Add("jump", new Source());
         }
 
-        public override void Update(float deltaTime)
+        public override void Update()
         {
             if (!IsAbleToMove) return;
-            HandleMove(deltaTime);
+            HandleMove();
         }
 
-        private void HandleMove(float deltaTime)
+        private void HandleMove()
         {
             var playerSource = GetSource("movement")!;
             var jumpSource = GetSource("jump")!;
@@ -167,7 +168,7 @@ public class FPController
             if (IsGrounded && IsWalking)
             {
                 var interval = IsRunning ? RunStepInterval : StepInterval;
-                playerSource.Play(GetSound("step"), interval, deltaTime);
+                playerSource.Play(GetSound("step"), interval, Time.DeltaTime);
             }
 
             var velocity = Body.Velocity.Linear;
@@ -194,7 +195,7 @@ public class FPController
                 var changeMagnitude = velChange.Length();
                 if (changeMagnitude > 0)
                 {
-                    var maxChange = Acceleration * deltaTime;
+                    var maxChange = Acceleration * Time.DeltaTime;
                     velChange *= MathF.Min(1f, maxChange / changeMagnitude);
                 }
 
@@ -205,7 +206,7 @@ public class FPController
                 var speed = horizontalVel.Length();
                 if (speed > 0)
                 {
-                    var drop = DeAcceleration * deltaTime;
+                    var drop = DeAcceleration * Time.DeltaTime;
                     speed = MathF.Max(0, speed - drop);
                     horizontalVel = System.Numerics.Vector3.Normalize(horizontalVel) * speed;
                 }

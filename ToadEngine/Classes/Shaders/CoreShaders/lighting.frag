@@ -3,6 +3,7 @@ struct Material
 {
 	sampler2D diffuse;
 	sampler2D specular;
+	//sampler2D normalMap;
 	float shininess;
 };
 
@@ -71,6 +72,7 @@ out vec4 FragColor;
 in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoords;
+//in mat3 TBN;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -79,9 +81,12 @@ float ShadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap, float bias)
 
 void main()
 {	
-	vec3 norm = normalize(Normal);
-	vec3 viewDir = normalize(viewPos - FragPos);
+	//vec3 norm = texture(material.normalMap, TexCoords).rgb;
+	//norm = normalize(norm * 2.0 - 1.0);
 
+	vec3 norm = normalize(Normal);
+
+	vec3 viewDir = normalize(viewPos - FragPos);
 	vec3 result = CalcDirLight(dirLight, norm, viewDir);
 
 	if (pointLightAmount != 0)

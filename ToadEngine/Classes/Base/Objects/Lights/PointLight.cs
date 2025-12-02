@@ -1,5 +1,6 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
 
@@ -34,7 +35,7 @@ public class PointLight : GameObject
         CurrentIndex = LightIndex - 1;
     }
 
-    public override void Draw(float deltaTime)
+    public override void Draw()
     {
         CoreShader.Use();
         CoreShader.SetInt1("spotLightAmount", SpotLight.LightIndex);
@@ -60,7 +61,7 @@ public class PointLight : GameObject
         CoreShader.SetVector3($"pointLights[{CurrentIndex}].specular", Settings.Specular);
     }
 
-    public override void Update(float deltaTime)
+    public override void Update()
     {
     }
 

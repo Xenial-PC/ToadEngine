@@ -1,4 +1,5 @@
 ﻿using Guinevere;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Menus;
 
@@ -57,7 +58,7 @@ public class PauseMenu : Behavior
         }
     }
 
-    public override void Update(float deltaTime)
+    public override void Update()
     {
         if (Input.IsKeyPressed(Keys.Escape))
         {

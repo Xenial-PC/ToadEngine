@@ -2,7 +2,7 @@
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Shaders;
 
-namespace ToadEngine.Classes.Base.Scripting;
+namespace ToadEngine.Classes.Base.Scripting.Base;
 
 public static class Service
 {

@@ -1,6 +1,7 @@
 ﻿using BepuPhysics;
 using ToadEngine.Classes.Base.Colliders;
 using ToadEngine.Classes.Base.Physics;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Scripting;
 
@@ -22,7 +23,7 @@ public class PhysicsBody : Behavior
         };
     }
 
-    public override void Update(float deltaTime)
+    public override void Update()
     {
         if (!GameObject.UsePhysics) return;
 

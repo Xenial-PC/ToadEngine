@@ -3,6 +3,7 @@ using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
 
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
@@ -11,9 +12,6 @@ public class Scene
 {
     public NativeWindow WHandler = null!;
     public Window.Window Window = null!;
-
-    private float _accumulator;
-    private const float FixedDelta = 1f / 60f;
 
     public PhysicsManager PhysicsManager = new();
     public AudioManager AudioManager = null!;
@@ -116,22 +114,26 @@ public class Scene
 
     private void DrawScene(float deltaTime)
     {
-        ObjectManager.DrawGameObjects(deltaTime);
+        ObjectManager.DrawGameObjects();
         OnDraw(deltaTime);
     }
 
     public void Update(FrameEventArgs e)
     {
-        _accumulator += (float)e.Time;
-        while (_accumulator >= FixedDelta)
+        Time.DeltaTime = (float)e.Time;
+        Time.AccumulatedTime += (float)e.Time;
+
+        while (Time.AccumulatedTime >= Time.FixedDeltaTime)
         {
             if (!Service.Scene.PhysicsManager.IsPhysicsPaused)
-                Service.Scene.PhysicsManager.Step(FixedDelta);
-            _accumulator -= FixedDelta;
+                Service.Scene.PhysicsManager.Step(Time.FixedDeltaTime);
+
+            ObjectManager.UpdateBehaviorsFixedTime();
+            Time.AccumulatedTime -= Time.FixedDeltaTime;
         }
 
         OnUpdate(e);
-        ObjectManager.UpdateGameObjects((float)e.Time);
+        ObjectManager.UpdateGameObjects();
         OnLateUpdate(e);
     }
 
@@ -152,7 +154,6 @@ public class Scene
         AudioManager.SetDistanceModel(ALDistanceModel.InverseDistanceClamped);
 
         AudioManager.Init();
-
         ShadowMapShader = new Shader("shadowmap.vert", "shadowmap.frag");
 
         Setup();

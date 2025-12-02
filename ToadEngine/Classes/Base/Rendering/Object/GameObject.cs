@@ -1,5 +1,6 @@
 ﻿using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
+using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
 
@@ -141,13 +142,21 @@ public class GameObject : RenderObject
         }
     }
 
-    public void UpdateBehaviours(float deltaTime)
+    public void UpdateBehaviours()
     {
         foreach (var behaviour in _behaviours.OfType<Behavior>())
         {
             behaviour.GameObject = this;
-            behaviour.DeltaTime = deltaTime;
-            behaviour.Update(deltaTime);
+            behaviour.Update();
+        }
+    }
+
+    public void UpdateBehavioursFixedTime()
+    {
+        foreach (var behaviour in _behaviours.OfType<Behavior>())
+        {
+            behaviour.GameObject = this;
+            behaviour.OnFixedUpdate();
         }
     }
 

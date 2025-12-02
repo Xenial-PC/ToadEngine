@@ -1,5 +1,6 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Menus;
 using SimplePlatformer.Classes.GameObjects.Scripts;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Controllers;
 
@@ -24,6 +25,7 @@ public class PlatformerController : Behavior
     {
         _fpScript = GameObject.GetComponent<FPController.FPControllerScript>()!;
         _fpScript.OverrideBaseMovement = true;
+
         _playerHud = GameObject.GetComponent<PlayerHud>()!;
 
         _playerHud.UpdateStaminaUI(JumpStamina / 100f);
@@ -31,7 +33,7 @@ public class PlatformerController : Behavior
         _playerHud.UpdateHealthUI(Health / 100f);
     }
 
-    public override void Update(float deltaTime)
+    public override void Update()
     {
         _fpScript.IsAbleToMove = !PauseMenu.IsPaused;
         if (!_fpScript.IsAbleToMove) return;
@@ -60,7 +62,7 @@ public class PlatformerController : Behavior
         if (_fpScript is { IsGrounded: false, IsRunning: true })
             DecreaseBoost(85f);
 
-        HandleAirSpeed(DeltaTime, _fpScript.IsGrounded);
+        HandleAirSpeed(Time.DeltaTime, _fpScript.IsGrounded);
 
         var baseSpeed = _fpScript.IsRunning
             ? (Boost > 0 ? _fpScript.RunSpeed : _fpScript.WalkSpeed)
@@ -116,10 +118,10 @@ public class PlatformerController : Behavior
 
     private void RegenPlayerJumpStamina()
     {
-        if (_timer > 0f) _timer -= 0.5f * DeltaTime;
+        if (_timer > 0f) _timer -= 0.5f * Time.DeltaTime;
         if (!(_timer <= 0) || !(JumpStamina < JumpStaminaMax)) return;
 
-        JumpStamina += (!_fpScript.IsInAir() ? 45f : 15f) * DeltaTime;
+        JumpStamina += (!_fpScript.IsInAir() ? 45f : 15f) * Time.DeltaTime;
         _playerHud.UpdateStaminaUI(JumpStamina / 100);
     }
 
@@ -158,7 +160,7 @@ public class PlatformerController : Behavior
 
     public void DecreaseBoost(float value)
     {
-        Boost -= value * DeltaTime;
+        Boost -= value * Time.DeltaTime;
         if (Boost <= 0f) Boost = 0f;
         _playerHud.UpdateBoostUI(Boost / 100);
     }
@@ -178,7 +180,7 @@ public class PlatformerController : Behavior
 
     public void DecreaseHealth(float value)
     {
-        Health -= value * DeltaTime;
+        Health -= value * Time.DeltaTime;
         if (Health <= 0) Health = 0f;
         _playerHud.UpdateHealthUI(Health / 100);
     }

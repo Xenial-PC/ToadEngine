@@ -8,6 +8,7 @@ using ToadEngine.Classes.Base.Objects.Skybox;
 using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
+using ToadEngine.Classes.Base.Scripting.Base;
 using static ToadEngine.Classes.Base.Rendering.Object.RenderObject;
 
 namespace SimplePlatformer.Classes.Scenes;

@@ -6,8 +6,8 @@ public abstract class RenderObject
     public bool IsEnabled = true;
 
     public virtual void Setup() { }
-    public virtual void Draw(float deltaTime) { }
-    public virtual void Update(float deltaTime) { }
+    public virtual void Draw() { }
+    public virtual void Update() { }
     public virtual void Resize(FramebufferResizeEventArgs e) { }
     public virtual void Dispose() { }
 
@@ -19,16 +19,16 @@ public abstract class RenderObject
         _isDisposing = false;
     }
 
-    public void OnDraw(float deltaTime)
+    public void OnDraw()
     {
         if (_isDisposing || !IsEnabled) return;
-        Draw(deltaTime);
+        Draw();
     }
 
-    public void OnUpdate(float deltaTime)
+    public void OnUpdate()
     {
         if (_isDisposing || !IsEnabled) return;
-        Update(deltaTime);
+        Update();
     }
 
     public void OnResize(FramebufferResizeEventArgs e)

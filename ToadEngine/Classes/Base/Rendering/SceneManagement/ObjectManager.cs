@@ -1,4 +1,5 @@
 ﻿using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Scripting.Base;
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
 
 public enum InstantiateType
@@ -93,29 +94,44 @@ public class ObjectManager
         }
     }
 
-    public void DrawGameObjects(float deltaTime)
+    public void DrawGameObjects()
     {
         foreach (var render in GameObjects)
-            render.Value.OnDraw(deltaTime);
+            render.Value.OnDraw();
 
         foreach (var render in GameObjectsLast)
-            render.Value.OnDraw(deltaTime);
+            render.Value.OnDraw();
     }
 
-    public void UpdateGameObjects(float deltaTime)
+    public void UpdateGameObjects()
     {
         foreach (var render in GameObjects)
         {
-            render.Value.OnUpdate(deltaTime);
+            render.Value.OnUpdate();
             render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehaviours(deltaTime);
+            render.Value.UpdateBehaviours();
         }
 
         foreach (var render in GameObjectsLast)
         {
-            render.Value.OnUpdate(deltaTime);
+            render.Value.OnUpdate();
             render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehaviours(deltaTime);
+            render.Value.UpdateBehaviours();
+        }
+    }
+
+    public void UpdateBehaviorsFixedTime()
+    {
+        foreach (var render in GameObjects)
+        {
+            render.Value.UpdateWorldTransform();
+            render.Value.UpdateBehavioursFixedTime();
+        }
+        
+        foreach (var render in GameObjectsLast)
+        {
+            render.Value.UpdateWorldTransform();
+            render.Value.UpdateBehavioursFixedTime();
         }
     }
 

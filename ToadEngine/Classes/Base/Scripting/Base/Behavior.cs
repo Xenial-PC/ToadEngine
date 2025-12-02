@@ -1,7 +1,4 @@
-﻿using Assimp;
-using BepuPhysics;
-using BepuUtilities.Memory;
-using Guinevere;
+﻿using Guinevere;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Raycasting;
@@ -9,7 +6,7 @@ using ToadEngine.Classes.Base.Rendering.Object;
 using MouseButton = OpenTK.Windowing.GraphicsLibraryFramework.MouseButton;
 using Scene = ToadEngine.Classes.Base.Rendering.SceneManagement.Scene;
 
-namespace ToadEngine.Classes.Base.Scripting;
+namespace ToadEngine.Classes.Base.Scripting.Base;
 
 public abstract class Behavior : RenderObject, ICloneable
 {
@@ -19,7 +16,7 @@ public abstract class Behavior : RenderObject, ICloneable
 
     public Scene Scene => Service.Scene;
     public NativeWindow WHandler => Service.NativeWindow;
-    
+
     public AudioManager AudioManger => Service.Scene.AudioManager;
     public PhysicsManager PhysicsManager => Service.Scene.PhysicsManager;
 
@@ -29,8 +26,6 @@ public abstract class Behavior : RenderObject, ICloneable
     public Source? GetSource(string name) => Sources.GetValueOrDefault(name);
 
     public Gui UI => GUI.Paint;
-
-    public float DeltaTime;
 
     static Behavior()
     {
@@ -59,10 +54,12 @@ public abstract class Behavior : RenderObject, ICloneable
         };
     }
 
-    public virtual void OnGUI() {}
-    public virtual void OnTriggerEnter(GameObject other) {}
-    public virtual void OnTriggerExit(GameObject other) {}
+    public virtual void OnGUI() { }
+    public virtual void OnFixedUpdate() { }
 
+    public virtual void OnTriggerEnter(GameObject other) { }
+    public virtual void OnTriggerExit(GameObject other) { }
+    
     public void LoadScene(string name) => Service.Window.LoadScene(name);
 
     public HitInfo SendRay(Vector3 origin, Vector3 direction, float maxT = 1000)
@@ -114,46 +111,6 @@ public abstract class Behavior : RenderObject, ICloneable
     {
         public GameObject? GameObject;
         public RaycastManager.RayHit Hit;
-    }
-
-    public static class Input
-    {
-        private static NativeWindow WHandler => Service.NativeWindow;
-
-        public static bool IsKeyDown(Keys key)
-        {
-            return WHandler.KeyboardState.IsKeyDown(key);
-        }
-
-        public static bool IsKeyReleased(Keys key)
-        {
-            return WHandler.KeyboardState.IsKeyReleased(key);
-        }
-
-        public static bool IsKeyPressed(Keys key)
-        {
-            return WHandler.KeyboardState.IsKeyPressed(key);
-        }
-
-        public static bool IsMouseDown(MouseButton button)
-        {
-            return WHandler.MouseState.IsButtonDown(button);
-        }
-
-        public static bool IsMousePressed(MouseButton button)
-        {
-            return WHandler.MouseState.IsButtonPressed(button);
-        }
-
-        public static bool IsMouseReleased(MouseButton button)
-        {
-            return WHandler.MouseState.IsButtonReleased(button);
-        }
-
-        public static Vector2 GetMousePos()
-        {
-            return WHandler.MouseState.Position;
-        }
     }
 
     public object Clone()

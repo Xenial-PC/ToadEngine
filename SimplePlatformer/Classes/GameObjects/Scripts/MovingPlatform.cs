@@ -1,6 +1,7 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Scripting.Base;
 using static BepuPhysics.Collidables.CompoundBuilder;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
@@ -21,10 +22,10 @@ public class MovingPlatform : Behavior
         _originalPosition = GameObject.Transform.Position;
     }
 
-    public override void Update(float deltaTime)
+    public override void Update()
     {
-        if (_isForward) _t += MovingSpeed * deltaTime;
-        else _t -= MovingSpeed * deltaTime;
+        if (_isForward) _t += MovingSpeed * Time.DeltaTime;
+        else _t -= MovingSpeed * Time.DeltaTime;
 
         switch (_t)
         {

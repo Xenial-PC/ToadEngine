@@ -2,6 +2,7 @@
 using BepuPhysics.Collidables;
 using BepuUtilities;
 using System.Drawing;
+using ToadEngine.Classes.Base.Scripting.Base;
 using Quaternion = System.Numerics.Quaternion;
 using Vector3 = System.Numerics.Vector3;
 
@@ -23,7 +24,7 @@ namespace ToadEngine.Classes.Base.Colliders
             Dynamic
         }
 
-        public override void Update(float deltaTime)
+        public override void Update()
         {
             var simulation = PhysicsManager.Simulation;
             var body = simulation.Bodies.GetBodyReference(Collider);

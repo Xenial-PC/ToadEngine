@@ -1,7 +1,10 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Numerics;
+using System.Runtime.InteropServices;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
 using PrimitiveType = OpenTK.Graphics.OpenGL4.PrimitiveType;
+using Vector2 = OpenTK.Mathematics.Vector2;
+using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace ToadEngine.Classes.Base.Assets;
 
@@ -98,6 +101,8 @@ public class Mesh
         {
             public Vector3 Position;
             public Vector3 Normal;
+            public Vector3 Tangent;
+            public Vector3 Bitangent;
             public Vector2 TexCoords;
         }
 

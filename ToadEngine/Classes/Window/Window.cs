@@ -2,6 +2,7 @@
 using OpenTK.Platform.Windows;
 using SkiaSharp;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
+using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
 using MouseButton = Guinevere.MouseButton;
 

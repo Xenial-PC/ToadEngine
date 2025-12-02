@@ -11,6 +11,7 @@ using BepuUtilities.Collections;
 using BepuUtilities.Memory;
 using PInvoke;
 using ToadEngine.Classes.Base.Physics;
+using ToadEngine.Classes.Base.Scripting.Base;
 using Buffer = OpenTK.Graphics.OpenGL4.Buffer;
 using Vector3 = OpenTK.Mathematics.Vector3;
 

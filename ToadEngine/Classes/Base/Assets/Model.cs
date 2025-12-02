@@ -27,7 +27,7 @@ public class Model
     private void LoadModel()
     {
         var context = new AssimpContext();
-        var scene = context.ImportFile(_directory, PostProcessSteps.Triangulate | PostProcessSteps.FlipUVs);
+        var scene = context.ImportFile(_directory, PostProcessSteps.Triangulate | PostProcessSteps.FlipUVs | PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace);
         if (scene == null || scene.SceneFlags == SceneFlags.Incomplete || scene.RootNode == null)
         {
             Console.WriteLine($"Error.Assimp.Loading.Model");
@@ -66,10 +66,13 @@ public class Model
             };
             vertex.Position = vector;
 
-            vector.X = mesh.Normals[i].X;
-            vector.Y = mesh.Normals[i].Y;
-            vector.Z = mesh.Normals[i].Z;
-            vertex.Normal = vector;
+            if (mesh.HasNormals)
+            {
+                vector.X = mesh.Normals[i].X;
+                vector.Y = mesh.Normals[i].Y;
+                vector.Z = mesh.Normals[i].Z;
+                vertex.Normal = vector;
+            }
 
             if (mesh.HasTextureCoords(0))
             {
@@ -79,6 +82,16 @@ public class Model
                     Y = mesh.TextureCoordinateChannels[0][i].Y,
                 };
                 vertex.TexCoords = texCoords;
+
+                vector.X = mesh.Tangents[i].X;
+                vector.Y = mesh.Tangents[i].Y;
+                vector.Z = mesh.Tangents[i].Z;
+                vertex.Tangent = vector;
+
+                vector.X = mesh.BiTangents[i].X;
+                vector.Y = mesh.BiTangents[i].Y;
+                vector.Z = mesh.BiTangents[i].Z;
+                vertex.Bitangent = vector;
             }
             else vertex.TexCoords = new Vector2(0.0f);
             vertices.Add(vertex);
@@ -95,6 +108,13 @@ public class Model
 
         var specularMaps = LoadMaterialTextures(material, TextureType.Specular, "texture_specular");
         textures.AddRange(specularMaps);
+
+        var normalMaps = LoadMaterialTextures(material, TextureType.Height, "texture_normal");
+        textures.AddRange(normalMaps);
+
+        var heightMaps = LoadMaterialTextures(material, TextureType.Ambient, "texture_height");
+        textures.AddRange(heightMaps);
+
         return new Mesh(vertices, indices, textures, matData);
     }
 

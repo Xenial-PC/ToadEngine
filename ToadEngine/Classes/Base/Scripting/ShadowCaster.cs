@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using ToadEngine.Classes.Base.Objects.Lights;
-using ToadEngine.Classes.Base.Objects.View;
-using ToadEngine.Classes.Shaders;
+﻿using ToadEngine.Classes.Base.Objects.Lights;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Scripting;
 

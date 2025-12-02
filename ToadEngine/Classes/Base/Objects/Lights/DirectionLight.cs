@@ -1,5 +1,6 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
 
@@ -25,7 +26,7 @@ public class DirectionLight : GameObject
         ShadowCaster.FarPlane = 200f;
     }
 
-    public override void Draw(float deltaTime)
+    public override void Draw()
     {
         CoreShader.Use();
         CoreShader.SetInt1("spotLightAmount", SpotLight.LightIndex);
@@ -46,7 +47,7 @@ public class DirectionLight : GameObject
         CoreShader.SetVector3($"dirLight.specular", Settings.Specular);
     }
 
-    public override void Update(float deltaTime)
+    public override void Update()
     {
         
     }
