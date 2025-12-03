@@ -10,6 +10,7 @@ public class BaseLight
     {
         public int Diffuse;
         public int Specular;
+        public int Normal;
         public float Shininess;
     }
 

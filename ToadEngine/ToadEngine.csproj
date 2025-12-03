@@ -10,15 +10,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Classes\Base\Objects\Primitives\Objs\Cone.obj" />
+    <None Remove="Classes\Base\Objects\Primitives\Objs\Cube.obj" />
+    <None Remove="Classes\Base\Objects\Primitives\Objs\Cylinder.obj" />
+    <None Remove="Classes\Base\Objects\Primitives\Objs\Sphere.obj" />
     <None Remove="Classes\Base\Rendering\Scene.cs~RF103b3d3.TMP" />
     <None Remove="Classes\Fonts\fa-regular-400.ttf" />
     <None Remove="Classes\Fonts\font.ttf" />
     <None Remove="Classes\Fonts\icons.ttf" />
     <None Remove="Classes\Fonts\NotoColorEmoji-Regular.ttf" />
     <None Remove="Classes\Fonts\Roboto-Regular.ttf" />
+    <None Remove="Classes\Textures\Base\black.png" />
+    <None Remove="Classes\Textures\Base\blue.jpg" />
+    <None Remove="Classes\Textures\Base\gray.jpg" />
+    <None Remove="Classes\Textures\Base\green.jpg" />
+    <None Remove="Classes\Textures\Base\red.png" />
+    <None Remove="Classes\Textures\Base\yellow.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Classes\Base\Objects\Primitives\Objs\Cone.obj" />
+    <EmbeddedResource Include="Classes\Base\Objects\Primitives\Objs\Cube.obj" />
+    <EmbeddedResource Include="Classes\Base\Objects\Primitives\Objs\Cylinder.obj" />
+    <EmbeddedResource Include="Classes\Base\Objects\Primitives\Objs\Sphere.obj" />
     <EmbeddedResource Include="Classes\Fonts\fa-regular-400.ttf" />
     <EmbeddedResource Include="Classes\Fonts\font.ttf" />
     <EmbeddedResource Include="Classes\Fonts\icons.ttf" />
@@ -68,6 +82,13 @@
     <EmbeddedResource Include="Classes\Shaders\CoreShaders\ui.vert">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Textures\Base\black.png" />
+    <EmbeddedResource Include="Classes\Textures\Base\blue.jpg" />
+    <EmbeddedResource Include="Classes\Textures\Base\gray.jpg" />
+    <EmbeddedResource Include="Classes\Textures\Base\green.jpg" />
+    <EmbeddedResource Include="Classes\Textures\Base\red.png" />
+    <EmbeddedResource Include="Classes\Textures\Base\white.jpg" />
+    <EmbeddedResource Include="Classes\Textures\Base\yellow.jpg" />
   </ItemGroup>
 
   <ItemGroup>

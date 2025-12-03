@@ -21,7 +21,7 @@ public class LevelGenerator
     {
         var level = new List<GameObject>();
 
-        level.AddRange(new SavePoint(new Vector3(0, 0, 0), new Vector3(2f, 12f, 2f)).GameObjects());
+        level.AddRange(new SavePoint(new Vector3(0, 0, 0), new Vector3(4f, 12f, 4f)).GameObjects());
         _lastPosition = new Vector3(0f);
 
         var rand = new Random();
@@ -57,7 +57,7 @@ public class LevelGenerator
 
     private List<GameObject> CreatePlatform(Random rand)
     {
-        var platform = new Platform(new Vector3(2f, 12f, 2f));
+        var platform = new Platform(new Vector3(3f, 14f, 3f));
 
         var maxHeight = Math.Max(_lastPosition.Y + rand.Next(1, 4), 8f);
         if (maxHeight >= 8f) maxHeight = rand.Next(-3, 0);
@@ -77,7 +77,7 @@ public class LevelGenerator
 
     private List<GameObject> CreateMovingPlatform(Random rand)
     {
-        var platform = new Platform(new Vector3(2f, 12f, 2f));
+        var platform = new Platform(new Vector3(3f, 14f, 3f));
 
         var maxHeight = Math.Max(_lastPosition.Y + rand.Next(1, 4), 8f);
         if (maxHeight >= 8f) maxHeight = rand.Next(-3, 0);
@@ -108,7 +108,7 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
 
-        var lava = new Lava(new Vector3(4f, 12f, 4f), pos, OutOfBoundsRespawnScript);
+        var lava = new Lava(new Vector3(5f, 14f, 5f), pos, OutOfBoundsRespawnScript);
         _lastPosition = lava.GameObject.Transform.Position;
 
         _flipDirection = !_flipDirection;
@@ -123,7 +123,7 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
         
-        var platform = new SavePoint(pos, new Vector3(4f, 12f, 4f));
+        var platform = new SavePoint(pos, new Vector3(6f, 14f, 6f));
         platform.SPScript.IsLastSavePoint = isLastSavePoint;
 
         _lastPosition = platform.SavePointObject.GameObject.Transform.Position;

@@ -4,6 +4,7 @@ using SimplePlatformer.Classes.GameObjects.Menus;
 using SimplePlatformer.Classes.GameObjects.Scripts;
 using SimplePlatformer.Classes.GameObjects.Scripts.World;
 using ToadEngine.Classes.Base.Objects.Lights;
+using ToadEngine.Classes.Base.Objects.Primitives;
 using ToadEngine.Classes.Base.Objects.Skybox;
 using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
@@ -84,6 +85,11 @@ public class LevelOne : Scene
         _outOfBoundsLava.TGameObject.GameObject.Transform.LocalPosition.Y = 3;
 
         _level = _generator.GenerateLevelOne(_player);
+
+        /*var testCube = new Sphere();
+        testCube.Transform.LocalScale = new Vector3(1f);
+        testCube.Transform.Position = new Vector3(10f);
+        Instantiate(testCube);*/
     }
 
     public override void OnStart()

@@ -7,8 +7,11 @@ namespace ToadEngine.Classes.Base.Assets;
 
 public class Model
 {
-    private readonly List<Mesh> _meshes = new();
+    public readonly List<Mesh> Meshes = new();
     private readonly string _directory, _path;
+
+    public List<List<Texture>> GetTextures => Meshes.Select(m => m.Textures).ToList();
+    public List<List<Texture>> GetTexturesOfType(TextureType type) => Meshes.Select(m => m.Textures.Where(tex => tex.Type == type).ToList()).ToList();
 
     public Model(string path, string model)
     {
@@ -18,10 +21,29 @@ public class Model
         LoadModel();
     }
 
+    public Model(string model)
+    {
+        var modelStream = RReader.ReadAsMemoryStream(model);
+        LoadModel(modelStream!, model.Remove(0, model.IndexOf('.', StringComparison.Ordinal)));
+    }
+
     public void Draw(Shader shader)
     {
-        foreach (var mesh in _meshes)
+        foreach (var mesh in Meshes)
             mesh.Draw(shader);
+    }
+
+    private void LoadModel(Stream stream, string format)
+    {
+        var context = new AssimpContext();
+        var scene = context.ImportFileFromStream(stream, PostProcessSteps.Triangulate | PostProcessSteps.FlipUVs | PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace, format);
+        if (scene == null || scene.SceneFlags == SceneFlags.Incomplete || scene.RootNode == null)
+        {
+            Console.WriteLine($"Error.Assimp.Loading.Model");
+            return;
+        }
+
+        ProcessNode(scene.RootNode, scene);
     }
 
     private void LoadModel()
@@ -42,7 +64,7 @@ public class Model
         for (var i = 0; i < node.MeshCount; i++)
         {
             var mesh = scene.Meshes[node.MeshIndices[i]];
-            _meshes.Add(ProcessMesh(mesh, scene));
+            Meshes.Add(ProcessMesh(mesh, scene));
         }
 
         foreach (var n in node.Children) ProcessNode(n, scene);
@@ -124,9 +146,9 @@ public class Model
         for (var i = 0; i < mat.GetMaterialTextureCount(type); i++)
         {
             mat.GetMaterialTexture(type, i, out var slot);
-            var texture = new Texture($"{_path}/{slot.FilePath}", type == TextureType.Diffuse);
+            var texture = Texture.FromPath($"{_path}/{slot.FilePath}", type);
             texture.Handle = texture.Handle;
-            texture.Type = typeName;
+            texture.TypeName = typeName;
             texture.Path = slot.FilePath;
             textures.Add(texture);
         }

@@ -5,6 +5,7 @@ using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
+using ToadEngine.Classes.Textures;
 
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
 
@@ -177,6 +178,7 @@ public class Scene
 
         Window?.CoreShader?.Dispose();
         Service.Clear();
+        Texture.ClearTextures();
 
         Dispose();
     }

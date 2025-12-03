@@ -15,8 +15,7 @@ public class BasePlate
     {
         GameObject = new TexturedCubeModel(
             diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/concrete.jpg",
-            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/concrete_specular.jpg",
-            name: name);
+            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/concrete_specular.jpg");
 
         if (size != null) GameObject.Transform.LocalScale = (Vector3)size!;
 

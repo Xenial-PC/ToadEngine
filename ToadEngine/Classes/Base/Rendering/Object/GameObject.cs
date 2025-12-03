@@ -6,6 +6,13 @@ using ToadEngine.Classes.Textures;
 
 namespace ToadEngine.Classes.Base.Rendering.Object;
 
+public struct Textures
+{
+    public Texture Diffuse;
+    public Texture Specular;
+    public Texture Normal;
+}
+
 public class GameObject : RenderObject
 {
     public string? Name;
@@ -23,16 +30,10 @@ public class GameObject : RenderObject
     public bool IsChild;
 
     public Matrix4 Model;
-    public Textures Texture;
+    public Textures Textures;
 
     public Matrix4 ProjectionMatrix;
     public Matrix4 ViewMatrix;
-
-    public struct Textures
-    {
-        public Texture Diffuse;
-        public Texture Specular;
-    }
 
     public Scene Scene => Service.Scene;
     public Shader CoreShader => Service.CoreShader;

@@ -15,8 +15,7 @@ public class BoxContainer
     {
         GameObject = new TexturedCubeModel(
             diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/container.png",
-            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/container_specular.png",
-            name: name);
+            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/container_specular.png");
 
         var collider = GameObject.AddComponent<BoxCollider>();
         collider.Type = BoxCollider.ColliderType.Kinematic;

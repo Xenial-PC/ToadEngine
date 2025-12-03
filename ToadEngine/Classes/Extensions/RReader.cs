@@ -34,6 +34,21 @@ public static class RReader
         return fileContents;
     }
 
+    public static MemoryStream? ReadAsMemoryStream(string resourceName)
+    {
+        var resPath = GetResourcePathByName(resourceName);
+        var assembly = Assembly.GetExecutingAssembly();
+
+        using var stream = assembly.GetManifestResourceStream(resPath);
+        if (stream == null) return null;
+
+        var mReader = new MemoryStream();
+        stream.CopyTo(mReader);
+
+        mReader.Position = 0;
+        return mReader;
+    }
+
     public static Stream GetStream(string resourceName)
     {
         var resPath = GetResourcePathByName(resourceName);
