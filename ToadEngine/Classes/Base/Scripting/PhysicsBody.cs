@@ -7,7 +7,7 @@ namespace ToadEngine.Classes.Base.Scripting;
 
 public class PhysicsBody : Behavior
 {
-    public override void Setup()
+    public override void OnStart()
     {
         var bodyHandle = new BodyHandle();
         if (GameObject.Component.Get<BaseCollider>() != null)
@@ -23,7 +23,7 @@ public class PhysicsBody : Behavior
         };
     }
 
-    public override void Update()
+    public override void OnUpdate()
     {
         if (!GameObject.UsePhysics) return;
 

@@ -125,30 +125,28 @@ public class Model
         var material = scene.Materials[mesh.MaterialIndex];
         matData = LoadMaterial(material);
         
-        var diffuseMaps = LoadMaterialTextures(material, TextureType.Diffuse, "texture_diffuse");
+        var diffuseMaps = LoadMaterialTextures(material, TextureType.Diffuse);
         textures.AddRange(diffuseMaps);
 
-        var specularMaps = LoadMaterialTextures(material, TextureType.Specular, "texture_specular");
+        var specularMaps = LoadMaterialTextures(material, TextureType.Specular);
         textures.AddRange(specularMaps);
 
-        var normalMaps = LoadMaterialTextures(material, TextureType.Height, "texture_normal");
+        var normalMaps = LoadMaterialTextures(material, TextureType.Normals);
         textures.AddRange(normalMaps);
 
-        var heightMaps = LoadMaterialTextures(material, TextureType.Ambient, "texture_height");
+        var heightMaps = LoadMaterialTextures(material, TextureType.Height);
         textures.AddRange(heightMaps);
 
         return new Mesh(vertices, indices, textures, matData);
     }
 
-    private List<Texture> LoadMaterialTextures(Material mat, TextureType type, string typeName)
+    private List<Texture> LoadMaterialTextures(Material mat, TextureType type)
     {
         List<Texture> textures = new();
         for (var i = 0; i < mat.GetMaterialTextureCount(type); i++)
         {
             mat.GetMaterialTexture(type, i, out var slot);
             var texture = Texture.FromPath($"{_path}/{slot.FilePath}", type);
-            texture.Handle = texture.Handle;
-            texture.TypeName = typeName;
             texture.Path = slot.FilePath;
             textures.Add(texture);
         }

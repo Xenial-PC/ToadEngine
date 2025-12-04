@@ -17,12 +17,12 @@ public class MovingPlatform : Behavior
     private Vector3 _originalPosition, _lastPlatformPosition;
     private float _t;
 
-    public override void Setup()
+    public override void OnStart()
     {
         _originalPosition = GameObject.Transform.Position;
     }
 
-    public override void Update()
+    public override void OnUpdate()
     {
         if (_isForward) _t += MovingSpeed * Time.DeltaTime;
         else _t -= MovingSpeed * Time.DeltaTime;

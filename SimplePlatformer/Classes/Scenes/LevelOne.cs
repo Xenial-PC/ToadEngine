@@ -10,7 +10,6 @@ using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
-using static ToadEngine.Classes.Base.Rendering.Object.RenderObject;
 
 namespace SimplePlatformer.Classes.Scenes;
 
@@ -68,8 +67,6 @@ public class LevelOne : Scene
         _directionLight.Settings.Ambient = new Vector3(0.5f);
         _directionLight.Settings.Diffuse = new Vector3(0.3f);
 
-        _directionLight.AddShadowCaster();
-
         _generator = new LevelGenerator
         {
             OutOfBoundsRespawnScript = new RespawnScript
@@ -79,17 +76,12 @@ public class LevelOne : Scene
             }
         };
 
-        _outOfBoundsLava = new Lava(new Vector3(10000f, 1f, 10000f), new Vector3(0, -10f, 0),
+        _outOfBoundsLava = new Lava(new Vector3(1000f, 1f, 1000f), new Vector3(0, -10f, 0),
             _generator.OutOfBoundsRespawnScript);
         
         _outOfBoundsLava.TGameObject.GameObject.Transform.LocalPosition.Y = 3;
 
         _level = _generator.GenerateLevelOne(_player);
-
-        /*var testCube = new Sphere();
-        testCube.Transform.LocalScale = new Vector3(1f);
-        testCube.Transform.Position = new Vector3(10f);
-        Instantiate(testCube);*/
     }
 
     public override void OnStart()
@@ -99,6 +91,7 @@ public class LevelOne : Scene
 
         Instantiate(_player.GameObject);
         Instantiate(_level);
+
         Instantiate(_outOfBoundsLava.GameObjects());
     }
 

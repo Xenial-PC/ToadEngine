@@ -57,18 +57,6 @@ public class FPController
             Camera.Transform.LocalPosition = Transform.LocalPosition;
             Camera.Transform.LocalRotation = new Vector3(0f, 90f, 0f);
         }
-
-        public override void Update()
-        {
-            if (PauseMenu.IsPaused) return;
-            Camera!.Update(WHandler.KeyboardState, WHandler.MouseState, Time.DeltaTime);
-        }
-
-        public override void Resize(FramebufferResizeEventArgs e)
-        {
-            base.Resize(e);
-            Camera!.AspectRatio = WHandler.Size.X / (float)WHandler.Size.Y;
-        }
     }
 
     public class FPControllerScript : Behavior
@@ -93,7 +81,7 @@ public class FPController
 
         private bool _wasGrounded;
 
-        public override void Setup()
+        public override void OnStart()
         {
             _fpCamera = GameObject.GetComponent<FPCamera>("fpCamera");
             GameObject.UsePhysics = true;
@@ -120,10 +108,17 @@ public class FPController
             Sources.Add("jump", new Source());
         }
 
-        public override void Update()
+        public override void OnResize(FramebufferResizeEventArgs e)
+        {
+            _fpCamera.Camera!.AspectRatio = WHandler.Size.X / (float)WHandler.Size.Y;
+        }
+
+        public override void OnUpdate()
         {
             if (!IsAbleToMove) return;
             HandleMove();
+
+            _fpCamera.Camera!.Update(WHandler.KeyboardState, WHandler.MouseState, Time.DeltaTime);
         }
 
         private void HandleMove()

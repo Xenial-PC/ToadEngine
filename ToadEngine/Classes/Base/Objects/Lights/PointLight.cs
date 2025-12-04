@@ -1,6 +1,7 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Base.Scripting.Renderer;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
 
@@ -8,7 +9,9 @@ public class PointLight : GameObject
 {
     public static int LightIndex;
     public int CurrentIndex;
+
     public ShadowCaster ShadowCaster = null!;
+    public LightRenderer LightRenderer = null!;
 
     public BaseLight.PointLight Settings = new()
     {
@@ -26,47 +29,16 @@ public class PointLight : GameObject
     public void AddShadowCaster()
     {
         ShadowCaster = Component.Add<ShadowCaster>();
-        ShadowCaster.IsCastingShadows = true;
+        ShadowCaster.IsCastingShadows = false;
     }
 
     public override void Setup()
     {
         LightIndex++;
         CurrentIndex = LightIndex - 1;
-    }
 
-    public override void Draw()
-    {
-        CoreShader.Use();
-        CoreShader.SetInt1("spotLightAmount", SpotLight.LightIndex);
-        CoreShader.SetInt1("pointLightAmount", PointLight.LightIndex);
-
-        UpdateModelMatrix();
-
-        var camera = Service.Get<Camera>()!;
-
-        CoreShader.SetMatrix4("model", Model);
-        CoreShader.SetMatrix4("view", camera.GetViewMatrix());
-        CoreShader.SetMatrix4("projection", camera.GetProjectionMatrix());
-        CoreShader.SetVector3("viewPos", camera.Transform.LocalPosition);
-
-        CoreShader.SetVector3($"pointLights[{CurrentIndex}].position", Settings.Position);
-        
-        CoreShader.SetFloat1($"pointLights[{CurrentIndex}].constant", Settings.Constant);
-        CoreShader.SetFloat1($"pointLights[{CurrentIndex}].linear", Settings.Linear);
-        CoreShader.SetFloat1($"pointLights[{CurrentIndex}].quadratic", Settings.Quadratic);
-
-        CoreShader.SetVector3($"pointLights[{CurrentIndex}].ambient", Settings.Ambient);
-        CoreShader.SetVector3($"pointLights[{CurrentIndex}].diffuse", Settings.Diffuse);
-        CoreShader.SetVector3($"pointLights[{CurrentIndex}].specular", Settings.Specular);
-    }
-
-    public override void Update()
-    {
-    }
-
-    public override void Dispose()
-    {
-        LightIndex--;
+        LightRenderer = AddComponent<LightRenderer>();
+        LightRenderer.Settings = Settings;
+        LightRenderer.CurrentIndex = CurrentIndex;
     }
 }

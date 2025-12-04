@@ -9,7 +9,7 @@ public class EOLMenu : Behavior
 {
     public static bool IsDrawingEOLMenu, IsDrawingLoseScreen;
 
-    public override void Setup()
+    public override void OnStart()
     {
         IsDrawingEOLMenu = false;
         IsDrawingLoseScreen = false;

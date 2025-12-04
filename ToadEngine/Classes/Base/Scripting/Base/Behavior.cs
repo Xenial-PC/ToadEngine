@@ -3,12 +3,13 @@ using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Raycasting;
 using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Shaders;
 using MouseButton = OpenTK.Windowing.GraphicsLibraryFramework.MouseButton;
 using Scene = ToadEngine.Classes.Base.Rendering.SceneManagement.Scene;
 
 namespace ToadEngine.Classes.Base.Scripting.Base;
 
-public abstract class Behavior : RenderObject, ICloneable
+public abstract class Behavior : ICloneable
 {
     public RaycastManager Raycast = new(Service.Scene.PhysicsManager.BufferPool);
     public static Dictionary<int, GameObject> BodyToGameObject = new();
@@ -26,7 +27,8 @@ public abstract class Behavior : RenderObject, ICloneable
     public Source? GetSource(string name) => Sources.GetValueOrDefault(name);
 
     public Gui UI => GUI.Paint;
-
+    public Shader CoreShader => Service.CoreShader;
+    
     static Behavior()
     {
         Trigger.OnEnter += (a, b) =>
@@ -54,8 +56,12 @@ public abstract class Behavior : RenderObject, ICloneable
         };
     }
 
-    public virtual void OnGUI() { }
+    public virtual void OnStart() { }
+    public virtual void OnUpdate() { }
     public virtual void OnFixedUpdate() { }
+    public virtual void OnResize(FramebufferResizeEventArgs e) { }
+    public virtual void OnGUI() { }
+    public virtual void OnDispose() { }
 
     public virtual void OnTriggerEnter(GameObject other) { }
     public virtual void OnTriggerExit(GameObject other) { }

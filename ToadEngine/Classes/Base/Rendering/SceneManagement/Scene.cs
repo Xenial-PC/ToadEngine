@@ -21,7 +21,7 @@ public class Scene
     public Shader CoreShader => Service.CoreShader;
     public static Shader ShadowMapShader = null!;
 
-    public GameObject Scripts = new("Scripts");
+    public GameObject Scripts = new() { Name = "Scripts" };
 
     public virtual void Setup() { }
     public virtual void OnStart() { }

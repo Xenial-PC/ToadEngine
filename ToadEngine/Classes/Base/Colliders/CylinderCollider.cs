@@ -15,7 +15,7 @@ public class CylinderCollider : BaseCollider
     private float _lastRadius;
     private Vector2 _lastSize;
 
-    public override void Setup()
+    public override void OnStart()
     {
         if (Size == Vector2.Zero)
             Size = new Vector2(Radius, GameObject.Transform.LocalScale.Y);

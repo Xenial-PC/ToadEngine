@@ -24,7 +24,7 @@ namespace ToadEngine.Classes.Base.Colliders
             Dynamic
         }
 
-        public override void Update()
+        public override void OnUpdate()
         {
             var simulation = PhysicsManager.Simulation;
             var body = simulation.Bodies.GetBodyReference(Collider);

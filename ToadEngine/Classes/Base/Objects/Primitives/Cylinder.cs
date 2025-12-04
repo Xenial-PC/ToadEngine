@@ -1,30 +1,17 @@
 ﻿using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Base.Scripting.Renderer;
 
 namespace ToadEngine.Classes.Base.Objects.Primitives;
 
 public class Cylinder : GameObject
 {
-    private Model _cylinderModel;
+    public MeshRenderer Mesh = null!;
 
     public override void Setup()
     {
-        _cylinderModel = new Model("Cylinder.obj");
-    }
-
-    public override void Draw()
-    {
-        CoreShader.Use();
-        UpdateModelMatrix();
-
-        var camera = Service.MainCamera;
-
-        CoreShader.SetMatrix4("model", Model);
-        CoreShader.SetMatrix4("view", camera.GetViewMatrix());
-        CoreShader.SetMatrix4("projection", camera.GetProjectionMatrix());
-        CoreShader.SetVector3("viewPos", camera.Transform.LocalPosition);
-
-        _cylinderModel.Draw(CoreShader);
+        Mesh = AddComponent<MeshRenderer>();
+        Mesh.Model = new Model("Cylinder.obj");
     }
 }

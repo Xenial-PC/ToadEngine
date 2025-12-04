@@ -84,36 +84,9 @@ public class Skybox(List<string> textures) : GameObject
 
         _skybox.Use();
         _skybox.SetInt1("skybox", 0);
-    }
 
-    public override void Draw()
-    {
-        var camera = Service.MainCamera;
-
-        GL.DepthFunc(DepthFunction.Lequal);
-        GL.DepthMask(false);
-
-        _skybox!.Use();
-
-        _skybox.SetMatrix4("view", new Matrix4(new Matrix3(camera.GetViewMatrix())));
-        _skybox.SetMatrix4("projection", camera.GetProjectionMatrix());
-
-        GL.BindVertexArray(_skyboxVao);
-        GL.ActiveTexture(TextureUnit.Texture0);
-        GL.BindTexture(TextureTarget.TextureCubeMap, _skyBox!.Handle);
-        GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
-        GL.BindVertexArray(0);
-
-        GL.DepthMask(true);
-        GL.DepthFunc(DepthFunction.Less);
-    }
-
-    public override void Update()
-    {
-    }
-
-    public override void Dispose()
-    {
-        _skybox?.Dispose();
+        var skyboxRenderer = AddComponent<SkyboxRenderer>();
+        skyboxRenderer.SkyboxShader = _skybox;
+        skyboxRenderer.SkyboxVAO = _skyboxVao;
     }
 }

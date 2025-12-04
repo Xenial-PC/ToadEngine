@@ -19,7 +19,7 @@ public class ObjectManager
 
     public void Instantiate(GameObject gameObject, InstantiateType type = InstantiateType.Early)
     {
-        gameObject.OnSetup();
+        gameObject.Setup();
         gameObject.Name ??= $"go_{_goIndex++}";
 
         if (type == InstantiateType.Early)
@@ -35,7 +35,7 @@ public class ObjectManager
     {
         foreach (var gameObject in gameObjects)
         {
-            gameObject.OnSetup();
+            gameObject.Setup();
             gameObject.Name ??= $"go_{_goIndex++}";
 
             if (type == InstantiateType.Early)
@@ -55,12 +55,12 @@ public class ObjectManager
         if (type == InstantiateType.Early)
         {
             GameObjects.Remove(gameObject.Name!);
-            gameObject.Dispose();
+            gameObject.Renderers.ForEach(r => r.Dispose());
             return;
         }
 
         GameObjectsLast.Remove(gameObject.Name!);
-        gameObject.Dispose();
+        gameObject.Renderers.ForEach(r => r.Dispose());
     }
 
     public void DestroyObject(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early)
@@ -70,12 +70,12 @@ public class ObjectManager
             if (type == InstantiateType.Early)
             {
                 GameObjects.Remove(gameObject.Name!);
-                gameObject.Dispose();
+                gameObject.Renderers.ForEach(r => r.Dispose());
                 continue;
             }
 
             GameObjectsLast.Remove(gameObject.Name!);
-            gameObject.Dispose();
+            gameObject.Renderers.ForEach(r => r.Dispose());
         }
     }
 
@@ -83,40 +83,40 @@ public class ObjectManager
     {
         foreach (var render in GameObjects)
         {
-            render.Value.OnSetup();
             render.Value.UpdateWorldTransform();
+            render.Value.Renderers.ForEach(r => r.Setup());
         }
 
         foreach (var render in GameObjectsLast)
         {
-            render.Value.OnSetup();
             render.Value.UpdateWorldTransform();
+            render.Value.Renderers.ForEach(r => r.Setup());
         }
     }
 
     public void DrawGameObjects()
     {
         foreach (var render in GameObjects)
-            render.Value.OnDraw();
+            render.Value.Renderers.ForEach(r => r.Draw());
 
         foreach (var render in GameObjectsLast)
-            render.Value.OnDraw();
+            render.Value.Renderers.ForEach(r => r.Draw());
     }
 
     public void UpdateGameObjects()
     {
         foreach (var render in GameObjects)
         {
-            render.Value.OnUpdate();
             render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehaviours();
+            render.Value.UpdateBehaviors();
+            render.Value.Renderers.ForEach(r => r.Update());
         }
 
         foreach (var render in GameObjectsLast)
         {
-            render.Value.OnUpdate();
             render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehaviours();
+            render.Value.UpdateBehaviors();
+            render.Value.Renderers.ForEach(r => r.Update());
         }
     }
 
@@ -125,13 +125,13 @@ public class ObjectManager
         foreach (var render in GameObjects)
         {
             render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehavioursFixedTime();
+            render.Value.UpdateBehaviorsFixedTime();
         }
         
         foreach (var render in GameObjectsLast)
         {
             render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehavioursFixedTime();
+            render.Value.UpdateBehaviorsFixedTime();
         }
     }
 
@@ -139,39 +139,39 @@ public class ObjectManager
     {
         foreach (var render in GameObjects)
         {
-            render.Value.OnResize(e);
-            render.Value.ResizeBehaviours(e);
+            render.Value.Renderers.ForEach(r => r.Resize(e));
+            render.Value.ResizeBehaviors(e);
         }
 
         foreach (var render in GameObjectsLast)
         {
-            render.Value.OnResize(e);
-            render.Value.ResizeBehaviours(e);
+            render.Value.Renderers.ForEach(r => r.Resize(e));
+            render.Value.ResizeBehaviors(e);
         }
     }
 
     public void SetupBehaviors()
     {
         foreach (var render in GameObjects)
-            render.Value.SetupBehaviours();
+            render.Value.SetupBehaviors();
 
         foreach (var render in GameObjectsLast)
-            render.Value.SetupBehaviours();
+            render.Value.SetupBehaviors();
     }
 
     public void Dispose()
     {
         foreach (var renderObject in GameObjects)
         {
-            renderObject.Value.CleanupBehaviours();
-            renderObject.Value.Dispose();
+            renderObject.Value.CleanupBehaviors();
+            renderObject.Value.Renderers.ForEach(r => r.Dispose());
             DestroyObject(renderObject.Value);
         }
 
         foreach (var renderObject in GameObjectsLast)
         {
-            renderObject.Value.CleanupBehaviours();
-            renderObject.Value.Dispose();
+            renderObject.Value.CleanupBehaviors();
+            renderObject.Value.Renderers.ForEach(r => r.Dispose());
             DestroyObject(renderObject.Value);
         }
 

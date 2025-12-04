@@ -7,7 +7,7 @@ namespace SimplePlatformer.Classes.GameObjects.World;
 
 public class Platform
 {
-    public TexturedCubeModel GameObject { get; private set; }
+    public TexturedCube GameObject { get; private set; }
     public Trigger TGameObject { get; private set; }
 
     public Behavior? Script = null;
@@ -21,13 +21,12 @@ public class Platform
 
     public void Load(Vector3 size)
     {
-        GameObject = new TexturedCubeModel(
+        GameObject = new TexturedCube(
             diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/granite.jpg",
             specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/granite_specular.jpg");
 
-        GameObject.Material.Shininess = 0.5f;
         GameObject.Transform.LocalScale = size;
-        GameObject.AddComponent<BoxCollider>().Type = BoxCollider.ColliderType.Kinematic;
+        GameObject.AddComponent<BoxCollider>().Type = ColliderType.Kinematic;
     }
 
     public List<GameObject> GameObjects()

@@ -10,7 +10,7 @@ public class BoxCollider : BaseCollider
     public OpenTK.Mathematics.Vector3 Size = OpenTK.Mathematics.Vector3.Zero;
     private OpenTK.Mathematics.Vector3 _lastSize = OpenTK.Mathematics.Vector3.Zero;
 
-    public override void Setup()
+    public override void OnStart()
     {
         if (Size == OpenTK.Mathematics.Vector3.Zero) 
             Size = GameObject.Transform.LocalScale;

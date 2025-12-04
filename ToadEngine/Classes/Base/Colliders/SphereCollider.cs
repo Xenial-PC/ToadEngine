@@ -13,7 +13,7 @@ public class SphereCollider : BaseCollider
 
     private float _lastRadius;
 
-    public override void Setup()
+    public override void OnStart()
     {
         _lastRadius = Radius;
 

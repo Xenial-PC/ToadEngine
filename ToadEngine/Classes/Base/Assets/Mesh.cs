@@ -30,37 +30,19 @@ public class Mesh
 
     public void Draw(Shader shader)
     {
-        uint diffuseNr = 1;
-        uint specularNr = 1;
-        uint normalNr = 1;
-        uint heightNr = 1;
-        
+        var hasNormalMap = false;
         for (var i = 0; i < Textures.Count; i++)
         {
             GL.ActiveTexture((TextureUnit)((int)TextureUnit.Texture0 + i));
-            var number = string.Empty;
-            var name = Textures[i].TypeName;
-
-            number = name switch
-            {
-                "texture_diffuse" => $"{diffuseNr++}",
-                "texture_specular" => $"{specularNr++}",
-                "texture_normal" => $"{normalNr++}",
-                "texture_height" => $"{heightNr++}",
-                _ => number
-            };
-
-            shader.SetInt1("material.".Replace("texture_", string.Empty) + name + number, i);
+            var type = Textures[i].Type;
+            
+            if (type == Assimp.TextureType.Normals) hasNormalMap = true;
+            shader.SetInt1("material." + type.ToString().ToLower(), i);
             GL.BindTexture(TextureTarget.Texture2D, Textures[i].Handle);
         }
 
         if (Textures.Count <= 0) BaseTextures.White.Use();
-        
-        shader.SetVector3("materials.ambient", Material.Ambient);
-        shader.SetVector3("materials.diffuse", Material.Diffuse);
-        shader.SetVector3("materials.specular", Material.Specular);
-        shader.SetVector3("materials.normal", Material.Normal);
-        shader.SetFloat1("materials.shininess", Material.Shininess);
+        shader.SetInt1("material.hasNormalMap", hasNormalMap ? 1 : 0);
 
         GL.BindVertexArray(_vao);
         GL.DrawElements(PrimitiveType.Triangles, Indices.Count, DrawElementsType.UnsignedInt, 0);
@@ -119,9 +101,9 @@ public class Mesh
         {
             public Vector3 Position;
             public Vector3 Normal;
+            public Vector2 TexCoords;
             public Vector3 Tangent;
             public Vector3 Bitangent;
-            public Vector2 TexCoords;
         }
 
         [StructLayout(LayoutKind.Sequential)]

@@ -18,4 +18,9 @@ public class Transform
     {
         Scale = scale;
     }
+
+    public Transform Clone()
+    {
+        return (Transform)(MemberwiseClone());
+    }
 }

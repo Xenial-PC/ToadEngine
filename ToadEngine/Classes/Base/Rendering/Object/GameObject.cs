@@ -3,6 +3,7 @@ using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
+using UltraMapper;
 
 namespace ToadEngine.Classes.Base.Rendering.Object;
 
@@ -13,11 +14,13 @@ public struct Textures
     public Texture Normal;
 }
 
-public class GameObject : RenderObject
+public class GameObject
 {
-    public string? Name;
+    public string? Name = null;
 
-    private List<Behavior?> _behaviours = new();
+    private List<Behavior?> _behaviors = new();
+
+    public List<IRenderObject> Renderers => Component.GetOfType<IRenderObject>();
 
     public Component Component = new();
     public Transform Transform = new();
@@ -39,10 +42,10 @@ public class GameObject : RenderObject
     public Shader CoreShader => Service.CoreShader;
     public NativeWindow WHandler => Service.NativeWindow;
 
-    public GameObject(string? name = null)
-    {
-        Name = name;
+    public bool IsEnabled = true;
 
+    public GameObject()
+    {
         Transform.Front = -Vector3.UnitZ;
         Transform.Up = Vector3.UnitY;
         Transform.Right = Vector3.UnitX;
@@ -60,6 +63,8 @@ public class GameObject : RenderObject
     public T GetComponent<T>(string name) where T : class => Component.Get<T>(name);
     public List<T> GetComponentsOfType<T>(string name) where T : class => Component.GetOfType<T>();
     public List<object> Components => Component.Components;
+
+    public virtual void Setup() { }
 
     public void UpdateModelMatrix()
     {
@@ -130,51 +135,59 @@ public class GameObject : RenderObject
         Scene.DestroyObject(this);
     }
 
-    public void SetupBehaviours()
+    public void SetupBehaviors()
     {
-        _behaviours = Component.GetOfType<Behavior>()!;
-        if (_behaviours.Count <= 0) return;
+        _behaviors = Component.GetOfType<Behavior>()!;
+        if (_behaviors.Count <= 0) return;
 
-        foreach (var behaviour in _behaviours.OfType<Behavior>())
+        foreach (var behavior in _behaviors.OfType<Behavior>())
         {
-            behaviour.GameObject = this;
-            GUI.GuiCallBack += behaviour.OnGUI;
-            behaviour.Setup();
+            behavior.GameObject = this;
+            GUI.GuiCallBack += behavior.OnGUI;
+            behavior.OnStart();
         }
     }
 
-    public void UpdateBehaviours()
+    public void UpdateBehaviors()
     {
-        foreach (var behaviour in _behaviours.OfType<Behavior>())
+        foreach (var behavior in _behaviors.OfType<Behavior>())
         {
-            behaviour.GameObject = this;
-            behaviour.Update();
+            behavior.GameObject = this;
+            behavior.OnUpdate();
         }
     }
 
-    public void UpdateBehavioursFixedTime()
+    public void UpdateBehaviorsFixedTime()
     {
-        foreach (var behaviour in _behaviours.OfType<Behavior>())
+        foreach (var behavior in _behaviors.OfType<Behavior>())
         {
-            behaviour.GameObject = this;
-            behaviour.OnFixedUpdate();
+            behavior.GameObject = this;
+            behavior.OnFixedUpdate();
         }
     }
 
-    public void CleanupBehaviours()
+    public void CleanupBehaviors()
     {
-        foreach (var behaviour in _behaviours.OfType<Behavior>())
+        foreach (var behavior in _behaviors.OfType<Behavior>())
         {
-            foreach (var source in behaviour.Sources)
+            foreach (var source in behavior.Sources)
                 source.Value.Dispose();
 
-            behaviour.Dispose();
+            behavior.OnDispose();
         }
     }
 
-    public void ResizeBehaviours(FramebufferResizeEventArgs e)
+    public void ResizeBehaviors(FramebufferResizeEventArgs e)
     {
-        foreach (var behaviour in _behaviours.OfType<Behavior>())
-            behaviour.Resize(e);
+        foreach (var behavior in _behaviors.OfType<Behavior>())
+        {
+            behavior.OnResize(e);
+        }
+    }
+
+    public GameObject Clone()
+    {
+        var uMap = new Mapper();
+        return uMap.Map<GameObject>(this);
     }
 }

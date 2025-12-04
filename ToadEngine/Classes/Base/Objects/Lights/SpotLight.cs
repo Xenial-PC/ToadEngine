@@ -1,6 +1,7 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Base.Scripting.Renderer;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
 
@@ -8,7 +9,9 @@ public class SpotLight : GameObject
 {
     public static int LightIndex;
     public int CurrentIndex;
+
     public ShadowCaster ShadowCaster = null!;
+    public LightRenderer LightRenderer = null!;
 
     public BaseLight.SpotLight Settings = new()
     {
@@ -37,44 +40,9 @@ public class SpotLight : GameObject
     {
         LightIndex++;
         CurrentIndex = LightIndex - 1;
-    }
 
-    public override void Draw()
-    {
-        CoreShader.Use();
-        CoreShader.SetInt1("spotLightAmount", SpotLight.LightIndex);
-        CoreShader.SetInt1("pointLightAmount", PointLight.LightIndex);
-
-        UpdateModelMatrix();
-
-        var camera = Service.MainCamera;
-
-        CoreShader.SetMatrix4("model", Model);
-        CoreShader.SetMatrix4("view", camera.GetViewMatrix());
-        CoreShader.SetMatrix4("projection", camera.GetProjectionMatrix());
-        CoreShader.SetVector3("viewPos", camera.Transform.LocalPosition);
-
-        CoreShader.SetVector3($"spotLights[{CurrentIndex}].position", Settings.Position);
-        CoreShader.SetVector3($"spotLights[{CurrentIndex}].direction", Settings.Direction);
-
-        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].cutOff", Settings.CutOff);
-        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].outerCutOff", Settings.OuterCutOff);
-
-        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].constant", Settings.Constant);
-        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].linear", Settings.Linear);
-        CoreShader.SetFloat1($"spotLights[{CurrentIndex}].quadratic", Settings.Quadratic);
-
-        CoreShader.SetVector3($"spotLights[{CurrentIndex}].ambient", Settings.Ambient);
-        CoreShader.SetVector3($"spotLights[{CurrentIndex}].diffuse", Settings.Diffuse);
-        CoreShader.SetVector3($"spotLights[{CurrentIndex}].specular", Settings.Specular);
-    }
-
-    public override void Update()
-    {
-    }
-
-    public override void Dispose()
-    {
-        LightIndex--;
+        LightRenderer = AddComponent<LightRenderer>();
+        LightRenderer.Settings = Settings;
+        LightRenderer.CurrentIndex = CurrentIndex;
     }
 }

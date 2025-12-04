@@ -102,7 +102,7 @@
     <PackageReference Include="DearImGui" Version="1.89.3" />
     <PackageReference Include="DearImGui.OpenTK" Version="1.0.0.1" />
     <PackageReference Include="DearImPlot" Version="0.14.0.1" />
-    <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="SkiaSharp" Version="3.119.1" />
@@ -112,6 +112,7 @@
     <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.1" />
     <PackageReference Include="SkiaSharp.Vulkan.SharpVk" Version="3.119.1" />
     <PackageReference Include="StbImageSharp" Version="2.30.15" />
+    <PackageReference Include="UltraMapper" Version="0.2.61" />
   </ItemGroup>
 
 </Project>

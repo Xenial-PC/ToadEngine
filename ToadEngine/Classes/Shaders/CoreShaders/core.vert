@@ -8,7 +8,8 @@ layout(location = 4) in vec3 aBitangent;
 out vec3 Normal;
 out vec3 FragPos;
 out vec2 TexCoords;
-out mat3 TBN;
+out vec3 worldPos;
+out vec3 worldN;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -21,12 +22,7 @@ void main()
 	Normal = mat3(transpose(inverse(model))) * aNormal;
 	TexCoords = aTexCoords;
 
-	mat3 normalMatrix = mat3(transpose(inverse(model)));
-	vec3 T = normalize(normalMatrix * aTangent);
-	vec3 N = normalize(normalMatrix * aNormal);
-
-	T = normalize(T - dot(T, N) * N);
-	vec3 B = cross(N, T);
-
-	TBN = mat3(T, B, N);
+	worldPos = (model * vec4(aPosition, 1.0)).xyz;
+	worldN = (vec4(aNormal, 1.0) * inverse(model)).xyz;
+	worldN = normalize(worldN);
 }

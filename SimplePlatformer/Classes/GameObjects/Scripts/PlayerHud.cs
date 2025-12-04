@@ -18,7 +18,7 @@ public class PlayerHud : Behavior
     private static DateTime _levelStartTime;
     private static bool _isTimerRunning;
 
-    public override void Setup()
+    public override void OnStart()
     {
         LevelTimer = new Timer(1);
         LevelTimer.Elapsed += LevelTimerOnElapsed;

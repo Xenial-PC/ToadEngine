@@ -3,8 +3,9 @@ struct Material
 {
 	sampler2D diffuse;
 	sampler2D specular;
-	sampler2D normalMap;
+	sampler2D normals;
 	float shininess;
+	bool hasNormalMap;
 };
 
 struct DirLight
@@ -72,21 +73,26 @@ out vec4 FragColor;
 in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoords;
-in mat3 TBN;
+in vec3 worldPos;
+in vec3 worldN;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 float ShadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap, float bias);
+vec3 getNormalFromMap();
 
 void main()
 {	
-	vec3 norm = texture(material.normalMap, TexCoords).rgb;
-	norm = normalize(norm * 2.0 - 1.0);
+	vec3 norm;
 
-	//vec3 norm = normalize(Normal);
-
-	vec3 viewDir = TBN * normalize(viewPos - FragPos);
+	if (material.hasNormalMap) 
+	{
+		norm = getNormalFromMap();
+	}
+	else norm = normalize(Normal);
+	
+	vec3 viewDir = normalize(viewPos - FragPos);
 	vec3 result = CalcDirLight(dirLight, norm, viewDir);
 
 	if (pointLightAmount != 0)
@@ -130,11 +136,29 @@ float ShadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap, float bias)
 	return shadow;
 }
 
+vec3 getNormalFromMap()
+{
+	vec3 tangentNormal = texture(material.normals, TexCoords).xyz * 2.0 - 1.0;
+
+	vec3 Q1 = dFdx(worldPos);
+	vec3 Q2 = dFdy(worldPos);
+	vec2 st1 = dFdx(TexCoords);
+	vec2 st2 = dFdy(TexCoords);
+
+	vec3 n = normalize(worldN);
+	vec3 t = normalize(Q1 * st2.t - Q2 * st1.t);
+	vec3 b = normalize(-Q1 * st2.s + Q2 * st1.s);
+
+	mat3 tbn = mat3(t, b, n);
+
+	return normalize(tbn * tangentNormal);
+}
+
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
 	vec3 color = texture(material.diffuse, TexCoords).rgb;
 
-	vec3 lightDir = TBN * normalize(-light.direction);
+	vec3 lightDir = normalize(-light.direction);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 
 	float diff = max(dot(normal, lightDir), 0.0);
@@ -144,7 +168,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 	vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
 	vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
 	
-	float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+	float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.005);
 	vec4 fragPosLightSpace = vec4(FragPos, 1.0) * light.fragPosLightSpace;
 	float shadow = ShadowCalculation(fragPosLightSpace, light.shadowMap, bias);
 

@@ -1,12 +1,14 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Base.Scripting.Renderer;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
 
 public class DirectionLight : GameObject
 {
     public ShadowCaster ShadowCaster = null!;
+    public LightRenderer LightRenderer = null!;
 
     public BaseLight.DirectionLight Settings = new()
     {
@@ -16,7 +18,7 @@ public class DirectionLight : GameObject
         Specular = new Vector3(1.0f),
     };
 
-    public void AddShadowCaster()
+    private void AddShadowCaster()
     {
         ShadowCaster = Component.Add<ShadowCaster>();
         ShadowCaster.IsCastingShadows = true;
@@ -26,34 +28,10 @@ public class DirectionLight : GameObject
         ShadowCaster.FarPlane = 200f;
     }
 
-    public override void Draw()
+    public override void Setup()
     {
-        CoreShader.Use();
-        CoreShader.SetInt1("spotLightAmount", SpotLight.LightIndex);
-        CoreShader.SetInt1("pointLightAmount", PointLight.LightIndex);
-
-        UpdateModelMatrix();
-
-        var camera = Service.Get<Camera>()!;
-
-        CoreShader.SetMatrix4("model", Model);
-        CoreShader.SetMatrix4("view", camera.GetViewMatrix());
-        CoreShader.SetMatrix4("projection", camera.GetProjectionMatrix());
-        CoreShader.SetVector3("viewPos", camera.Transform.LocalPosition);
-
-        CoreShader.SetVector3($"dirLight.direction", Settings.Direction);
-        CoreShader.SetVector3($"dirLight.ambient", Settings.Ambient);
-        CoreShader.SetVector3($"dirLight.diffuse", Settings.Diffuse);
-        CoreShader.SetVector3($"dirLight.specular", Settings.Specular);
-    }
-
-    public override void Update()
-    {
-        
-    }
-
-    public override void Dispose()
-    {
-        
+        LightRenderer = AddComponent<LightRenderer>();
+        LightRenderer.Settings = Settings;
+        AddShadowCaster();
     }
 }

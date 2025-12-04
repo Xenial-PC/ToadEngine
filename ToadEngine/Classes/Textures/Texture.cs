@@ -8,7 +8,6 @@ public class Texture
 {
     public int Handle;
     public TextureType Type;
-    public string TypeName;
     public string Path;
 
     private static readonly Dictionary<string, int> LoadedTextures = new();

@@ -4,7 +4,7 @@ namespace SimplePlatformer.Classes.GameObjects.World;
 
 public class BasePlate
 {
-    public TexturedCubeModel GameObject { get; private set; }
+    public TexturedCube GameObject { get; private set; }
 
     public BasePlate(string? name = null, Vector3? size = null)
     {
@@ -13,14 +13,14 @@ public class BasePlate
 
     private void Load(string? name = null, Vector3? size = null)
     {
-        GameObject = new TexturedCubeModel(
+        GameObject = new TexturedCube(
             diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/concrete.jpg",
             specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/concrete_specular.jpg");
 
-        if (size != null) GameObject.Transform.LocalScale = (Vector3)size!;
+        if (size != null) GameObject.Transform.LocalScale = (Vector3)size;
 
         var collider = GameObject.AddComponent<BoxCollider>();
-        collider.Type = BoxCollider.ColliderType.Kinematic;
+        collider.Type = ColliderType.Kinematic;
         collider.Size = size ?? GameObject.Transform.LocalScale;
     }
 }

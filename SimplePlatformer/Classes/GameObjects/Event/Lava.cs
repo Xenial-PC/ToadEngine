@@ -6,7 +6,7 @@ namespace SimplePlatformer.Classes.GameObjects.Event;
 
 public class Lava
 {
-    public TexturedCubeModel GameObject { get; private set; }
+    public TexturedCube GameObject { get; private set; }
     public Trigger TGameObject { get; private set; }
 
     private static int _lava;
@@ -21,11 +21,11 @@ public class Lava
 
     public void Load(Vector3 size, Vector3 position, Behavior behavior)
     {
-        GameObject = new TexturedCubeModel(
+        GameObject = new TexturedCube(
             diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava.jpg",
-            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava_specular.jpg");
+            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava_specular.jpg",
+            normal: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava_normal.png");
 
-        GameObject.Material.Shininess = 10f;
         GameObject.Transform.LocalScale = size;
         GameObject.Transform.Position = position;
 

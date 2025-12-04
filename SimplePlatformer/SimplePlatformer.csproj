@@ -81,6 +81,12 @@
     <None Update="Resources\Textures\lava.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\Textures\lava_normal.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Textures\lava_normal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Textures\lava_specular.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
