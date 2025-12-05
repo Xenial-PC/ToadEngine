@@ -52,7 +52,7 @@ public class AssetManager
     /// <param name="matName"></param>
     /// <param name="material"></param>
     /// <returns></returns>
-    public static Material LoadMaterial(string matName, Material material)
+    public static Material CreateMaterial(string matName, Material material)
     {
         if (Materials.TryGetValue(matName, out var mat))
             return mat;

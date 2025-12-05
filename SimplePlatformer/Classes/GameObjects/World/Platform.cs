@@ -1,5 +1,6 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Event;
 using SimplePlatformer.Classes.GameObjects.Models;
+using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
 
@@ -21,10 +22,7 @@ public class Platform
 
     public void Load(Vector3 size)
     {
-        GameObject = new TexturedCube(
-            diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/granite.jpg",
-            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/granite_specular.jpg",
-            normal: $"{Directory.GetCurrentDirectory()}/Resources/Textures/granite_normal.png");
+        GameObject = new TexturedCube(AssetManager.GetMaterial("GraniteMat"));
 
         GameObject.Transform.LocalScale = size;
         GameObject.AddComponent<BoxCollider>().Type = ColliderType.Kinematic;

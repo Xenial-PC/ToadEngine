@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Classes\Fonts\" />
-    <Folder Include="Classes\GameObjects\Materials\" />
     <Folder Include="Classes\Shaders\" />
   </ItemGroup>
 

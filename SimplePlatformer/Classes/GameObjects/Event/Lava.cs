@@ -1,6 +1,11 @@
-﻿using SimplePlatformer.Classes.GameObjects.Models;
+﻿using Assimp;
+using SharpVk;
+using SimplePlatformer.Classes.GameObjects.Models;
+using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Textures;
+using Material = ToadEngine.Classes.Base.Assets.Material;
 
 namespace SimplePlatformer.Classes.GameObjects.Event;
 
@@ -21,10 +26,7 @@ public class Lava
 
     public void Load(Vector3 size, Vector3 position, Behavior behavior)
     {
-        GameObject = new TexturedCube(
-            diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava/lava.png",
-            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava/lava_roughness.png",
-            normal: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava/lava_normal.png");
+        GameObject = new TexturedCube(AssetManager.GetMaterial("LavaMat"));
 
         GameObject.Transform.LocalScale = size;
         GameObject.Transform.Position = position;

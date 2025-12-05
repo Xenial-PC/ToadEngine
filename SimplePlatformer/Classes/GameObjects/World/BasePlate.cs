@@ -1,4 +1,5 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Models;
+using ToadEngine.Classes.Base.Assets;
 
 namespace SimplePlatformer.Classes.GameObjects.World;
 
@@ -13,10 +14,7 @@ public class BasePlate
 
     private void Load(string? name = null, Vector3? size = null)
     {
-        GameObject = new TexturedCube(
-            diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/concrete.jpg",
-            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/concrete_specular.jpg",
-            normal: $"{Directory.GetCurrentDirectory()}/Resources/Textures/concrete_normal.png");
+        GameObject = new TexturedCube(AssetManager.GetMaterial("ConcreteMat"));
 
         if (size != null) GameObject.Transform.LocalScale = (Vector3)size;
 

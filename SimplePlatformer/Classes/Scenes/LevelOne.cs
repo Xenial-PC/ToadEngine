@@ -1,5 +1,6 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
 using SimplePlatformer.Classes.GameObjects.Event;
+using SimplePlatformer.Classes.GameObjects.Materials;
 using SimplePlatformer.Classes.GameObjects.Menus;
 using SimplePlatformer.Classes.GameObjects.Models;
 using SimplePlatformer.Classes.GameObjects.Scripts;
@@ -31,6 +32,8 @@ public class LevelOne : Scene
 
     public override void Setup()
     {
+        SceneMaterials.SceneOne();
+
         var baseDirectory = $"{Directory.GetCurrentDirectory()}/Resources/";
 
         _skybox = new Skybox

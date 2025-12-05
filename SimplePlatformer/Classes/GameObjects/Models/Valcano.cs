@@ -15,16 +15,7 @@ public class Volcano : GameObject
     {
         MeshRenderer = AddComponent<MeshRenderer>();
         MeshRenderer.Model = AssetManager.LoadModel($"{Directory.GetCurrentDirectory()}/Resources/Models/Volcano/source/", "Volcano.fbx", [
-            new Material()
-            {
-                Diffuse = Texture.FromPath(
-                    $"{Directory.GetCurrentDirectory()}/Resources/Models/Volcano/textures/volcano_diffuse.png",
-                    TextureType.Diffuse),
-
-                Normal = Texture.FromPath(
-                    $"{Directory.GetCurrentDirectory()}/Resources/Models/Volcano/textures/volcano_normal.png",
-                    TextureType.Normals)
-            }
+            AssetManager.GetMaterial("VolcanoMat")
         ]);
 
         Transform.Rotation = new Vector3(-90, 0, 0);
