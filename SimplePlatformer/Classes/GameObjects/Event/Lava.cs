@@ -1,11 +1,6 @@
-﻿using Assimp;
-using SharpVk;
-using SimplePlatformer.Classes.GameObjects.Models;
+﻿using SimplePlatformer.Classes.GameObjects.Models;
 using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Rendering.Object;
-using ToadEngine.Classes.Base.Scripting.Base;
-using ToadEngine.Classes.Textures;
-using Material = ToadEngine.Classes.Base.Assets.Material;
 
 namespace SimplePlatformer.Classes.GameObjects.Event;
 
@@ -16,15 +11,12 @@ public class Lava
 
     private static int _lava;
 
-    public Behavior Behavior { get; private set; }
-
-    public Lava(Vector3 size, Vector3 position, Behavior behavior)
+    public Lava(Vector3 size, Vector3 position)
     {
-        Behavior = (behavior.Clone() as Behavior)!;
-        Load(size, position, Behavior);
+        Load(size, position);
     }
 
-    public void Load(Vector3 size, Vector3 position, Behavior behavior)
+    public void Load(Vector3 size, Vector3 position)
     {
         GameObject = new TexturedCube(AssetManager.GetMaterial("LavaMat"));
 
@@ -33,11 +25,13 @@ public class Lava
 
         GameObject.AddComponent<BoxCollider>().Type = ColliderType.Kinematic;
         TGameObject = new Trigger(GameObject.Transform.LocalScale, GameObject.Transform.Position,
-            $"lava_{_lava++}", behavior);
+            $"lava_{_lava++}");
 
         GameObject.AddChild(TGameObject.GameObject);
         TGameObject.GameObject.Transform.LocalPosition.Y += 0.05f;
     }
+
+    public T AddScript<T>() where T : new() => TGameObject.AddScript<T>();
 
     public List<GameObject> GameObjects()
     {

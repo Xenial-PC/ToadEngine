@@ -1,6 +1,4 @@
-﻿using SimplePlatformer.Classes.GameObjects.Models;
-using ToadEngine.Classes.Base.Rendering.Object;
-using ToadEngine.Classes.Base.Scripting.Base;
+﻿using ToadEngine.Classes.Base.Rendering.Object;
 
 namespace SimplePlatformer.Classes.GameObjects.Event;
 
@@ -8,12 +6,12 @@ public class Trigger
 {
     public TriggerGameObject GameObject { get; private set; }
     
-    public Trigger(Vector3 size, Vector3 position, string name, Behavior scriptBehavior)
+    public Trigger(Vector3 size, Vector3 position, string name)
     {
-        Load(size, position, name, scriptBehavior);
+        Load(size, position, name);
     }
 
-    public void Load(Vector3 size, Vector3 position, string name, Behavior scriptBehavior)
+    public void Load(Vector3 size, Vector3 position, string name)
     {
         GameObject = new TriggerGameObject() { Name = name };
         
@@ -21,8 +19,9 @@ public class Trigger
         GameObject.Transform.LocalScale = size;
 
         GameObject.AddComponent<BoxCollider>().Type = ColliderType.Trigger;
-        GameObject.AddComponent(scriptBehavior);
     }
+
+    public T AddScript<T>() where T : new() => GameObject.AddComponent<T>();
 
     public class TriggerGameObject : GameObject;
 }

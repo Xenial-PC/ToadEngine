@@ -115,12 +115,14 @@ public class GameObject
     {
         if (Children.Contains(child)) return;
         Children.Add(child);
+        UpdateWorldTransform();
     }
 
     public void RemoveChild(GameObject child)
     {
         if (Children.Contains(child)) return;
         Children.Remove(child);
+        UpdateWorldTransform();
     }
 
     public void Enable()

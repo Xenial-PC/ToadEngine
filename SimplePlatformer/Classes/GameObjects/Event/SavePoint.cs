@@ -9,8 +9,6 @@ public class SavePoint
     public BasePlate SavePointObject { get; private set; }
     public Trigger TGameObject { get; private set; }
 
-    public SavePointScript SPScript { get; private set; }
-
     private static int _index;
 
     public SavePoint(Vector3 pos, Vector3? size = null)
@@ -21,17 +19,18 @@ public class SavePoint
 
     public void Load(Vector3 size, Vector3 pos)
     {
-        SPScript = new SavePointScript();
         SavePointObject = new BasePlate(size: size);
         SavePointObject.GameObject.Transform.Position = pos;
         SavePointObject.GameObject.Transform.LocalScale = size;
 
         TGameObject = new Trigger(SavePointObject.GameObject.Transform.LocalScale, SavePointObject.GameObject.Transform.Position,
-            $"savePoint_{_index++}", SPScript);
+            $"savePoint_{_index++}");
         
         SavePointObject.GameObject.AddChild(TGameObject.GameObject);
         TGameObject.GameObject.Transform.LocalPosition.Y += 0.45f;
     }
+
+    public T AddScript<T>() where T : new() => TGameObject.AddScript<T>();
 
     public List<GameObject> GameObjects()
     {

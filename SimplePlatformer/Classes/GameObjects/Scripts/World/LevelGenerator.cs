@@ -92,7 +92,11 @@ public class LevelGenerator
         _isFirstPlatform = false;
         _flipDirection = !_flipDirection;
 
-        platform.Script = new MovingPlatform() { MovingRange = new Vector3(_lastWasLava ? 0 : rand.Next(-6, 6), 0f, _lastWasLava ? -11.3f : 0), MovingSpeed = 0.4f, Player = OutOfBoundsRespawnScript.Player };
+        var mPlatform = platform.AddScript<MovingPlatform>();
+        mPlatform.MovingRange = new Vector3(_lastWasLava ? 0 : rand.Next(-6, 6), 0f, _lastWasLava ? -11.3f : 0);
+        mPlatform.MovingSpeed = 0.4f;
+        mPlatform.Player = OutOfBoundsRespawnScript.Player;
+
         _lastWasLava = false;
 
         return platform.GameObjects();
@@ -108,7 +112,9 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
 
-        var lava = new Lava(new Vector3(5f, 14f, 5f), pos, OutOfBoundsRespawnScript);
+        var lava = new Lava(new Vector3(5f, 14f, 5f), pos);
+        var respawnScript = lava.AddScript<RespawnScript>();
+
         _lastPosition = lava.GameObject.Transform.Position;
 
         _flipDirection = !_flipDirection;
@@ -122,9 +128,10 @@ public class LevelGenerator
 
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
-        
+
         var platform = new SavePoint(pos, new Vector3(6f, 14f, 6f));
-        platform.SPScript.IsLastSavePoint = isLastSavePoint;
+        var savePoint = platform.AddScript<SavePointScript>();
+        savePoint.IsLastSavePoint = isLastSavePoint;
 
         _lastPosition = platform.SavePointObject.GameObject.Transform.Position;
         _flipDirection = !_flipDirection;

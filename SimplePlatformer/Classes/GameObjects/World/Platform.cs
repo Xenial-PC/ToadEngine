@@ -11,8 +11,6 @@ public class Platform
     public TexturedCube GameObject { get; private set; }
     public Trigger TGameObject { get; private set; }
 
-    public Behavior? Script = null;
-
     private static int _index;
 
     public Platform(Vector3 size)
@@ -23,25 +21,21 @@ public class Platform
     public void Load(Vector3 size)
     {
         GameObject = new TexturedCube(AssetManager.GetMaterial("GraniteMat"));
-
         GameObject.Transform.LocalScale = size;
         GameObject.AddComponent<BoxCollider>().Type = ColliderType.Kinematic;
+
+        TGameObject = new Trigger(GameObject.Transform.LocalScale, GameObject.Transform.Position,
+            $"platform_{_index++}");
+
+        TGameObject.GameObject.Transform.LocalPosition.Y += 0.35f;
+        GameObject.AddChild(TGameObject.GameObject);
     }
+
+    public T AddScript<T>() where T : new() => TGameObject.AddScript<T>();
 
     public List<GameObject> GameObjects()
     {
-        if (Script == null) return [GameObject];
-        TGameObject = new Trigger(GameObject.Transform.LocalScale, GameObject.Transform.Position,
-            $"platform_{_index++}", Script);
-
-        GameObject.AddChild(TGameObject.GameObject);
-
-        var clone = (Script.Clone() as Behavior);
-        clone!.GameObject = GameObject;
-
-        GameObject.AddComponent(clone);
-
-        TGameObject.GameObject.Transform.LocalPosition.Y += 0.35f;
+        if (GameObject.Components.Count <= 0) return [GameObject];
         return [GameObject, TGameObject.GameObject];
     }
 }

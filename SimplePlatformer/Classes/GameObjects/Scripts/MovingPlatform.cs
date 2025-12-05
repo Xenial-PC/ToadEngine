@@ -1,8 +1,6 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
-using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
-using static BepuPhysics.Collidables.CompoundBuilder;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
@@ -19,7 +17,7 @@ public class MovingPlatform : Behavior
 
     public override void OnStart()
     {
-        _originalPosition = GameObject.Transform.Position;
+        _originalPosition = GameObject.Parent.Transform.Position;
     }
 
     public override void OnUpdate()
@@ -39,17 +37,16 @@ public class MovingPlatform : Behavior
                 break;
         }
 
-        GameObject.Transform.Position = _originalPosition + (MovingRange * _t);
+        GameObject.Parent.Transform.Position = _originalPosition + (MovingRange * _t);
 
         if (_isPlayerOnTop)
         {
-            var delta = (GameObject.Transform.Position - _lastPlatformPosition);
+            var delta = (GameObject.Parent.Transform.Position - _lastPlatformPosition);
             Player.Controller.Body.Pose.Position += (System.Numerics.Vector3)delta;
         }
 
-        _lastPlatformPosition = GameObject.Transform.Position;
+        _lastPlatformPosition = GameObject.Parent.Transform.Position;
     }
-
 
     public override void OnTriggerEnter(GameObject other)
     {
