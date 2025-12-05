@@ -46,7 +46,7 @@ public class LevelOne : Scene
         ]);
 
         _camera = new Camera(WHandler.Size.X / (float)WHandler.Size.Y);
-        Service.Add(_camera);
+        Service.MainCamera = _camera;
 
         PauseMenu = new PauseMenu();
         Scripts.AddComponent(PauseMenu);
@@ -81,6 +81,21 @@ public class LevelOne : Scene
 
         RespawnScript.RespawnPosition =  _player.GameObject.Transform.Position;
 
+        GenerateLevelFloor();
+        
+        _level = _generator.GenerateLevelOne(_player);
+
+        _volcano = new Volcano();
+        _volcano.Transform.Position = new Vector3(-1500, -20, 400);
+        _volcano.Transform.LocalScale = new Vector3(30, 30, 30);
+
+        _volcano2 = new Volcano();
+        _volcano2.Transform.Position = new Vector3(1500, -20, 800);
+        _volcano2.Transform.LocalScale = new Vector3(30, 30, 30);
+    }
+
+    private void GenerateLevelFloor()
+    {
         for (var i = -5; i < 5; i++)
         {
             for (var j = -5; j < 5; j++)
@@ -92,16 +107,6 @@ public class LevelOne : Scene
                 _outOfBoundsLava.Add(lava);
             }
         }
-        
-        _level = _generator.GenerateLevelOne(_player);
-
-        _volcano = new Volcano();
-        _volcano.Transform.Position = new Vector3(-1500, -20, 400);
-        _volcano.Transform.LocalScale = new Vector3(30, 30, 30);
-
-        _volcano2 = new Volcano();
-        _volcano2.Transform.Position = new Vector3(1500, -20, 800);
-        _volcano2.Transform.LocalScale = new Vector3(30, 30, 30);
     }
 
     public override void OnStart()
