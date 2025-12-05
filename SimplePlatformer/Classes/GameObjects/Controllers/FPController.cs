@@ -1,5 +1,4 @@
 ﻿using BepuPhysics;
-using SimplePlatformer.Classes.GameObjects.Menus;
 using SimplePlatformer.Classes.GameObjects.Scripts;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.View;
@@ -49,7 +48,7 @@ public class FPController
             if (Camera is null)
             {
                 Camera = new Camera(WHandler.Size.X / (float)WHandler.Size.Y);
-                Service.Add(Camera);
+                Service.MainCamera = Camera;
             }
 
             AddChild(Camera);
