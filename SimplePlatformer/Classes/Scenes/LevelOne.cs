@@ -1,6 +1,7 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
 using SimplePlatformer.Classes.GameObjects.Event;
 using SimplePlatformer.Classes.GameObjects.Menus;
+using SimplePlatformer.Classes.GameObjects.Models;
 using SimplePlatformer.Classes.GameObjects.Scripts;
 using SimplePlatformer.Classes.GameObjects.Scripts.World;
 using ToadEngine.Classes.Base.Objects.Lights;
@@ -21,8 +22,9 @@ public class LevelOne : Scene
     private FPController _player = null!;
 
     private LevelGenerator _generator = null!;
-    private Lava _outOfBoundsLava = null!;
+    private List<Lava> _outOfBoundsLava = new();
     private List<GameObject> _level = null!;
+    private Volcano _volcano = null!, _volcano2 = null!;
 
     public PauseMenu PauseMenu = null!;
     public EOLMenu EndOfLevelMenu = null!;
@@ -71,17 +73,33 @@ public class LevelOne : Scene
         {
             OutOfBoundsRespawnScript = new RespawnScript
             {
-                RespawnPosition = _player.GameObject.Transform.Position,
                 Player = _player
             }
         };
 
-        _outOfBoundsLava = new Lava(new Vector3(1000f, 1f, 1000f), new Vector3(0, -10f, 0),
-            _generator.OutOfBoundsRespawnScript);
-        
-        _outOfBoundsLava.TGameObject.GameObject.Transform.LocalPosition.Y = 3;
+        RespawnScript.RespawnPosition =  _player.GameObject.Transform.Position;
 
+        for (var i = -5; i < 5; i++)
+        {
+            for (var j = -5; j < 5; j++)
+            {
+                var lava = new Lava(new Vector3(1000f, 1f, 1000f), new Vector3(i * 800, -10f, j * 800),
+                    _generator.OutOfBoundsRespawnScript);
+
+                lava.TGameObject.GameObject.Transform.LocalPosition.Y += 3;
+                _outOfBoundsLava.Add(lava);
+            }
+        }
+        
         _level = _generator.GenerateLevelOne(_player);
+
+        _volcano = new Volcano();
+        _volcano.Transform.Position = new Vector3(-1500, -20, 400);
+        _volcano.Transform.LocalScale = new Vector3(30, 30, 30);
+
+        _volcano2 = new Volcano();
+        _volcano2.Transform.Position = new Vector3(1500, -20, 800);
+        _volcano2.Transform.LocalScale = new Vector3(30, 30, 30);
     }
 
     public override void OnStart()
@@ -92,13 +110,15 @@ public class LevelOne : Scene
         Instantiate(_player.GameObject);
         Instantiate(_level);
 
-        Instantiate(_outOfBoundsLava.GameObjects());
+        Instantiate(_volcano);
+        Instantiate(_volcano2);
+
+        foreach (var lava in _outOfBoundsLava) Instantiate(lava.GameObjects());
     }
 
     public override void OnUpdate(FrameEventArgs e)
     {
-        var res = _outOfBoundsLava.Behavior as RespawnScript;
-        res!.RespawnPosition = SavePointScript.SavePoint;
+        RespawnScript.RespawnPosition = SavePointScript.SavePoint;
 
         if (PauseMenu.IsPaused) return;
         _camera.Update(WHandler.KeyboardState, WHandler.MouseState, (float)e.Time);

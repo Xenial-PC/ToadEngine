@@ -11,6 +11,6 @@ public class Sphere : GameObject
     public override void Setup()
     {
         Mesh = AddComponent<MeshRenderer>();
-        Mesh.Model = new Model("Sphere.obj");
+        Mesh.Model = AssetManager.LoadModel("Sphere.obj");
     }
 }

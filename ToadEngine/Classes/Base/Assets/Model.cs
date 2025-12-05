@@ -1,4 +1,5 @@
 ﻿using Assimp;
+using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
 using static ToadEngine.Classes.Base.Assets.Mesh;
@@ -10,21 +11,44 @@ public class Model
     public readonly List<Mesh> Meshes = new();
     private readonly string _directory, _path;
 
-    public List<List<Texture>> GetTextures => Meshes.Select(m => m.Textures).ToList();
-    public List<List<Texture>> GetTexturesOfType(TextureType type) => Meshes.Select(m => m.Textures.Where(tex => tex.Type == type).ToList()).ToList();
-
+    public List<Material?> GetMaterials => Meshes.Select(m => m.Material).ToList();
+    
     public Model(string path, string model)
     {
         _directory = Path.Combine(path, model);
         _path = path;
-
+        
         LoadModel();
     }
 
     public Model(string model)
     {
         var modelStream = RReader.ReadAsMemoryStream(model);
-        LoadModel(modelStream!, model.Remove(0, model.IndexOf('.', StringComparison.Ordinal)));
+        LoadModel(modelStream!, Path.GetExtension(model).TrimStart('.'));
+    }
+
+    public static Model Load(string path, string model)
+    {
+        var newModel = new Model(path, model);
+        return newModel;
+    }
+
+    public static Model Load(string model)
+    {
+        var newModel = new Model(model);
+        return newModel;
+    }
+
+    public void SetMaterial(Material material, int index) => GetMaterials[index] = material;
+    public void SetMaterials(List<Material> materials) => UpdateMaterials(materials);
+
+    private void UpdateMaterials(List<Material> materials)
+    {
+        for (var i = 0; i < materials.Count; i++)
+        {
+            if (i >= Meshes.Count) return;
+            Meshes[i].Material = materials[i];
+        }
     }
 
     public void Draw(Shader shader)
@@ -70,12 +94,11 @@ public class Model
         foreach (var n in node.Children) ProcessNode(n, scene);
     }
 
-    private Mesh ProcessMesh(Assimp.Mesh mesh, Assimp.Scene scene)
+    private Mesh ProcessMesh(Assimp.Mesh mesh, Scene scene)
     {
         List<MeshStructs.Vertex> vertices = new();
         List<int> indices = new();
-        List<Texture> textures = new();
-        MeshStructs.Mat matData = new();
+        MeshStructs.InternalMat matData = new();
 
         for (var i = 0; i < mesh.Vertices.Count; i++)
         {
@@ -105,58 +128,35 @@ public class Model
                 };
                 vertex.TexCoords = texCoords;
 
-                vector.X = mesh.Tangents[i].X;
-                vector.Y = mesh.Tangents[i].Y;
-                vector.Z = mesh.Tangents[i].Z;
-                vertex.Tangent = vector;
+                if (mesh.HasTangentBasis)
+                {
+                    vector.X = mesh.Tangents[i].X;
+                    vector.Y = mesh.Tangents[i].Y;
+                    vector.Z = mesh.Tangents[i].Z;
+                    vertex.Tangent = vector;
 
-                vector.X = mesh.BiTangents[i].X;
-                vector.Y = mesh.BiTangents[i].Y;
-                vector.Z = mesh.BiTangents[i].Z;
-                vertex.Bitangent = vector;
+                    vector.X = mesh.BiTangents[i].X;
+                    vector.Y = mesh.BiTangents[i].Y;
+                    vector.Z = mesh.BiTangents[i].Z;
+                    vertex.Bitangent = vector;
+                }
             }
             else vertex.TexCoords = new Vector2(0.0f);
             vertices.Add(vertex);
         }
         
         foreach (var faceIndices in mesh.Faces) indices.AddRange(faceIndices.Indices);
-        if (mesh.MaterialIndex < 0) return new Mesh(vertices, indices, textures, matData);
+        if (mesh.MaterialIndex < 0) return new Mesh(vertices, indices, matData);
 
         var material = scene.Materials[mesh.MaterialIndex];
         matData = LoadMaterial(material);
-        
-        var diffuseMaps = LoadMaterialTextures(material, TextureType.Diffuse);
-        textures.AddRange(diffuseMaps);
 
-        var specularMaps = LoadMaterialTextures(material, TextureType.Specular);
-        textures.AddRange(specularMaps);
-
-        var normalMaps = LoadMaterialTextures(material, TextureType.Normals);
-        textures.AddRange(normalMaps);
-
-        var heightMaps = LoadMaterialTextures(material, TextureType.Height);
-        textures.AddRange(heightMaps);
-
-        return new Mesh(vertices, indices, textures, matData);
+        return new Mesh(vertices, indices, matData);
     }
 
-    private List<Texture> LoadMaterialTextures(Material mat, TextureType type)
+    MeshStructs.InternalMat LoadMaterial(Assimp.Material mat)
     {
-        List<Texture> textures = new();
-        for (var i = 0; i < mat.GetMaterialTextureCount(type); i++)
-        {
-            mat.GetMaterialTexture(type, i, out var slot);
-            var texture = Texture.FromPath($"{_path}/{slot.FilePath}", type);
-            texture.Path = slot.FilePath;
-            textures.Add(texture);
-        }
-
-        return textures;
-    }
-
-    MeshStructs.Mat LoadMaterial(Material mat)
-    {
-        var material = new MeshStructs.Mat();
+        var material = new MeshStructs.InternalMat();
         if (mat.HasColorDiffuse)
             material.Diffuse = new Vector3(mat.ColorDiffuse.R, mat.ColorDiffuse.G, mat.ColorDiffuse.B);
 

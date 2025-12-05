@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
 using ToadEngine.Classes.Textures.Base;
+using static ToadEngine.Classes.Base.Assets.Mesh.MeshStructs;
 using PrimitiveType = OpenTK.Graphics.OpenGL4.PrimitiveType;
 using Vector2 = OpenTK.Mathematics.Vector2;
 using Vector3 = OpenTK.Mathematics.Vector3;
@@ -13,36 +14,34 @@ public class Mesh
 {
     public List<MeshStructs.Vertex> Vertices;
     public List<int> Indices;
-    public List<Texture> Textures;
-    public MeshStructs.Mat Material;
+    public Material? Material;
+    public InternalMat InternalMat;
 
     private uint _vao, _vbo, _ebo;
 
-    public Mesh(List<MeshStructs.Vertex> vertices, List<int> indices, List<Texture> textures, MeshStructs.Mat material)
+    public Mesh(List<Vertex> vertices, List<int> indices, InternalMat mat)
     {
         Vertices = vertices;
         Indices = indices;
-        Textures = textures;
-        Material = material;
+        InternalMat = mat;
 
         SetupMesh();
     }
 
     public void Draw(Shader shader)
     {
-        var hasNormalMap = false;
-        for (var i = 0; i < Textures.Count; i++)
-        {
-            GL.ActiveTexture((TextureUnit)((int)TextureUnit.Texture0 + i));
-            var type = Textures[i].Type;
-            
-            if (type == Assimp.TextureType.Normals) hasNormalMap = true;
-            shader.SetInt1("material." + type.ToString().ToLower(), i);
-            GL.BindTexture(TextureTarget.Texture2D, Textures[i].Handle);
-        }
+        shader.SetInt1("material.diffuse", 0);
+        shader.SetInt1("material.specular", 1);
+        shader.SetInt1("material.normals", 2);
+        shader.SetInt1("material.height", 3);
 
-        if (Textures.Count <= 0) BaseTextures.White.Use();
-        shader.SetInt1("material.hasNormalMap", hasNormalMap ? 1 : 0);
+        Material?.Diffuse?.Use(TextureUnit.Texture0);
+        Material?.Specular?.Use(TextureUnit.Texture1);
+        Material?.Normal?.Use(TextureUnit.Texture2);
+        Material?.Height?.Use(TextureUnit.Texture3);
+
+        if (Material == null) BaseTextures.White.Use();
+        shader.SetInt1("material.hasNormalMap", Material?.Normal != null ? 1 : 0);
 
         GL.BindVertexArray(_vao);
         GL.DrawElements(PrimitiveType.Triangles, Indices.Count, DrawElementsType.UnsignedInt, 0);
@@ -60,7 +59,7 @@ public class Mesh
 
         GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
         GL.BufferData(BufferTarget.ArrayBuffer,
-            Vertices.Count * Marshal.SizeOf<MeshStructs.Vertex>(),
+            Vertices.Count * Marshal.SizeOf<Vertex>(),
             Vertices.ToArray(),
             BufferUsageHint.StaticDraw);
 
@@ -70,26 +69,26 @@ public class Mesh
             Indices.ToArray(),
             BufferUsageHint.StaticDraw);
 
-        var stride = Marshal.SizeOf<MeshStructs.Vertex>();
+        var stride = Marshal.SizeOf<Vertex>();
 
         GL.EnableVertexAttribArray(0);
         GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, stride, IntPtr.Zero);
 
         GL.EnableVertexAttribArray(1);
         GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, stride,
-            Marshal.OffsetOf<MeshStructs.Vertex>("Normal"));
+            Marshal.OffsetOf<Vertex>("Normal"));
 
         GL.EnableVertexAttribArray(2);
         GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, stride,
-            Marshal.OffsetOf<MeshStructs.Vertex>("TexCoords"));
+            Marshal.OffsetOf<Vertex>("TexCoords"));
 
         GL.EnableVertexAttribArray(3);
         GL.VertexAttribPointer(3, 3, VertexAttribPointerType.Float, false, stride,
-            Marshal.OffsetOf<MeshStructs.Vertex>("Tangent"));
+            Marshal.OffsetOf<Vertex>("Tangent"));
 
         GL.EnableVertexAttribArray(4);
         GL.VertexAttribPointer(4, 3, VertexAttribPointerType.Float, false, stride,
-            Marshal.OffsetOf<MeshStructs.Vertex>("Bitangent"));
+            Marshal.OffsetOf<Vertex>("Bitangent"));
 
         GL.BindVertexArray(0);
     }
@@ -107,7 +106,7 @@ public class Mesh
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct Mat
+        public struct InternalMat
         {
             public Vector3 Diffuse;
             public Vector3 Specular;

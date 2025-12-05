@@ -1,6 +1,7 @@
 ﻿using Assimp;
 using ToadEngine.Classes.Base.Objects.Primitives;
 using ToadEngine.Classes.Textures;
+using Material = ToadEngine.Classes.Base.Assets.Material;
 
 namespace SimplePlatformer.Classes.GameObjects.Models;
 
@@ -9,8 +10,13 @@ public class TexturedCube(string diffuse = "", string specular = "", string norm
     public override void Setup()
     {
         base.Setup();
-        if (diffuse != string.Empty) Mesh.Model.GetTextures[0].Add(Texture.FromPath(diffuse, TextureType.Diffuse));
-        if (specular != string.Empty) Mesh.Model.GetTextures[0].Add(Texture.FromPath(specular, TextureType.Specular));
-        if (normal != string.Empty) Mesh.Model.GetTextures[0].Add(Texture.FromPath(normal, TextureType.Normals));
+        Mesh.Model.SetMaterials([
+            new Material()
+            {
+                Diffuse = Texture.FromPath(diffuse, TextureType.Diffuse),
+                Specular = Texture.FromPath(specular, TextureType.Specular),
+                Normal = Texture.FromPath(normal, TextureType.Normals)
+            }
+        ]);
     }
 }

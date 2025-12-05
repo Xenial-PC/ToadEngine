@@ -7,7 +7,6 @@ namespace ToadEngine.Classes.Base.Scripting.Renderer
     public class MeshRenderer : Behavior, IRenderObject
     {
         public Model Model { get; set; } = null!;
-        
 
         public void Draw()
         {

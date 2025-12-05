@@ -12,6 +12,6 @@ public class Cone : GameObject
     public override void Setup()
     {
         Mesh = AddComponent<MeshRenderer>();
-        Mesh.Model = new Model("Cone.obj");
+        Mesh.Model = AssetManager.LoadModel("Cone.obj");
     }
 }

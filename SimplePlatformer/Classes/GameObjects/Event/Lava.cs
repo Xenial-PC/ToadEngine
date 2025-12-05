@@ -22,9 +22,9 @@ public class Lava
     public void Load(Vector3 size, Vector3 position, Behavior behavior)
     {
         GameObject = new TexturedCube(
-            diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava.jpg",
-            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava_specular.jpg",
-            normal: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava_normal.png");
+            diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava/lava.png",
+            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava/lava_roughness.png",
+            normal: $"{Directory.GetCurrentDirectory()}/Resources/Textures/lava/lava_normal.png");
 
         GameObject.Transform.LocalScale = size;
         GameObject.Transform.Position = position;

@@ -12,6 +12,6 @@ public class Cylinder : GameObject
     public override void Setup()
     {
         Mesh = AddComponent<MeshRenderer>();
-        Mesh.Model = new Model("Cylinder.obj");
+        Mesh.Model = AssetManager.LoadModel("Cylinder.obj");
     }
 }

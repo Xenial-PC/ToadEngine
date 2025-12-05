@@ -20,6 +20,8 @@ public class Camera : GameObject
 
     public float AspectRatio { get; set; }
 
+    public float DepthNear = .01f, DepthFar = 2000f;
+
     public Vector3 Front
     {
         get => _front;
@@ -73,7 +75,7 @@ public class Camera : GameObject
 
     public Matrix4 GetProjectionMatrix()
     {
-        return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 1000f);
+        return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, DepthNear, DepthFar);
     }
 
     public void UpdateVectors()

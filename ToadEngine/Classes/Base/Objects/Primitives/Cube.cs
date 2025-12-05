@@ -11,6 +11,6 @@ public class Cube : GameObject
     public override void Setup()
     {
         Mesh = AddComponent<MeshRenderer>();
-        Mesh.Model = new Model("Cube.obj");
+        Mesh.Model = AssetManager.LoadModel("Cube.obj");
     }
 }

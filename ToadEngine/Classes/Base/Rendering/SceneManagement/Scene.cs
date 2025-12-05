@@ -1,4 +1,5 @@
 ﻿using OpenTK.Audio.OpenAL;
+using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Physics;
@@ -177,8 +178,10 @@ public class Scene
         PhysicsManager = new PhysicsManager();
 
         Window?.CoreShader?.Dispose();
+
         Service.Clear();
         Texture.ClearTextures();
+        AssetManager.Reset();
 
         Dispose();
     }

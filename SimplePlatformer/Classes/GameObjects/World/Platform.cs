@@ -23,7 +23,8 @@ public class Platform
     {
         GameObject = new TexturedCube(
             diffuse: $"{Directory.GetCurrentDirectory()}/Resources/Textures/granite.jpg",
-            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/granite_specular.jpg");
+            specular: $"{Directory.GetCurrentDirectory()}/Resources/Textures/granite_specular.jpg",
+            normal: $"{Directory.GetCurrentDirectory()}/Resources/Textures/granite_normal.png");
 
         GameObject.Transform.LocalScale = size;
         GameObject.AddComponent<BoxCollider>().Type = ColliderType.Kinematic;
