@@ -1,4 +1,5 @@
 ﻿using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Scripting.Base;
 using Vector2 = OpenTK.Mathematics.Vector2;
 using Vector3 = OpenTK.Mathematics.Vector3;
 
@@ -21,6 +22,11 @@ public class Camera : GameObject
     public float AspectRatio { get; set; }
 
     public float DepthNear = .01f, DepthFar = 2000f;
+
+    public Camera()
+    {
+        AspectRatio = (WHandler.Size.X / (float)WHandler.Size.Y);
+    }
 
     public Vector3 Front
     {
@@ -62,12 +68,6 @@ public class Camera : GameObject
         }
     }
 
-    public Camera(float aspectRatio)
-    {
-        Transform.LocalPosition = new Vector3(0, 0, 0);
-        AspectRatio = aspectRatio;
-    }
-
     public Matrix4 GetViewMatrix()
     {
         return Matrix4.LookAt(Transform.LocalPosition, Transform.LocalPosition + _front, _up);
@@ -100,17 +100,18 @@ public class Camera : GameObject
     }
 
 
-    public void Update(KeyboardState input, MouseState mouse, float deltaTime)
+    public void Update()
     {
-        if (input.IsKeyDown(Keys.W)) Transform.LocalPosition += Front * Speed * deltaTime;
-        if (input.IsKeyDown(Keys.S)) Transform.LocalPosition -= Front * Speed * deltaTime;
+        if (Input.IsKeyDown(Keys.W)) Transform.LocalPosition += Front * Speed * Time.DeltaTime;
+        if (Input.IsKeyDown(Keys.S)) Transform.LocalPosition -= Front * Speed * Time.DeltaTime;
 
-        if (input.IsKeyDown(Keys.A)) Transform.LocalPosition -= Vector3.Normalize(Vector3.Cross(Front, Up)) * Speed * deltaTime;
-        if (input.IsKeyDown(Keys.D)) Transform.LocalPosition += Vector3.Normalize(Vector3.Cross(Front, Up)) * Speed * deltaTime;
+        if (Input.IsKeyDown(Keys.A)) Transform.LocalPosition -= Vector3.Normalize(Vector3.Cross(Front, Up)) * Speed * Time.DeltaTime;
+        if (Input.IsKeyDown(Keys.D)) Transform.LocalPosition += Vector3.Normalize(Vector3.Cross(Front, Up)) * Speed * Time.DeltaTime;
 
-        if (input.IsKeyDown(Keys.Space)) Transform.LocalPosition += Up * Speed * deltaTime;
-        if (input.IsKeyDown(Keys.LeftShift)) Transform.LocalPosition -= Up * Speed * deltaTime;
+        if (Input.IsKeyDown(Keys.Space)) Transform.LocalPosition += Up * Speed * Time.DeltaTime;
+        if (Input.IsKeyDown(Keys.LeftShift)) Transform.LocalPosition -= Up * Speed * Time.DeltaTime;
 
+        var mouse = Input.GetMousePos();
         if (_firstMove)
         {
             _lastPos = new Vector2(mouse.X, mouse.Y);
@@ -124,7 +125,6 @@ public class Camera : GameObject
 
         Transform.LocalRotation.Y += deltaX * Sensitivity;
         Transform.LocalRotation.X += deltaY * Sensitivity;
-
         Transform.LocalRotation.X = MathHelper.Clamp(Transform.LocalRotation.X, -89f, 89f);
 
         UpdateVectors();

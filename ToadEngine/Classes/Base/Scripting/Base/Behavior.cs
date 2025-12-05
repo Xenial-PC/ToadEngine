@@ -4,7 +4,6 @@ using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Raycasting;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Shaders;
-using MouseButton = OpenTK.Windowing.GraphicsLibraryFramework.MouseButton;
 using Scene = ToadEngine.Classes.Base.Rendering.SceneManagement.Scene;
 
 namespace ToadEngine.Classes.Base.Scripting.Base;

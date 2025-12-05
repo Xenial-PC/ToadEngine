@@ -47,7 +47,7 @@ public class FPController
             Camera = Service.MainCamera;
             if (Camera is null)
             {
-                Camera = new Camera(WHandler.Size.X / (float)WHandler.Size.Y);
+                Camera = new Camera();
                 Service.MainCamera = Camera;
             }
 
@@ -117,7 +117,7 @@ public class FPController
             if (!IsAbleToMove) return;
             HandleMove();
 
-            _fpCamera.Camera!.Update(WHandler.KeyboardState, WHandler.MouseState, Time.DeltaTime);
+            _fpCamera.Camera!.Update();
         }
 
         private void HandleMove()

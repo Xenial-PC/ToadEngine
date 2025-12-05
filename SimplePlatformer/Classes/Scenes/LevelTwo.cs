@@ -33,7 +33,7 @@ public class LevelTwo : Scene
             $"{baseDirectory}Textures/level_one_skybox/back.png",
         ]);
 
-        _camera = new Camera(WHandler.Size.X / (float)WHandler.Size.Y);
+        _camera = new Camera();
         Service.Add(_camera);
 
         _flashLight = new SpotLight();
@@ -60,6 +60,6 @@ public class LevelTwo : Scene
         _flashLight.Settings.Position = _player.GameObject.Transform.Position;
         
         if (PauseMenu.IsPaused) return;
-        _camera.Update(WHandler.KeyboardState, WHandler.MouseState, (float)e.Time);
+        _camera.Update();
     }
 }

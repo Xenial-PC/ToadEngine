@@ -45,7 +45,7 @@ public class LevelOne : Scene
             $"{baseDirectory}Textures/level_one_skybox/back.png",
         ]);
 
-        _camera = new Camera(WHandler.Size.X / (float)WHandler.Size.Y);
+        _camera = new Camera();
         Service.MainCamera = _camera;
 
         PauseMenu = new PauseMenu();
@@ -128,6 +128,6 @@ public class LevelOne : Scene
         RespawnScript.RespawnPosition = SavePointScript.SavePoint;
 
         if (PauseMenu.IsPaused) return;
-        _camera.Update(WHandler.KeyboardState, WHandler.MouseState, (float)e.Time);
+        _camera.Update();
     }
 }
