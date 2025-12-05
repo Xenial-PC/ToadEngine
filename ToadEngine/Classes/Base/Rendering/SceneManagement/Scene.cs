@@ -45,7 +45,7 @@ public class Scene
 
     public void Draw(float deltaTime)
     {
-        SetCoreShader(ShadowMapShader);
+        Service.CoreShader = ShadowMapShader;
         foreach (var light in ObjectManager.GameObjects.Values.Where(l => l is DirectionLight))
         {
             var caster = light.Component.Get<ShadowCaster>();
@@ -62,7 +62,7 @@ public class Scene
         }
 
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-        SetCoreShader(Window.CoreShader);
+        Service.CoreShader = Window.CoreShader;
 
         var textureIndex = 10;
         foreach (var light in ObjectManager.GameObjects.Values.Where(l => l is DirectionLight))
@@ -105,13 +105,6 @@ public class Scene
             }
         }
         DrawScene(deltaTime);
-    }
-
-    private void SetCoreShader(Shader shader)
-    {
-        Service.Remove(shader!);
-        Service.Add(shader);
-        shader.Use();
     }
 
     private void DrawScene(float deltaTime)

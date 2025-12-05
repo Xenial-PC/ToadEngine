@@ -15,8 +15,7 @@ public class Meteor : GameObject
     {
         MeshRenderer = AddComponent<MeshRenderer>();
         MeshRenderer.Model =
-            AssetManager.LoadModel($"{Directory.GetCurrentDirectory()}/Resources/Models/Meteor/source/", "Meteor.obj", [
-                AssetManager.GetMaterial("MeteorMat")
-            ]);
+            AssetManager.LoadModel($"{Directory.GetCurrentDirectory()}/Resources/Models/Meteor/source/", "Meteor.obj", 
+            materials: [AssetManager.GetMaterial("MeteorMat")]);
     }
 }

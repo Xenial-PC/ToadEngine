@@ -31,7 +31,7 @@ public class LevelOne : Scene
 
     public override void Setup()
     {
-        SceneMaterials.SceneOne();
+        SceneMaterials.LoadMaterials();
 
         var baseDirectory = $"{Directory.GetCurrentDirectory()}/Resources/";
 

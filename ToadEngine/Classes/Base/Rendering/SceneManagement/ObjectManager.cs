@@ -1,4 +1,5 @@
-﻿using ToadEngine.Classes.Base.Rendering.Object;
+﻿using System.Reflection.PortableExecutable;
+using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
 
@@ -96,6 +97,13 @@ public class ObjectManager
 
     public void DrawGameObjects()
     {
+        var coreShader = Service.CoreShader;
+        var camera = Service.MainCamera;
+
+        coreShader.SetMatrix4("view", camera.GetViewMatrix());
+        coreShader.SetMatrix4("projection", camera.GetProjectionMatrix());
+        coreShader.SetVector3("viewPos", camera.Transform.LocalPosition);
+
         foreach (var render in GameObjects)
             render.Value.Renderers.ForEach(r => r.Draw());
 

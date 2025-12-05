@@ -11,7 +11,7 @@ namespace SimplePlatformer.Classes.GameObjects.Materials;
 
 public class SceneMaterials
 {
-    public static void SceneOne()
+    public static void LoadMaterials()
     {
         AssetManager.CreateMaterial("LavaMat", new ToadEngine.Classes.Base.Assets.Material()
         {

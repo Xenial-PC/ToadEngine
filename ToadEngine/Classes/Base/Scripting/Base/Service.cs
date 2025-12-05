@@ -18,11 +18,36 @@ public static class Service
         Services.Remove(typeof(T));
     }
 
+    public static void Remove<T>() where T : class
+    {
+        if (!Services.ContainsKey(typeof(T))) return;
+        Services.Remove(typeof(T));
+    }
+
     public static T GetSceneAs<T>() where T : class => (Get<Scene>() as T)!;
 
     public static Scene Scene => Get<Scene>()!;
-    public static Camera MainCamera => Get<Camera>()!;
     public static NativeWindow NativeWindow => Get<NativeWindow>()!;
     public static Window.Window Window => Get<Window.Window>()!;
-    public static Shader CoreShader => Get<Shader>()!;
+
+    public static Shader CoreShader
+    {
+        get => Get<Shader>()!;
+        set
+        {
+            Remove<Shader>();
+            Add(value);
+            value.Use();
+        }
+    }
+
+    public static Camera MainCamera
+    {
+        get => Get<Camera>()!;
+        set
+        {
+            Remove<Camera>();
+            Add(value);
+        }
+    }
 }

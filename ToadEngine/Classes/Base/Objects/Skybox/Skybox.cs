@@ -1,6 +1,7 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Base.Scripting.Renderer;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
 
