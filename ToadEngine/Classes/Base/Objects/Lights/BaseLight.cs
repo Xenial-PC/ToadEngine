@@ -6,23 +6,12 @@ namespace ToadEngine.Classes.Base.Objects.Lights;
 
 public class BaseLight
 {
-    public struct Material
-    {
-        public int Diffuse;
-        public int Specular;
-        public int Normal;
-        public float Shininess;
-    }
-
     public struct DirectionLight
     {
         public Vector3 Direction;
         public Vector3 Ambient;
         public Vector3 Diffuse;
         public Vector3 Specular;
-
-        public Matrix4 FragPosLightSpace;
-        public int ShadowMap;
     }
 
     public struct PointLight
