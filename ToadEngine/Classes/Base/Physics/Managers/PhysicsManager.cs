@@ -1,6 +1,6 @@
-﻿namespace ToadEngine.Classes.Base.Physics;
+﻿namespace ToadEngine.Classes.Base.Physics.Managers;
 
-public class PhysicsManager 
+public class PhysicsManager
 {
     private static readonly Dictionary<string, PhysicsSimulation> Physics = new();
 

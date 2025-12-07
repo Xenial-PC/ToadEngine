@@ -1,4 +1,4 @@
-﻿namespace ToadEngine.Classes.Base.Physics;
+﻿namespace ToadEngine.Classes.Base.Physics.Managers;
 
 public class TriggerRegistry
 {

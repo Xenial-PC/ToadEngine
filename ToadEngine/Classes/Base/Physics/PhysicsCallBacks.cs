@@ -1,15 +1,15 @@
 ﻿using BepuPhysics.Collidables;
 using BepuPhysics.CollisionDetection;
-using BepuPhysics.Constraints;
 using BepuPhysics;
 using BepuUtilities;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Base.Physics.Managers;
 
 namespace ToadEngine.Classes.Base.Physics;
 
-public class DefaultCallBacks
+public class PhysicsCallBacks
 {
     public struct NarrowPhaseCallbacks() : INarrowPhaseCallbacks
     {
@@ -37,17 +37,22 @@ public class DefaultCallBacks
         {
             var physics = Service.Physics;
 
-            pairMaterial.FrictionCoefficient = physics.FrictionCoefficient;
-            pairMaterial.MaximumRecoveryVelocity = physics.MaximumRecoveryVelocity;
-            pairMaterial.SpringSettings = physics.SpringSettings;
+            var matA = PhysicsMaterialRegistry.Get(pair.A.RawHandleValue);
+            var matB = PhysicsMaterialRegistry.Get(pair.B.RawHandleValue);
+            var isMaterialsFound = matA != null && matB != null;
+            
+            pairMaterial.FrictionCoefficient = isMaterialsFound ? MathF.Sqrt(matA!.Friction * matB!.Friction) 
+                : physics.Settings.Friction;
 
-            if (IsTrigger(pair.A) || IsTrigger(pair.B))
-            {
-                TriggerManager.RegisterOverlap(pair.A.RawHandleValue, pair.B.RawHandleValue);
-                return false;
-            }
+            pairMaterial.MaximumRecoveryVelocity = isMaterialsFound ? MathF.Max(matA!.Restitution, matB!.Restitution) 
+                : physics.Settings.Restitution;
 
-            return true;
+            pairMaterial.SpringSettings = isMaterialsFound ? matB!.SpringSettings : physics.Settings.SpringSettings;
+
+            if (!IsTrigger(pair.A) && !IsTrigger(pair.B)) return true;
+            TriggerManager.RegisterOverlap(pair.A.RawHandleValue, pair.B.RawHandleValue);
+
+            return false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -84,7 +89,7 @@ public class DefaultCallBacks
 
         public void PrepareForIntegration(float dt)
         {
-            _gravityWideDt = Vector3Wide.Broadcast(Service.Physics.Gravity * dt);
+            _gravityWideDt = Vector3Wide.Broadcast(Service.Physics.Settings.Gravity * dt);
         }
 
         public void IntegrateVelocity(Vector<int> bodyIndices, Vector3Wide position, QuaternionWide orientation,

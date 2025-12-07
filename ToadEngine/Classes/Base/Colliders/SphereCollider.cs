@@ -7,7 +7,7 @@ public class SphereCollider : BaseCollider
 {
     public float Radius;
 
-    public void Start()
+    public void Awake()
     {
         switch (Type)
         {
@@ -16,25 +16,25 @@ public class SphereCollider : BaseCollider
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Kinematic:
                 Collider = Physics.ColliderManager.CreateKinematic.Sphere((Vector3)GameObject.Transform.Position, Radius);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Dynamic:
                 Collider = Physics.ColliderManager.CreateDynamic.Sphere((Vector3)GameObject.Transform.Position, Radius, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Static:
                 SCollider = Physics.ColliderManager.CreateStatic.Sphere((Vector3)GameObject.Transform.Position, Radius);
 
                 Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
         }
     }
 

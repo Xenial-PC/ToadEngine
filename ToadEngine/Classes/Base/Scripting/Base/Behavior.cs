@@ -1,6 +1,7 @@
 ﻿using Guinevere;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Physics;
+using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Raycasting;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Shaders;

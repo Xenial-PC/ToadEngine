@@ -7,7 +7,7 @@ public class BoxCollider : BaseCollider
 {
     public OpenTK.Mathematics.Vector3 Size = OpenTK.Mathematics.Vector3.Zero;
     
-    public void Start()
+    public void Awake()
     {
         if (Size == OpenTK.Mathematics.Vector3.Zero) 
             Size = GameObject.Transform.LocalScale;
@@ -21,7 +21,7 @@ public class BoxCollider : BaseCollider
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Kinematic:
                 Collider = Physics.ColliderManager.CreateKinematic.Box(
                     (Vector3)GameObject.Transform.Position,
@@ -29,7 +29,7 @@ public class BoxCollider : BaseCollider
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Dynamic:
                 Collider = Physics.ColliderManager.CreateDynamic.Box(
                     (Vector3)GameObject.Transform.Position,
@@ -37,7 +37,7 @@ public class BoxCollider : BaseCollider
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Static:
                 SCollider = Physics.ColliderManager.CreateStatic.Box(
                     (Vector3)GameObject.Transform.Position,

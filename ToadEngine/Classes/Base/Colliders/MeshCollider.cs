@@ -9,7 +9,7 @@ public class MeshCollider : BaseCollider
     public OpenTK.Mathematics.Vector3 Size = OpenTK.Mathematics.Vector3.Zero;
     public Buffer<Triangle> Triangles;
 
-    public void Start()
+    public void Awake()
     {
         if (Size == OpenTK.Mathematics.Vector3.Zero)
             Size = GameObject.Transform.LocalScale;
@@ -23,21 +23,21 @@ public class MeshCollider : BaseCollider
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Kinematic:
                 Collider = Physics.ColliderManager.CreateKinematic.Mesh((Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Dynamic:
                 Collider = Physics.ColliderManager.CreateDynamic.Mesh((Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Static:
             {
                 SCollider = Physics.ColliderManager.CreateStatic.Mesh((Vector3)GameObject.Transform.Position,

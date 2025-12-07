@@ -9,7 +9,7 @@ public class CapsuleCollider : BaseCollider
     public Vector2 Size = Vector2.Zero;
     public float Radius;
 
-    public void Start()
+    public void Awake()
     {
         if (Size == Vector2.Zero)
             Size = new Vector2(Radius, GameObject.Transform.LocalScale.Y);
@@ -21,25 +21,25 @@ public class CapsuleCollider : BaseCollider
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Kinematic:
                 Collider = Physics.ColliderManager.CreateKinematic.Capsule((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Dynamic:
                 Collider = Physics.ColliderManager.CreateDynamic.Capsule((Vector3)GameObject.Transform.Position, Size, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Static:
                 SCollider = Physics.ColliderManager.CreateStatic.Capsule((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
         }
     }
 

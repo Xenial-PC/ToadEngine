@@ -6,7 +6,7 @@ namespace ToadEngine.Classes.Base.Scripting;
 public class PhysicsBody : Behavior
 {
     public BaseCollider Collider = null!;
-
+    
     public void Start()
     {
         if (GameObject.GetComponent<BaseCollider>() == null) return;

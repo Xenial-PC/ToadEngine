@@ -9,7 +9,7 @@ public class CylinderCollider : BaseCollider
     public float Radius;
     public Vector2 Size = Vector2.Zero;
 
-    public void Start()
+    public void Awake()
     {
         if (Size == Vector2.Zero)
             Size = new Vector2(Radius, GameObject.Transform.LocalScale.Y);
@@ -21,19 +21,19 @@ public class CylinderCollider : BaseCollider
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Kinematic:
                 Collider = Physics.ColliderManager.CreateKinematic.Cylinder((Vector3)GameObject.Transform.Position, Size);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Dynamic:
                 Collider = Physics.ColliderManager.CreateDynamic.Cylinder((Vector3)GameObject.Transform.Position, Size, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
-                return;
+                break;
             case ColliderType.Static:
             {
                 SCollider = Physics.ColliderManager.CreateStatic.Cylinder((Vector3)GameObject.Transform.Position, Size);

@@ -1,5 +1,6 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Physics;
+using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Shaders;
 

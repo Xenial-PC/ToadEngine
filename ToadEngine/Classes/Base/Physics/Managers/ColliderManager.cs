@@ -5,7 +5,7 @@ using Quaternion = System.Numerics.Quaternion;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 
-namespace ToadEngine.Classes.Base.Physics;
+namespace ToadEngine.Classes.Base.Physics.Managers;
 
 public class ColliderManager(Simulation sim, BufferPool bPool)
 {

@@ -1,4 +1,5 @@
 ﻿using BepuPhysics;
+using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Scripting.Base;
 using Quaternion = System.Numerics.Quaternion;
 using Vector3 = System.Numerics.Vector3;
@@ -13,12 +14,19 @@ namespace ToadEngine.Classes.Base.Colliders
         public ColliderType Type;
         public float Mass = 1f;
 
+        public PhysicsMaterial PhysicsMaterial = PhysicsMaterials.Default;
+
         public enum ColliderType
         {
             Kinematic,
             Static,
             Trigger,
             Dynamic
+        }
+
+        public void Start()
+        {
+            Physics.BindMaterial(Handle, PhysicsMaterial);
         }
 
         public void Update()

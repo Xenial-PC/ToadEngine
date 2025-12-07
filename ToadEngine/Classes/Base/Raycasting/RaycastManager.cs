@@ -1,18 +1,10 @@
-﻿using System.Diagnostics;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
-using BepuPhysics;
+﻿using BepuPhysics;
 using BepuPhysics.Collidables;
 using BepuPhysics.CollisionDetection;
-using BepuPhysics.Trees;
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
-using PInvoke;
-using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Scripting.Base;
-using Buffer = OpenTK.Graphics.OpenGL4.Buffer;
 using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace ToadEngine.Classes.Base.Raycasting;
@@ -139,7 +131,7 @@ public class RaycastManager
     {
         var intersectionCount = 0;
         var hitHandler = new HitHandler { Hits = algorithm.Results, IntersectionCount = &intersectionCount };
-        var batcher = new SimulationRayBatcher<HitHandler>(GetCurrentDispatcher().GetThreadMemoryPool(workerIndex),
+        var rayBatch = new SimulationRayBatcher<HitHandler>(GetCurrentDispatcher().GetThreadMemoryPool(workerIndex),
             GetCurrentSimulation(), hitHandler, 2048);
 
         int claimedIndex;
@@ -149,12 +141,12 @@ public class RaycastManager
             for (var i = job.Start; i < job.End; ++i)
             {
                 ref var ray = ref _rays[i];
-                batcher.Add(ref ray.Origin, ref ray.Direction, ray.MaximumT, i);
+                rayBatch.Add(ref ray.Origin, ref ray.Direction, ray.MaximumT, i);
             }
         }
 
-        batcher.Flush();
-        batcher.Dispose();
+        rayBatch.Flush();
+        rayBatch.Dispose();
         return intersectionCount;
     }
 
@@ -195,131 +187,5 @@ public class RaycastManager
     {
         public int Start;
         public int End;
-    }
-
-    public unsafe class IntersectionAlgorithm
-    {
-        public string Name;
-        public int IntersectionCount;
-        public Buffer<RayHit> Results;
-        public TimingsRingBuffer Timings;
-
-        public Func<int, IntersectionAlgorithm, int> Worker;
-        public Action<int> InternalWorker;
-        public int JobIndex;
-
-        public void Update(string name, Func<int, IntersectionAlgorithm, int> worker, BufferPool pool,
-            int largestRayCount, int timingSampleCount = 16)
-        {
-            Name = name;
-            Timings = new TimingsRingBuffer(timingSampleCount, pool);
-            Worker = worker;
-            InternalWorker = ExecuteWorker;
-            pool.Take(largestRayCount, out Results);
-        }
-
-        private void ExecuteWorker(int workerIndex)
-        {
-            var intersectionCount = Worker(workerIndex, this);
-            Interlocked.Add(ref IntersectionCount, intersectionCount);
-        }
-
-        public void Execute(ref QuickList<Ray> rays, IThreadDispatcher? dispatcher)
-        {
-            for (var i = 0; i < rays.Count; ++i)
-            {
-                Results[i].Distance = float.MaxValue;
-                Results[i].IsHit = false;
-            }
-
-            JobIndex = -1;
-            IntersectionCount = 0;
-
-            var start = Stopwatch.GetTimestamp();
-            if (dispatcher != null) dispatcher.DispatchWorkers(InternalWorker);
-            else InternalWorker(0);
-            var stop = Stopwatch.GetTimestamp();
-            Timings.Add((stop - start) / (double)Stopwatch.Frequency);
-        }
-    }
-
-    public unsafe struct HitHandler : IRayHitHandler
-    {
-        public Buffer<RayHit> Hits;
-        public int* IntersectionCount;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool AllowTest(CollidableReference collidable)
-        {
-            return !TriggerRegistry.IsTrigger(collidable.RawHandleValue);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool AllowTest(CollidableReference collidable, int childIndex)
-        {
-            return !TriggerRegistry.IsTrigger(collidable.RawHandleValue);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void OnRayHit(in RayData ray, ref float maximumT, float t, in System.Numerics.Vector3 normal, CollidableReference collidable,
-            int childIndex)
-        {
-            maximumT = t;
-            ref var hit = ref Hits[ray.Id];
-
-            if (t > hit.Distance) return;
-            if (hit.Distance is float.MaxValue) ++*IntersectionCount;
-
-            hit.Normal = normal;
-            hit.Distance = t;
-            hit.Collidabe = collidable;
-            hit.IsHit = true;
-        }
-    }
-
-    public interface IDataSeries
-    {
-        public int Start { get; }
-        public int End { get; }
-        public double this[int index] { get; }
-    }
-
-    public class TimingsRingBuffer : IDataSeries, IDisposable
-    {
-        private QuickQueue<double> _queue;
-        private readonly BufferPool _pool;
-
-        public double this[int index] => _queue[index];
-        public int Start => 0;
-        public int End => _queue.Count;
-
-        public int Capacity
-        {
-            get => _queue.Span.Length;
-            set
-            {
-                if (value <= 0) Console.WriteLine("Capacity must be positive");
-                if (Capacity != value)
-                    _queue.Resize(value, _pool);
-            }
-        }
-
-        public TimingsRingBuffer(int maximumCapacity, BufferPool pool)
-        {
-            if (maximumCapacity <= 0) return;
-            _pool = pool;
-            _queue = new QuickQueue<double>(maximumCapacity, pool);
-        }
-
-        public void Add(double time)
-        {
-            if (_queue.Count == Capacity) _queue.Dequeue();
-            _queue.EnqueueUnsafely(time);
-        }
-
-        public void Dispose()
-        {
-            _queue.Dispose(_pool);
-        }
     }
 }

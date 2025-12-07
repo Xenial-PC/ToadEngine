@@ -51,7 +51,7 @@ public class PlatformerController : Behavior
         {
             IncreaseJumpStamina(75f);
             AddBoost(50f);
-            Physics.Gravity.Y = -10;
+            Physics.Settings.Gravity.Y = -10;
         }
 
         if (Input.IsKeyPressed(Keys.Space))
@@ -116,8 +116,8 @@ public class PlatformerController : Behavior
             _airSpeedBonus += AirSpeedGainRate * deltaTime;
             _airSpeedBonus = MathF.Min(_airSpeedBonus, MaxAirSpeedBonus);
 
-            Physics.Gravity.Y += -7.5f * deltaTime;
-            if (Physics.Gravity.Y <= MaxFallingGravity) Physics.Gravity.Y = MaxFallingGravity;
+            Physics.Settings.Gravity.Y += -7.5f * deltaTime;
+            if (Physics.Settings.Gravity.Y <= MaxFallingGravity) Physics.Settings.Gravity.Y = MaxFallingGravity;
         }
         else if (_groundTime >= 0.5f) _airSpeedBonus = 0f;
     }
