@@ -1,4 +1,6 @@
-﻿namespace ToadEngine.Classes.Base.Physics;
+﻿using ToadEngine.Classes.Base.Rendering.Object;
+
+namespace ToadEngine.Classes.Base.Physics;
 
 /// <summary>
 /// Holds detection layers for physics objects
@@ -6,34 +8,70 @@
 public class PhysicsLayer
 {
     public int Layer { get; set; } = (int)PhysicsLayers.None;
+    public List<int> IgnoredObjects { get; } = new();
 
-    private static readonly Dictionary<int, int> LayersToIgnore = new();
+    private static readonly Dictionary<int, List<int>> LayersToIgnore = new();
+    private static readonly Dictionary<GameObject, List<GameObject>> ObjectsToIgnore = new();
 
-    public static void RegisterIgnoredLayer(int layer, int layerToIgnore)
+    public static bool ShouldCollideLayer(int layerA, int layerB) => !(LayersToIgnore.TryGetValue(layerA, out var layer) && layer.Contains(layerB));
+
+    public static bool ShouldCollideObject(GameObject gameObject, GameObject gameObjectToIgnore)
     {
-        if (LayersToIgnore.TryGetValue(layer, out var value))
-            return;
-
-        LayersToIgnore.Add(layer, layerToIgnore);
+        if (!ObjectsToIgnore.TryGetValue(gameObject, out var goList)) return true;
+        return !goList.Contains(gameObjectToIgnore);
     }
 
-    public static void RemoveIgnoredLayer(int layer)
+    public void AddIgnoredLayer(int layer, int layerToIgnore)
+    {
+        if (LayersToIgnore.TryGetValue(layer, out var value))
+        {
+            value.Add(layerToIgnore);
+            return;
+        }
+
+        LayersToIgnore.Add(layer, [layerToIgnore]);
+    }
+
+    public void RemoveLayer(int layer)
     {
         if (!LayersToIgnore.ContainsKey(layer)) return;
         LayersToIgnore.Remove(layer);
     }
 
-    public static bool ShouldCollide(int layerA, int layerB)
+    public void RemoveIgnoredLayer(int layer, int layerToRemove)
     {
-        if (LayersToIgnore.TryGetValue(layerA, out var layer))
-            return layerB != layer;
+        if (!LayersToIgnore.TryGetValue(layer, out var layerList)) return;
+        layerList.Remove(layerToRemove);
+    }
 
-        return false;
+    public void AddIgnoredObject(GameObject go, GameObject gameObjectToIgnore)
+    {
+        if (ObjectsToIgnore.TryGetValue(go, out var goList))
+        {
+            if (!goList.Contains(gameObjectToIgnore))
+                goList.Add(gameObjectToIgnore);
+            return;
+        }
+
+        ObjectsToIgnore.Add(go, [gameObjectToIgnore]);
+    }
+
+    public void RemoveObject(GameObject go)
+    {
+        if (!ObjectsToIgnore.ContainsKey(go)) return;
+        ObjectsToIgnore.Remove(go);
+    }
+
+    public void RemoveIgnoredObject(GameObject go, GameObject gameObjectToRemove)
+    {
+        if (!ObjectsToIgnore.TryGetValue(go, out var objList)) return;
+        objList.Remove(gameObjectToRemove);
     }
 
     public static void Reset()
     {
         LayersToIgnore.Clear();
+        ObjectsToIgnore.Clear();
     }
 }
 

@@ -49,10 +49,19 @@ public class PhysicsCallBacks
 
             pairMaterial.SpringSettings = isMaterialsFound ? matB!.SpringSettings : physics.Settings.SpringSettings;
 
-            if (!IsTrigger(pair.A) && !IsTrigger(pair.B)) return true;
-            TriggerManager.RegisterOverlap(pair.A.RawHandleValue, pair.B.RawHandleValue);
+            if (IsTrigger(pair.A) || IsTrigger(pair.B))
+            {
+                TriggerManager.RegisterOverlap(pair.A.RawHandleValue, pair.B.RawHandleValue);
+                return false;
+            }
+            var gameObjectA = Behavior.BodyToGameObject[pair.A.RawHandleValue];
+            var gameObjectB = Behavior.BodyToGameObject[pair.B.RawHandleValue];
 
-            return false;
+            var collisionChecks = 
+                isMaterialsFound && !PhysicsLayer.ShouldCollideLayer(matA!.PhysicsLayer.Layer, matB!.PhysicsLayer.Layer) ||
+                isMaterialsFound && !PhysicsLayer.ShouldCollideObject(gameObjectA, gameObjectB);
+
+            return collisionChecks;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

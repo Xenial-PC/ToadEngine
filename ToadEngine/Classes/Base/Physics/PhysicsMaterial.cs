@@ -11,6 +11,7 @@ public class PhysicsMaterial
     public float Friction { get; set; } = 1f;
     public float Restitution { get; set; } = 8f;
     public SpringSettings SpringSettings { get; set; } = new(30, 1);
+    public PhysicsLayer PhysicsLayer { get; set; } = new() { Layer = (int)PhysicsLayers.None };
 }
 
 /// <summary>
