@@ -119,9 +119,9 @@ public class Scene
 
         while (Time.AccumulatedTime >= Time.FixedDeltaTime)
         {
-            foreach (var sim in PhysicsManager.GetSimulations.Where(sim => !sim.IsPhysicsPaused))
-                sim.Step(Time.FixedDeltaTime);
-
+            if (!Service.Physics.IsPhysicsPaused) 
+                Service.Physics.Step(Time.FixedDeltaTime);
+            
             ObjectManager.UpdateBehaviorsFixedTime();
             Time.AccumulatedTime -= Time.FixedDeltaTime;
         }

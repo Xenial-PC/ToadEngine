@@ -9,7 +9,11 @@ public static class Service
 {
     private static readonly Dictionary<Type, object> Services = new();
 
-    public static T? Get<T>() where T : class => Services[typeof(T)] as T;
+    public static T? Get<T>() where T : class
+    {
+        if (Services.TryGetValue(typeof(T), out var value)) return value as T;
+        return null;
+    }
     public static void Add<T>(T service) where T : class => Services[typeof(T)] = service;
     public static void Clear() => Services.Clear();
 
@@ -54,7 +58,21 @@ public static class Service
 
     public static PhysicsSimulation Physics
     {
-        get => Get<PhysicsSimulation>()!;
+        get
+        {
+            var simulation = Get<PhysicsSimulation>();
+            if (simulation != null)
+            {
+                simulation.Setup();
+                return simulation;
+            }
+
+            simulation = PhysicsManager.Get("main");
+            simulation.Setup();
+
+            Add(simulation);
+            return simulation;
+        }
         set
         {
             Remove<PhysicsSimulation>();

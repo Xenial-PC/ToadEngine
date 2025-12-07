@@ -34,7 +34,7 @@ public class PhysicsComponent
 
 public class PhysicsSimulation : IDisposable
 {
-    public bool IsPhysicsPaused;
+    public bool IsPhysicsPaused, IsSetup;
     public Simulation Simulation { get; set; } = null!;
     public BufferPool BufferPool { get; set; } = null!;
     public ColliderManager ColliderManager { get; set; } = null!;
@@ -51,6 +51,8 @@ public class PhysicsSimulation : IDisposable
 
     public void Setup()
     {
+        if (IsSetup) return;
+
         ThreadDispatcher = new ThreadDispatcher(int.Max(1,
             Environment.ProcessorCount > 4 ? Environment.ProcessorCount - 2 : Environment.ProcessorCount - 1));
 
@@ -63,12 +65,15 @@ public class PhysicsSimulation : IDisposable
         BufferPool = new BufferPool();
         Simulation = Simulation.Create(BufferPool, narrowPhase, pose, SolveDescription);
         ColliderManager = new ColliderManager(Simulation, BufferPool);
+        IsSetup = true;
     }
 
     public void Setup<TNarrow, TPose>()
         where TNarrow : struct, INarrowPhaseCallbacks
         where TPose : struct, IPoseIntegratorCallbacks
     {
+        if (IsSetup) return;
+
         ThreadDispatcher = new ThreadDispatcher(int.Max(1,
             Environment.ProcessorCount > 4 ? Environment.ProcessorCount - 2 : Environment.ProcessorCount - 1));
 
@@ -81,6 +86,7 @@ public class PhysicsSimulation : IDisposable
         BufferPool = new BufferPool();
         Simulation = Simulation.Create(BufferPool, narrowPhase, pose, SolveDescription);
         ColliderManager = new ColliderManager(Simulation, BufferPool);
+        IsSetup = true;
     }
 
     public void Step(float deltaTime)

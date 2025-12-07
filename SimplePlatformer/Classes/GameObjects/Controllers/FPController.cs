@@ -85,7 +85,7 @@ public class FPController
             _fpCamera = GameObject.GetComponent<FPCamera>("fpCamera");
             GameObject.UsePhysics = true;
 
-            _simulation = Scene.PhysicsManager.Simulation;
+            _simulation = Physics.Simulation;
             _collider = GameObject.GetComponent<BoxCollider>()!;
 
             Body = _simulation.Bodies.GetBodyReference(_collider.Collider);

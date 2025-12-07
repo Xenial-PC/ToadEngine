@@ -88,7 +88,8 @@ public class LevelOne : Scene
             for (var j = -5; j < 5; j++)
             {
                 var lava = new Lava(new Vector3(1000f, 1f, 1000f), new Vector3(i * 800, -10f, j * 800));
-                lava.AddScript<RespawnScript>();
+                var rScript = lava.AddScript<RespawnScript>();
+                rScript.Player = _player;
 
                 lava.TGameObject.GameObject.Transform.LocalPosition.Y += 3;
                 _outOfBoundsLava.Add(lava);
