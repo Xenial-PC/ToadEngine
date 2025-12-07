@@ -1,5 +1,4 @@
 ﻿using BepuPhysics;
-
 using ToadEngine.Classes.Base.Scripting.Base;
 using Quaternion = System.Numerics.Quaternion;
 using Vector3 = System.Numerics.Vector3;

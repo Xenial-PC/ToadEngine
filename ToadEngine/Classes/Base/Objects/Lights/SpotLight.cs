@@ -1,6 +1,4 @@
-﻿using ToadEngine.Classes.Base.Objects.View;
-using ToadEngine.Classes.Base.Rendering.Object;
-using ToadEngine.Classes.Base.Scripting.Base;
+﻿using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Renderer;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
