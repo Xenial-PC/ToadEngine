@@ -9,13 +9,13 @@ public class EOLMenu : Behavior
 {
     public static bool IsDrawingEOLMenu, IsDrawingLoseScreen;
 
-    public override void OnStart()
+    public void Start()
     {
         IsDrawingEOLMenu = false;
         IsDrawingLoseScreen = false;
     }
 
-    public override void OnGUI()
+    public void OnGUI()
     {
         if (IsDrawingEOLMenu) WinScreen();
         if (IsDrawingLoseScreen) LoseScreen();

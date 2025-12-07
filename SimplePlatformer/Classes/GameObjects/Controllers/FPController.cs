@@ -80,7 +80,7 @@ public class FPController
 
         private bool _wasGrounded;
 
-        public override void OnStart()
+        public void Start()
         {
             _fpCamera = GameObject.GetComponent<FPCamera>("fpCamera");
             GameObject.UsePhysics = true;
@@ -107,12 +107,12 @@ public class FPController
             Sources.Add("jump", new Source());
         }
 
-        public override void OnResize(FramebufferResizeEventArgs e)
+        public void OnResize(FramebufferResizeEventArgs e)
         {
             _fpCamera.Camera!.AspectRatio = WHandler.Size.X / (float)WHandler.Size.Y;
         }
 
-        public override void OnUpdate()
+        public void Update()
         {
             if (!IsAbleToMove) return;
             HandleMove();

@@ -58,7 +58,7 @@ public class LightRenderer : Behavior, IRenderObject
         }
     }
 
-    public override void OnDispose()
+    public void Dispose()
     {
         switch (GameObject)
         {

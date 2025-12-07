@@ -15,12 +15,12 @@ public class MovingPlatform : Behavior
     private Vector3 _originalPosition, _lastPlatformPosition;
     private float _t;
 
-    public override void OnStart()
+    public void Start()
     {
         _originalPosition = GameObject.Parent.Transform.Position;
     }
 
-    public override void OnUpdate()
+    public void Update()
     {
         if (_isForward) _t += MovingSpeed * Time.DeltaTime;
         else _t -= MovingSpeed * Time.DeltaTime;
@@ -48,13 +48,13 @@ public class MovingPlatform : Behavior
         _lastPlatformPosition = GameObject.Parent.Transform.Position;
     }
 
-    public override void OnTriggerEnter(GameObject other)
+    public void OnTriggerEnter(GameObject other)
     {
         if (other.GetComponent<FPController.FPControllerScript>() != null)
             _isPlayerOnTop = true;
     }
 
-    public override void OnTriggerExit(GameObject other)
+    public void OnTriggerExit(GameObject other)
     {
         if (other.GetComponent<FPController.FPControllerScript>() != null)
             _isPlayerOnTop = false;

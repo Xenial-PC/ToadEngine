@@ -15,7 +15,7 @@ public class ShadowCaster : Behavior
         NearPlane = 1f, 
         FarPlane = 200f;
 
-    public override void OnStart()
+    public void Start()
     {
         GL.GenFramebuffers(1, out CasterFBO);
 

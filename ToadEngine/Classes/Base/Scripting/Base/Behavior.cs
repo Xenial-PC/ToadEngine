@@ -28,7 +28,7 @@ public abstract class Behavior : ICloneable
     public Gui UI => GUI.Paint;
     public Shader CoreShader => Service.CoreShader;
     
-    static Behavior()
+    public static void SetupTriggers()
     {
         TriggerManager.OnEnter += (a, b) =>
         {
@@ -36,10 +36,10 @@ public abstract class Behavior : ICloneable
                 !BodyToGameObject.TryGetValue(b, out var objB)) return;
 
             foreach (var component in objA.Component.GetOfType<Behavior>())
-                component?.OnTriggerEnter(objB);
+                component?.OnTriggerEnterMethod?.Invoke(objB);
 
             foreach (var component in objB.Component.GetOfType<Behavior>())
-                component?.OnTriggerEnter(objA);
+                component?.OnTriggerEnterMethod?.Invoke(objA);
         };
 
         TriggerManager.OnExit += (a, b) =>
@@ -48,23 +48,26 @@ public abstract class Behavior : ICloneable
                 !BodyToGameObject.TryGetValue(b, out var objB)) return;
 
             foreach (var component in objA.Component.GetOfType<Behavior>())
-                component?.OnTriggerExit(objB);
+                component?.OnTriggerExitMethod?.Invoke(objB);
 
             foreach (var component in objB.Component.GetOfType<Behavior>())
-                component?.OnTriggerExit(objA);
+                component?.OnTriggerExitMethod?.Invoke(objA);
         };
     }
 
-    public virtual void OnStart() { }
-    public virtual void OnUpdate() { }
-    public virtual void OnFixedUpdate() { }
-    public virtual void OnResize(FramebufferResizeEventArgs e) { }
-    public virtual void OnGUI() { }
-    public virtual void OnDispose() { }
+    internal Action? AwakeMethod;
+    internal Action? StartMethod;
 
-    public virtual void OnTriggerEnter(GameObject other) { }
-    public virtual void OnTriggerExit(GameObject other) { }
-    
+    internal Action? UpdateMethod;
+    internal Action? FixedUpdateMethod;
+    internal Action? OnGuiMethod;
+
+    internal Action<GameObject>? OnTriggerEnterMethod;
+    internal Action<GameObject>? OnTriggerExitMethod;
+
+    internal Action<FramebufferResizeEventArgs>? OnResizeMethod;
+    internal Action? DisposeMethod;
+
     public void LoadScene(string name) => Service.Window.LoadScene(name);
 
     public HitInfo SendRay(Vector3 origin, Vector3 direction, float maxT = 1000)

@@ -30,7 +30,7 @@ public class SkyboxRenderer : Behavior, IRenderObject
         GL.DepthFunc(DepthFunction.Less);
     }
 
-    public override void OnDispose()
+    public void Dispose()
     {
         SkyboxShader?.Dispose();
     }

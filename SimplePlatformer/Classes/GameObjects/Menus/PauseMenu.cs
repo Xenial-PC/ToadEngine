@@ -8,13 +8,13 @@ public class PauseMenu : Behavior
     public static bool IsPaused, IsDrawingPauseMenu;
     private static Vector2 _mousePositionCache;
 
-    public override void OnStart()
+    public void Start()
     {
         IsPaused = false;
         IsDrawingPauseMenu = false;
     }
 
-    public override void OnGUI()
+    public void OnGUI()
     {
         if ((!IsPaused && !IsDrawingPauseMenu) || EOLMenu.IsDrawingEOLMenu || EOLMenu.IsDrawingLoseScreen) return;
 
@@ -58,7 +58,7 @@ public class PauseMenu : Behavior
         }
     }
 
-    public override void OnUpdate()
+    public void Update()
     {
         if (Input.IsKeyPressed(Keys.Escape))
         {

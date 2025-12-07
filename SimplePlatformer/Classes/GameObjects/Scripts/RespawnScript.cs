@@ -7,10 +7,10 @@ namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
 public class RespawnScript : Behavior
 {
-    public FPController Player;
+    public FPController Player = null!;
     public static Vector3 RespawnPosition;
 
-    public override void OnTriggerEnter(GameObject other)
+    public void OnTriggerEnter(GameObject other)
     {
         if (other.GetComponent<FPController.FPControllerScript>() == null) return;
         

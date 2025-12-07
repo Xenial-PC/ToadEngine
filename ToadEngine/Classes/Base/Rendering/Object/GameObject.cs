@@ -23,36 +23,30 @@ public class GameObject
     public List<IRenderObject> Renderers => Component.GetOfType<IRenderObject>();
 
     public Component Component = new();
-    public Transform Transform = new();
+    public Transform Transform = new()
+    {
+        Front = -Vector3.UnitZ,
+        Up = Vector3.UnitY,
+        Right = Vector3.UnitX,
+
+        LocalScale = new Vector3(1f),
+        Rotation = new Vector3(0f)
+    };
 
     public PhysicsComponent Physics = new();
     public bool UsePhysics = false;
 
     public List<GameObject> Children = new();
-    public GameObject Parent;
+    public GameObject Parent = null!;
     public bool IsChild;
 
     public Matrix4 Model;
-    public Textures Textures;
-
-    public Matrix4 ProjectionMatrix;
-    public Matrix4 ViewMatrix;
-
+    
     public Scene Scene => Service.Scene;
     public Shader CoreShader => Service.CoreShader;
     public NativeWindow WHandler => Service.NativeWindow;
 
     public bool IsEnabled = true;
-
-    public GameObject()
-    {
-        Transform.Front = -Vector3.UnitZ;
-        Transform.Up = Vector3.UnitY;
-        Transform.Right = Vector3.UnitX;
-
-        Transform.LocalScale = new Vector3(1f);
-        Transform.Rotation = new Vector3(0f);
-    }
 
     public T AddComponent<T>() where T : new() => Component.Add<T>();
     public T AddComponent<T>(string name) where T : new() => Component.Add<T>(name);
@@ -144,9 +138,13 @@ public class GameObject
 
         foreach (var behavior in _behaviors.OfType<Behavior>())
         {
+            MethodRegistry.RegisterMethods(behavior);
+
             behavior.GameObject = this;
-            GUI.GuiCallBack += behavior.OnGUI;
-            behavior.OnStart();
+            GUI.GuiCallBack += behavior.OnGuiMethod;
+
+            behavior.AwakeMethod?.Invoke();
+            behavior.StartMethod?.Invoke();
         }
     }
 
@@ -155,7 +153,7 @@ public class GameObject
         foreach (var behavior in _behaviors.OfType<Behavior>())
         {
             behavior.GameObject = this;
-            behavior.OnUpdate();
+            behavior.UpdateMethod?.Invoke();
         }
     }
 
@@ -164,7 +162,7 @@ public class GameObject
         foreach (var behavior in _behaviors.OfType<Behavior>())
         {
             behavior.GameObject = this;
-            behavior.OnFixedUpdate();
+            behavior.FixedUpdateMethod?.Invoke();
         }
     }
 
@@ -175,21 +173,19 @@ public class GameObject
             foreach (var source in behavior.Sources)
                 source.Value.Dispose();
 
-            behavior.OnDispose();
+            behavior.DisposeMethod?.Invoke();
         }
     }
 
     public void ResizeBehaviors(FramebufferResizeEventArgs e)
     {
         foreach (var behavior in _behaviors.OfType<Behavior>())
-        {
-            behavior.OnResize(e);
-        }
+            behavior.OnResizeMethod?.Invoke(e);
     }
 
     public GameObject Clone()
     {
         var uMap = new Mapper();
-        return uMap.Map<GameObject>(this);
+        return uMap.Map(this);
     }
 }

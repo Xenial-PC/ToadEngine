@@ -1,9 +1,7 @@
 ﻿using System.Timers;
 using Guinevere;
 using SimplePlatformer.Classes.GameObjects.Menus;
-using SkiaSharp;
 using ToadEngine.Classes.Base.Scripting.Base;
-using ToadEngine.Classes.Base.UI;
 using Timer = System.Timers.Timer;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
@@ -18,7 +16,7 @@ public class PlayerHud : Behavior
     private static DateTime _levelStartTime;
     private static bool _isTimerRunning;
 
-    public override void OnStart()
+    public void Start()
     {
         LevelTimer = new Timer(1);
         LevelTimer.Elapsed += LevelTimerOnElapsed;
@@ -30,7 +28,7 @@ public class PlayerHud : Behavior
         Time = DateTime.Now - _levelStartTime;
     }
 
-    public override void OnGUI()
+    public void OnGUI()
     {
         if (PauseMenu.IsPaused) return;
 

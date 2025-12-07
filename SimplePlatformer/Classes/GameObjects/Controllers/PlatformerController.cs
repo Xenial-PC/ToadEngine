@@ -21,7 +21,7 @@ public class PlatformerController : Behavior
     public bool IsRespawned = true;
     private bool _isAbleToAddSpeed;
 
-    public override void OnStart()
+    public void Start()
     {
         _fpScript = GameObject.GetComponent<FPController.FPControllerScript>()!;
         _fpScript.OverrideBaseMovement = true;
@@ -33,7 +33,7 @@ public class PlatformerController : Behavior
         _playerHud.UpdateHealthUI(Health / 100f);
     }
 
-    public override void OnUpdate()
+    public void Update()
     {
         _fpScript.IsAbleToMove = !PauseMenu.IsPaused;
         if (!_fpScript.IsAbleToMove) return;

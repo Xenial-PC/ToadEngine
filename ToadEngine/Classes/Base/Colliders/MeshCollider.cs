@@ -9,7 +9,7 @@ public class MeshCollider : BaseCollider
     public OpenTK.Mathematics.Vector3 Size = OpenTK.Mathematics.Vector3.Zero;
     public Buffer<Triangle> Triangles;
 
-    public override void OnStart()
+    public void Start()
     {
         if (Size == OpenTK.Mathematics.Vector3.Zero)
             Size = GameObject.Transform.LocalScale;

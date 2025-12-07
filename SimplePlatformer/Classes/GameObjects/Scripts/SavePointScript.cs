@@ -11,7 +11,7 @@ public class SavePointScript : Behavior
     public bool IsLastSavePoint;
     private bool _hasHealed;
 
-    public override void OnTriggerEnter(GameObject other)
+    public void OnTriggerEnter(GameObject other)
     {
         var player = other.GetComponent<PlatformerController>();
         if (player == null) return;

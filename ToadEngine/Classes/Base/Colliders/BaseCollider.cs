@@ -1,4 +1,5 @@
 ﻿using BepuPhysics;
+
 using ToadEngine.Classes.Base.Scripting.Base;
 using Quaternion = System.Numerics.Quaternion;
 using Vector3 = System.Numerics.Vector3;
@@ -21,7 +22,7 @@ namespace ToadEngine.Classes.Base.Colliders
             Dynamic
         }
 
-        public override void OnUpdate()
+        public void Update()
         {
             var simulation = Physics.Simulation;
             var body = simulation.Bodies.GetBodyReference(Collider);

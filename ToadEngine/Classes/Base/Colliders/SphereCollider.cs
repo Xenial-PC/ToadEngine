@@ -7,7 +7,7 @@ public class SphereCollider : BaseCollider
 {
     public float Radius;
 
-    public override void OnStart()
+    public void Start()
     {
         switch (Type)
         {

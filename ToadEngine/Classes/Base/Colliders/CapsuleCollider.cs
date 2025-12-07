@@ -9,7 +9,7 @@ public class CapsuleCollider : BaseCollider
     public Vector2 Size = Vector2.Zero;
     public float Radius;
 
-    public override void OnStart()
+    public void Start()
     {
         if (Size == Vector2.Zero)
             Size = new Vector2(Radius, GameObject.Transform.LocalScale.Y);

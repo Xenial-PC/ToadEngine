@@ -56,12 +56,10 @@ public class ObjectManager
         if (type == InstantiateType.Early)
         {
             GameObjects.Remove(gameObject.Name!);
-            gameObject.Renderers.ForEach(r => r.Dispose());
             return;
         }
 
         GameObjectsLast.Remove(gameObject.Name!);
-        gameObject.Renderers.ForEach(r => r.Dispose());
     }
 
     public void DestroyObject(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early)
@@ -71,12 +69,10 @@ public class ObjectManager
             if (type == InstantiateType.Early)
             {
                 GameObjects.Remove(gameObject.Name!);
-                gameObject.Renderers.ForEach(r => r.Dispose());
                 continue;
             }
 
             GameObjectsLast.Remove(gameObject.Name!);
-            gameObject.Renderers.ForEach(r => r.Dispose());
         }
     }
 
@@ -117,14 +113,12 @@ public class ObjectManager
         {
             render.Value.UpdateWorldTransform();
             render.Value.UpdateBehaviors();
-            render.Value.Renderers.ForEach(r => r.Update());
         }
 
         foreach (var render in GameObjectsLast)
         {
             render.Value.UpdateWorldTransform();
             render.Value.UpdateBehaviors();
-            render.Value.Renderers.ForEach(r => r.Update());
         }
     }
 
@@ -165,6 +159,8 @@ public class ObjectManager
 
         foreach (var render in GameObjectsLast)
             render.Value.SetupBehaviors();
+
+        Behavior.SetupTriggers();
     }
 
     public void Dispose()
@@ -172,14 +168,12 @@ public class ObjectManager
         foreach (var renderObject in GameObjects)
         {
             renderObject.Value.CleanupBehaviors();
-            renderObject.Value.Renderers.ForEach(r => r.Dispose());
             DestroyObject(renderObject.Value);
         }
 
         foreach (var renderObject in GameObjectsLast)
         {
             renderObject.Value.CleanupBehaviors();
-            renderObject.Value.Renderers.ForEach(r => r.Dispose());
             DestroyObject(renderObject.Value);
         }
 
