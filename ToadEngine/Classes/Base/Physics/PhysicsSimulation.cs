@@ -1,16 +1,11 @@
 ﻿using BepuPhysics.CollisionDetection;
 using BepuPhysics;
+using BepuPhysics.Constraints;
 using BepuUtilities.Memory;
 using BepuUtilities;
 using Vector3 = System.Numerics.Vector3;
 
 namespace ToadEngine.Classes.Base.Physics;
-
-public class PhysicsComponent
-{
-    public BodyHandle BodyHandle;
-    public bool IsDynamic;
-}
 
 public class PhysicsSimulation : IDisposable
 {
@@ -25,13 +20,10 @@ public class PhysicsSimulation : IDisposable
     /// </summary>
     public Vector3 Gravity = new(0, -10, 0);
 
+    public float MaximumRecoveryVelocity = 8f, FrictionCoefficient = 1f;
+    public SpringSettings SpringSettings = new(30, 1);
+
     public ThreadDispatcher ThreadDispatcher = null!;
-
-    public T NarrowPhaseAs<T>() where T : struct => (T)_narrowPhase;
-    public T PoseIntegratorAs<T>() where T : struct => (T)_poseIntegrator;
-
-    private INarrowPhaseCallbacks _narrowPhase = null!;
-    private IPoseIntegratorCallbacks _poseIntegrator = null!;
 
     public SolveDescription SolveDescription { get; set; } = new(8, 1);
 
@@ -43,11 +35,8 @@ public class PhysicsSimulation : IDisposable
             Environment.ProcessorCount > 4 ? Environment.ProcessorCount - 2 : Environment.ProcessorCount - 1));
 
         var narrowPhase = new DefaultCallBacks.NarrowPhaseCallbacks();
-        _narrowPhase = narrowPhase;
-
         var pose = new DefaultCallBacks.PoseIntegratorCallbacks();
-        _poseIntegrator = pose;
-
+        
         BufferPool = new BufferPool();
         Simulation = Simulation.Create(BufferPool, narrowPhase, pose, SolveDescription);
         ColliderManager = new ColliderManager(Simulation, BufferPool);
@@ -64,11 +53,8 @@ public class PhysicsSimulation : IDisposable
             Environment.ProcessorCount > 4 ? Environment.ProcessorCount - 2 : Environment.ProcessorCount - 1));
 
         var narrowPhase = new TNarrow();
-        _narrowPhase = narrowPhase;
-
         var pose = new TPose();
-        _poseIntegrator = pose;
-
+        
         BufferPool = new BufferPool();
         Simulation = Simulation.Create(BufferPool, narrowPhase, pose, SolveDescription);
         ColliderManager = new ColliderManager(Simulation, BufferPool);

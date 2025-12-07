@@ -33,7 +33,6 @@ public class GameObject
         Rotation = new Vector3(0f)
     };
 
-    public PhysicsComponent Physics = new();
     public bool UsePhysics = false;
 
     public List<GameObject> Children = new();

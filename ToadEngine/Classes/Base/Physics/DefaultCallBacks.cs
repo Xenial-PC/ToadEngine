@@ -11,10 +11,8 @@ namespace ToadEngine.Classes.Base.Physics;
 
 public class DefaultCallBacks
 {
-    public struct NarrowPhaseCallbacks(float maximumRecoveryVelocity = 8f, float frictionCoefficient = 1f) : INarrowPhaseCallbacks
+    public struct NarrowPhaseCallbacks() : INarrowPhaseCallbacks
     {
-        public float MaximumRecoveryVelocity = maximumRecoveryVelocity, FrictionCoefficient = frictionCoefficient;
-
         public void Initialize(Simulation simulation)
         {
 
@@ -37,9 +35,11 @@ public class DefaultCallBacks
         public bool ConfigureContactManifold<TManifold>(int workerIndex, CollidablePair pair, ref TManifold manifold,
             out PairMaterialProperties pairMaterial) where TManifold : unmanaged, IContactManifold<TManifold>
         {
-            pairMaterial.FrictionCoefficient = FrictionCoefficient;
-            pairMaterial.MaximumRecoveryVelocity = MaximumRecoveryVelocity;
-            pairMaterial.SpringSettings = new SpringSettings(30, 1);
+            var physics = Service.Physics;
+
+            pairMaterial.FrictionCoefficient = physics.FrictionCoefficient;
+            pairMaterial.MaximumRecoveryVelocity = physics.MaximumRecoveryVelocity;
+            pairMaterial.SpringSettings = physics.SpringSettings;
 
             if (IsTrigger(pair.A) || IsTrigger(pair.B))
             {
@@ -93,5 +93,4 @@ public class DefaultCallBacks
             velocity.Linear += _gravityWideDt;
         }
     }
-
 }
