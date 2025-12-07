@@ -10,7 +10,7 @@ namespace ToadEngine.Classes.Base.Scripting.Base;
 
 public abstract class Behavior : ICloneable
 {
-    public RaycastManager Raycast = new(Service.Scene.PhysicsManager.BufferPool);
+    public RaycastManager Raycast = new(Service.Physics.BufferPool);
     public static Dictionary<int, GameObject> BodyToGameObject = new();
     public GameObject GameObject = null!;
 
@@ -18,7 +18,7 @@ public abstract class Behavior : ICloneable
     public NativeWindow WHandler => Service.NativeWindow;
 
     public AudioManager AudioManger => Service.Scene.AudioManager;
-    public PhysicsManager PhysicsManager => Service.Scene.PhysicsManager;
+    public PhysicsSimulation Physics => Service.Physics;
 
     public int GetSound(string name) => AudioManger.GetSound(name);
     public Dictionary<string, Source> Sources = new();
@@ -30,7 +30,7 @@ public abstract class Behavior : ICloneable
     
     static Behavior()
     {
-        Trigger.OnEnter += (a, b) =>
+        TriggerManager.OnEnter += (a, b) =>
         {
             if (!BodyToGameObject.TryGetValue(a, out var objA) ||
                 !BodyToGameObject.TryGetValue(b, out var objB)) return;
@@ -42,7 +42,7 @@ public abstract class Behavior : ICloneable
                 component?.OnTriggerEnter(objA);
         };
 
-        Trigger.OnExit += (a, b) =>
+        TriggerManager.OnExit += (a, b) =>
         {
             if (!BodyToGameObject.TryGetValue(a, out var objA) ||
                 !BodyToGameObject.TryGetValue(b, out var objB)) return;

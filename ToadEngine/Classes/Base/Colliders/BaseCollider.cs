@@ -1,7 +1,4 @@
 ﻿using BepuPhysics;
-using BepuPhysics.Collidables;
-using BepuUtilities;
-using System.Drawing;
 using ToadEngine.Classes.Base.Scripting.Base;
 using Quaternion = System.Numerics.Quaternion;
 using Vector3 = System.Numerics.Vector3;
@@ -26,7 +23,7 @@ namespace ToadEngine.Classes.Base.Colliders
 
         public override void OnUpdate()
         {
-            var simulation = PhysicsManager.Simulation;
+            var simulation = Physics.Simulation;
             var body = simulation.Bodies.GetBodyReference(Collider);
 
             if (Type == ColliderType.Static) return;
@@ -77,19 +74,19 @@ namespace ToadEngine.Classes.Base.Colliders
 
         public void Resize(dynamic shape)
         {
-            var shapeIndex = PhysicsManager.Simulation.Shapes.Add(shape);
+            var shapeIndex = Physics.Simulation.Shapes.Add(shape);
             var inertia = shape.ComputeInertia(Mass);
 
             if (Type == ColliderType.Static)
             {
-                var sBody = PhysicsManager.Simulation.Statics.GetStaticReference(SCollider);
-                PhysicsManager.Simulation.Shapes.Remove(sBody.Shape);
+                var sBody = Physics.Simulation.Statics.GetStaticReference(SCollider);
+                Physics.Simulation.Shapes.Remove(sBody.Shape);
                 sBody.SetShape(shapeIndex);
                 return;
             }
 
-            var body = PhysicsManager.Simulation.Bodies.GetBodyReference(Collider);
-            PhysicsManager.Simulation.Shapes.Remove(body.Collidable.Shape);
+            var body = Physics.Simulation.Bodies.GetBodyReference(Collider);
+            Physics.Simulation.Shapes.Remove(body.Collidable.Shape);
             body.SetShape(shapeIndex);
             body.LocalInertia = inertia;
         }

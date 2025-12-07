@@ -1,8 +1,4 @@
-﻿using BepuPhysics;
-using BepuPhysics.Collidables;
-using System.Drawing;
-using ToadEngine.Classes.Extensions;
-using Quaternion = System.Numerics.Quaternion;
+﻿using BepuPhysics.Collidables;
 using Vector3 = System.Numerics.Vector3;
 
 namespace ToadEngine.Classes.Base.Colliders;
@@ -11,34 +7,30 @@ public class SphereCollider : BaseCollider
 {
     public float Radius;
 
-    private float _lastRadius;
-
     public override void OnStart()
     {
-        _lastRadius = Radius;
-
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = Scene.PhysicsManager.CreateTriggerSphere((Vector3)GameObject.Transform.Position, Radius);
+                Collider = Physics.ColliderManager.CreateTrigger.Sphere((Vector3)GameObject.Transform.Position, Radius);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
-                Collider = Scene.PhysicsManager.CreateKinematicSphere((Vector3)GameObject.Transform.Position, Radius);
+                Collider = Physics.ColliderManager.CreateKinematic.Sphere((Vector3)GameObject.Transform.Position, Radius);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
-                Collider = Scene.PhysicsManager.CreateSphere((Vector3)GameObject.Transform.Position, Radius, Mass);
+                Collider = Physics.ColliderManager.CreateDynamic.Sphere((Vector3)GameObject.Transform.Position, Radius, Mass);
 
                 Handle = Collider.Value;
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
-                SCollider = Scene.PhysicsManager.CreateStaticSphere((Vector3)GameObject.Transform.Position, Radius);
+                SCollider = Physics.ColliderManager.CreateStatic.Sphere((Vector3)GameObject.Transform.Position, Radius);
 
                 Handle = SCollider.Value;
                 BodyToGameObject[Handle] = GameObject;

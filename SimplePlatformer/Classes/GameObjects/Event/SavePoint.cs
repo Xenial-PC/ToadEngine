@@ -32,8 +32,5 @@ public class SavePoint
 
     public T AddScript<T>() where T : new() => TGameObject.AddScript<T>();
 
-    public List<GameObject> GameObjects()
-    {
-        return [SavePointObject.GameObject, TGameObject.GameObject];
-    }
+    public List<GameObject> GameObjects() => [SavePointObject.GameObject, TGameObject.GameObject];
 }

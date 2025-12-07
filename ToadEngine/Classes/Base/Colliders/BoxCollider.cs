@@ -1,6 +1,4 @@
-﻿using BepuPhysics;
-using BepuPhysics.Collidables;
-using Quaternion = System.Numerics.Quaternion;
+﻿using BepuPhysics.Collidables;
 using Vector3 = System.Numerics.Vector3;
 
 namespace ToadEngine.Classes.Base.Colliders;
@@ -8,19 +6,16 @@ namespace ToadEngine.Classes.Base.Colliders;
 public class BoxCollider : BaseCollider
 {
     public OpenTK.Mathematics.Vector3 Size = OpenTK.Mathematics.Vector3.Zero;
-    private OpenTK.Mathematics.Vector3 _lastSize = OpenTK.Mathematics.Vector3.Zero;
-
+    
     public override void OnStart()
     {
         if (Size == OpenTK.Mathematics.Vector3.Zero) 
             Size = GameObject.Transform.LocalScale;
 
-        _lastSize = Size;
-
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = Scene.PhysicsManager.CreateTriggerBox(
+                Collider = Physics.ColliderManager.CreateTrigger.Box(
                     (Vector3)GameObject.Transform.Position,
                     (Vector3)Size);
 
@@ -28,7 +23,7 @@ public class BoxCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Kinematic:
-                Collider = Scene.PhysicsManager.CreateKinematicBox(
+                Collider = Physics.ColliderManager.CreateKinematic.Box(
                     (Vector3)GameObject.Transform.Position,
                     (Vector3)Size);
 
@@ -36,7 +31,7 @@ public class BoxCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Dynamic:
-                Collider = Scene.PhysicsManager.CreateBox(
+                Collider = Physics.ColliderManager.CreateDynamic.Box(
                     (Vector3)GameObject.Transform.Position,
                     (Vector3)Size, Mass);
 
@@ -44,7 +39,7 @@ public class BoxCollider : BaseCollider
                 BodyToGameObject[Handle] = GameObject;
                 return;
             case ColliderType.Static:
-                SCollider = Scene.PhysicsManager.CreateStaticBox(
+                SCollider = Physics.ColliderManager.CreateStatic.Box(
                     (Vector3)GameObject.Transform.Position,
                     (Vector3)Size);
 

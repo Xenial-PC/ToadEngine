@@ -22,7 +22,7 @@ public class LevelOne : Scene
     private FPController _player = null!;
 
     private LevelGenerator _generator = null!;
-    private List<Lava> _outOfBoundsLava = new();
+    private readonly List<Lava> _outOfBoundsLava = new();
     private List<GameObject> _level = null!;
     private Volcano _volcano = null!, _volcano2 = null!;
 
@@ -48,18 +48,12 @@ public class LevelOne : Scene
         _camera = new Camera();
         Service.MainCamera = _camera;
 
-        PauseMenu = new PauseMenu();
-        Scripts.AddComponent(PauseMenu);
-
-        EndOfLevelMenu = new EOLMenu();
-        Scripts.AddComponent(EndOfLevelMenu);
+        PauseMenu = Scripts.AddComponent<PauseMenu>();
+        EndOfLevelMenu = Scripts.AddComponent<EOLMenu>();
 
         _player = new FPController(new Vector3(0.3f, 2f, 0.3f))
         {
-            Controller =
-            {
-                JumpHeight = 8f
-            }
+            Controller = { JumpHeight = 8f }
         };
         _player.GameObject.Transform.Position = new Vector3(0f, 14f, 0f);
 
@@ -71,14 +65,7 @@ public class LevelOne : Scene
         _directionLight.Settings.Ambient = new Vector3(0.5f);
         _directionLight.Settings.Diffuse = new Vector3(0.3f);
 
-        _generator = new LevelGenerator
-        {
-            OutOfBoundsRespawnScript = new RespawnScript
-            {
-                Player = _player
-            }
-        };
-
+        _generator = new LevelGenerator { Player = _player };
         RespawnScript.RespawnPosition =  _player.GameObject.Transform.Position;
 
         GenerateLevelFloor();

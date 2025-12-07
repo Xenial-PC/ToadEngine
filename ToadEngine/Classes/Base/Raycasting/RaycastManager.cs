@@ -127,12 +127,12 @@ public class RaycastManager
 
     private ThreadDispatcher GetCurrentDispatcher()
     {
-        return Service.Scene.PhysicsManager.ThreadDispatcher;
+        return Service.Physics.ThreadDispatcher;
     }
 
     private Simulation GetCurrentSimulation()
     {
-        return Service.Scene.PhysicsManager.Simulation;
+        return Service.Physics.Simulation;
     }
 
     private unsafe int BatchedWorker(int workerIndex, IntersectionAlgorithm algorithm)

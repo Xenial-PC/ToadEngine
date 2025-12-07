@@ -1,7 +1,5 @@
-﻿using NAudio.Codecs;
-using SimplePlatformer.Classes.GameObjects.Controllers;
+﻿using SimplePlatformer.Classes.GameObjects.Controllers;
 using SimplePlatformer.Classes.GameObjects.Event;
-using System.Collections.Generic;
 using ToadEngine.Classes.Base.Rendering.Object;
 using Platform = SimplePlatformer.Classes.GameObjects.World.Platform;
 
@@ -9,7 +7,7 @@ namespace SimplePlatformer.Classes.GameObjects.Scripts.World;
 
 public class LevelGenerator
 {
-    public RespawnScript OutOfBoundsRespawnScript = null!;
+    public FPController Player;
 
     private Vector3 _lastPosition;
     private bool _isFirstPlatform = true;
@@ -95,7 +93,7 @@ public class LevelGenerator
         var mPlatform = platform.AddScript<MovingPlatform>();
         mPlatform.MovingRange = new Vector3(_lastWasLava ? 0 : rand.Next(-6, 6), 0f, _lastWasLava ? -11.3f : 0);
         mPlatform.MovingSpeed = 0.4f;
-        mPlatform.Player = OutOfBoundsRespawnScript.Player;
+        mPlatform.Player = Player;
 
         _lastWasLava = false;
 

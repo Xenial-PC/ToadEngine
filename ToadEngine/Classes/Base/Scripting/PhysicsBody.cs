@@ -27,7 +27,7 @@ public class PhysicsBody : Behavior
     {
         if (!GameObject.UsePhysics) return;
 
-        var body = Scene.PhysicsManager.Simulation.Bodies.GetBodyReference(GameObject.Physics.BodyHandle);
+        var body = Service.Physics.Simulation.Bodies.GetBodyReference(GameObject.Physics.BodyHandle);
         GameObject.Transform.Position = new Vector3(body.Pose.Position.X, body.Pose.Position.Y, body.Pose.Position.Z);
         GameObject.Transform.Rotation = new Vector3(body.Pose.Orientation.X, body.Pose.Orientation.Y, body.Pose.Orientation.Z);
     }

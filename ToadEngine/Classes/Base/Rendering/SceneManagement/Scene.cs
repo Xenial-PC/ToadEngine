@@ -15,7 +15,6 @@ public class Scene
     public NativeWindow WHandler = null!;
     public Window.Window Window = null!;
 
-    public PhysicsManager PhysicsManager = new();
     public AudioManager AudioManager = null!;
     public ObjectManager ObjectManager = new();
 
@@ -120,8 +119,8 @@ public class Scene
 
         while (Time.AccumulatedTime >= Time.FixedDeltaTime)
         {
-            if (!Service.Scene.PhysicsManager.IsPhysicsPaused)
-                Service.Scene.PhysicsManager.Step(Time.FixedDeltaTime);
+            foreach (var sim in PhysicsManager.GetSimulations.Where(sim => !sim.IsPhysicsPaused))
+                sim.Step(Time.FixedDeltaTime);
 
             ObjectManager.UpdateBehaviorsFixedTime();
             Time.AccumulatedTime -= Time.FixedDeltaTime;
@@ -167,8 +166,10 @@ public class Scene
         AudioManager?.Dispose();
         ShadowMapShader?.Dispose();
 
-        PhysicsManager.Dispose();
-        PhysicsManager = new PhysicsManager();
+        PhysicsManager.Reset();
+
+        Service.Physics = PhysicsManager.Register("main");
+        Service.Physics.Setup();
 
         Window?.CoreShader?.Dispose();
 

@@ -1,4 +1,5 @@
 ﻿using ToadEngine.Classes.Base.Objects.View;
+using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Shaders;
 
@@ -47,6 +48,16 @@ public static class Service
         set
         {
             Remove<Camera>();
+            Add(value);
+        }
+    }
+
+    public static PhysicsSimulation Physics
+    {
+        get => Get<PhysicsSimulation>()!;
+        set
+        {
+            Remove<PhysicsSimulation>();
             Add(value);
         }
     }
