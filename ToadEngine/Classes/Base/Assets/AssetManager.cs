@@ -1,6 +1,4 @@
-﻿using System.IO;
-using ToadEngine.Classes.Textures;
-using ToadEngine.Classes.Textures.Base;
+﻿using ToadEngine.Classes.Textures.Base;
 
 namespace ToadEngine.Classes.Base.Assets;
 

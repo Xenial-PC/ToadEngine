@@ -166,16 +166,13 @@ public class Scene
         AudioManager?.Dispose();
         ShadowMapShader?.Dispose();
 
-        PhysicsManager.Reset();
-
-        Service.Physics = PhysicsManager.Register("main");
-        Service.Physics.Setup();
-
         Window?.CoreShader?.Dispose();
 
         Service.Clear();
         Texture.ClearTextures();
+
         AssetManager.Reset();
+        PhysicsManager.Reset();
 
         Dispose();
     }
