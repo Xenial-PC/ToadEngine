@@ -5,6 +5,7 @@ using BepuPhysics;
 using BepuUtilities;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Physics;
 
@@ -68,14 +69,13 @@ public class DefaultCallBacks
 
         }
     }
-
+    
     public struct PoseIntegratorCallbacks : IPoseIntegratorCallbacks
     {
         public AngularIntegrationMode AngularIntegrationMode => AngularIntegrationMode.Nonconserving;
         public bool AllowSubstepsForUnconstrainedBodies => false;
         public bool IntegrateVelocityForKinematics => false;
 
-        public System.Numerics.Vector3 Gravity;
         private Vector3Wide _gravityWideDt;
 
         public void Initialize(Simulation simulation)
@@ -84,7 +84,7 @@ public class DefaultCallBacks
 
         public void PrepareForIntegration(float dt)
         {
-            _gravityWideDt = Vector3Wide.Broadcast(Gravity * dt);
+            _gravityWideDt = Vector3Wide.Broadcast(Service.Physics.Gravity * dt);
         }
 
         public void IntegrateVelocity(Vector<int> bodyIndices, Vector3Wide position, QuaternionWide orientation,

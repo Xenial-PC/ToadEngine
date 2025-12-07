@@ -23,15 +23,7 @@ public class PhysicsSimulation : IDisposable
     /// <summary>
     /// Default Callback field for setting gravity
     /// </summary>
-    public Vector3 Gravity
-    {
-        get => PoseIntegratorAs<DefaultCallBacks.PoseIntegratorCallbacks>().Gravity;
-        set
-        {
-            if (_poseIntegrator is DefaultCallBacks.PoseIntegratorCallbacks grIntegrator)
-                grIntegrator.Gravity = value;
-        }
-    }
+    public Vector3 Gravity = new(0, -10, 0);
 
     public ThreadDispatcher ThreadDispatcher = null!;
 
@@ -53,7 +45,7 @@ public class PhysicsSimulation : IDisposable
         var narrowPhase = new DefaultCallBacks.NarrowPhaseCallbacks();
         _narrowPhase = narrowPhase;
 
-        var pose = new DefaultCallBacks.PoseIntegratorCallbacks() { Gravity = new System.Numerics.Vector3(0, -10, 0) };
+        var pose = new DefaultCallBacks.PoseIntegratorCallbacks();
         _poseIntegrator = pose;
 
         BufferPool = new BufferPool();
