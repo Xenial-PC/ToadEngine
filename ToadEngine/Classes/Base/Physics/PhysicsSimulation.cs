@@ -2,6 +2,7 @@
 using BepuPhysics;
 using BepuUtilities.Memory;
 using BepuUtilities;
+using Vector3 = System.Numerics.Vector3;
 
 namespace ToadEngine.Classes.Base.Physics;
 
@@ -14,9 +15,23 @@ public class PhysicsComponent
 public class PhysicsSimulation : IDisposable
 {
     public bool IsPhysicsPaused, IsSetup;
+
     public Simulation Simulation { get; set; } = null!;
     public BufferPool BufferPool { get; set; } = null!;
     public ColliderManager ColliderManager { get; set; } = null!;
+
+    /// <summary>
+    /// Default Callback field for setting gravity
+    /// </summary>
+    public Vector3 Gravity
+    {
+        get => PoseIntegratorAs<DefaultCallBacks.PoseIntegratorCallbacks>().Gravity;
+        set
+        {
+            if (_poseIntegrator is DefaultCallBacks.PoseIntegratorCallbacks grIntegrator)
+                grIntegrator.Gravity = value;
+        }
+    }
 
     public ThreadDispatcher ThreadDispatcher = null!;
 
