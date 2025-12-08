@@ -1,0 +1,61 @@
+﻿<!--EXTERNAL_PROPERTIES: VisualStudioVersion-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CppSharp" Version="1.0.45.22293" />
+		<PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
+		<PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="TypeMaps\TypeMapEnum.tt">
+			<Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>TypeMapEnum.g.cs</LastGenOutput>
+		</None>
+		<None Update="TypeMaps\TypeMapEnumImGui.tt">
+			<Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>TypeMapEnumImGui.g.cs</LastGenOutput>
+		</None>
+		<None Update="TypeMaps\TypeMapEnumImPlot.tt">
+			<Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>TypeMapEnumImPlot.g.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="TypeMaps\TypeMapEnum.g.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>TypeMapEnum.tt</DependentUpon>
+	  </Compile>
+	  <Compile Update="TypeMaps\TypeMapEnumImGui.g.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>TypeMapEnumImGui.tt</DependentUpon>
+	  </Compile>
+	  <Compile Update="TypeMaps\TypeMapEnumImPlot.g.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>TypeMapEnumImPlot.tt</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<PropertyGroup>
+		<TransformOnBuild>true</TransformOnBuild>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TextTemplating\Microsoft.TextTemplating.targets" />
+
+</Project>

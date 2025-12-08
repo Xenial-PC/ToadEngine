@@ -1,0 +1,27 @@
+<Project>
+
+	<PropertyGroup>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
+		<Version>$(AssemblyVersion)</Version>
+		<Authors>aybe</Authors>
+		<Description>$(Title)</Description>
+		<Company>$(Authors)</Company>
+		<Copyright>$(Authors)</Copyright>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/aybe/DearImGui</RepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<PackageOutputPath>$(MSBuildThisFileDirectory)build\packages\$(Platform)\$(Configuration)</PackageOutputPath>
+		<DebugType>embedded</DebugType>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="" />
+		<None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+</Project>

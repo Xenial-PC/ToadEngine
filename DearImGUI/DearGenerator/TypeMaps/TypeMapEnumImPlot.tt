@@ -1,0 +1,42 @@
+﻿<#@ include file="TypeMapEnum.tt" once="true" #>
+<#
+	var types = new[]
+		// ReSharper disable StringLiteralTypo
+	{
+		"ImAxis;ImPlotAxis",
+		"ImPlotFlags",
+		"ImPlotAxisFlags",
+		"ImPlotSubplotFlags",
+		"ImPlotLegendFlags",
+		"ImPlotMouseTextFlags",
+		"ImPlotDragToolFlags",
+		"ImPlotColormapScaleFlags",
+		"ImPlotItemFlags",
+		"ImPlotLineFlags",
+		"ImPlotScatterFlags",
+		"ImPlotStairsFlags",
+		"ImPlotShadedFlags",
+		"ImPlotBarsFlags",
+		"ImPlotBarGroupsFlags",
+		"ImPlotErrorBarsFlags",
+		"ImPlotStemsFlags",
+		"ImPlotInfLinesFlags",
+		"ImPlotPieChartFlags",
+		"ImPlotHeatmapFlags",
+		"ImPlotHistogramFlags",
+		"ImPlotDigitalFlags",
+		"ImPlotImageFlags",
+		"ImPlotTextFlags",
+		"ImPlotDummyFlags",
+		"ImPlotCond",
+		"ImPlotCol",
+		"ImPlotStyleVar",
+		"ImPlotScale",
+		"ImPlotMarker",
+		"ImPlotColormap",
+		"ImPlotLocation",
+		"ImPlotBin"
+	};
+
+	Generate(types, "Constants.ImPlotNamespace");
+#>

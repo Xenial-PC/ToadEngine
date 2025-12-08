@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="OpenTK" Version="4.9.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DearImGui.OpenTK\DearImGui.OpenTK.csproj" />
+		<ProjectReference Include="..\DearImGui\DearImGui.csproj" />
+		<ProjectReference Include="..\DearImPlot\DearImPlot.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Roboto-Regular.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>
