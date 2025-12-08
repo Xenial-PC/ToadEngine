@@ -13,7 +13,11 @@ public class PhysicsLayer
     private static readonly Dictionary<int, List<int>> LayersToIgnore = new();
     private static readonly Dictionary<GameObject, List<GameObject>> ObjectsToIgnore = new();
 
-    public static bool ShouldCollideLayer(int layerA, int layerB) => !(LayersToIgnore.TryGetValue(layerA, out var layer) && layer.Contains(layerB));
+    public static bool ShouldCollideLayer(int layerA, int layerB)
+    {
+        if (!LayersToIgnore.TryGetValue(layerA, out var layer)) return true;
+        return !layer.Contains(layerB);
+    }
 
     public static bool ShouldCollideObject(GameObject gameObject, GameObject gameObjectToIgnore)
     {
