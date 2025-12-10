@@ -1,6 +1,5 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Menus;
 using SimplePlatformer.Classes.GameObjects.Scripts;
-using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Scripting.Base;
 using Vector3 = System.Numerics.Vector3;
 
@@ -9,7 +8,7 @@ namespace SimplePlatformer.Classes.GameObjects.Controllers;
 public class PlatformerController : Behavior
 {
     private PlayerHud _playerHud = null!;
-    private FPController _fp = null!;
+    private FPController _controller = null!;
 
     public float JumpStamina = 100f, JumpStaminaMax = 100f,
         Boost = 100f, BoostMax = 100f,
@@ -19,17 +18,19 @@ public class PlatformerController : Behavior
     private float _airSpeedBonus, _groundTime, _healthRegenTimer;
     private const float AirSpeedGainRate = 2f;
     private const float MaxAirSpeedBonus = 3.5f;
-    private const float MaxFallingGravity = -18;
+    private const float MaxFallingGravity = 1.5f;
+
+    private float _gravityModifier = 1.0f;
 
     public bool IsRespawned = true;
     private bool _isAbleToAddSpeed;
 
     public void Awake()
     {
-        _fp = GameObject.GetComponent<FPController>()!;
-        _fp.OverrideBaseMovement = true;
+        _controller = GameObject.GetComponent<FPController>()!;
+        _controller.OverrideBaseMovement = true;
 
-        _playerHud = _fp.PlayerHud;
+        _playerHud = _controller.PlayerHud;
     }
 
     public void Start()
@@ -41,8 +42,8 @@ public class PlatformerController : Behavior
 
     public void Update()
     {
-        _fp.IsAbleToMove = !PauseMenu.IsPaused;
-        if (!_fp.IsAbleToMove) return;
+        _controller.IsAbleToMove = !PauseMenu.IsPaused;
+        if (!_controller.IsAbleToMove) return;
 
         HandleHealth();
         HandleMovement();
@@ -50,12 +51,12 @@ public class PlatformerController : Behavior
 
     public void HandleMovement()
     {
-        _fp.IsAllowedToJump = JumpStamina > 0;
-        if (_fp.HasHitGround)
+        _controller.IsAllowedToJump = JumpStamina > 0;
+        if (_controller.HasHitGround)
         {
             IncreaseJumpStamina(75f);
             AddBoost(50f);
-            Physics.Settings.Gravity.Y = -10;
+            _controller.Collider.PhysicsMaterial.Gravity = _gravityModifier = 1.0f;
         }
 
         if (Input.IsKeyPressed(Keys.Space))
@@ -66,17 +67,17 @@ public class PlatformerController : Behavior
             ResetHealthTimer(0.5f);
         }
 
-        if (_fp is { IsGrounded: false, IsRunning: true })
+        if (_controller is { IsGrounded: false, IsRunning: true })
             DecreaseBoost(85f);
 
-        HandleAirSpeed(Time.DeltaTime, _fp.IsGrounded);
+        HandleAirSpeed(_controller.IsGrounded);
 
-        var baseSpeed = _fp.IsRunning
-            ? (Boost > 0 ? _fp.RunSpeed : _fp.WalkSpeed)
-            : _fp.WalkSpeed;
+        var baseSpeed = _controller.IsRunning
+            ? (Boost > 0 ? _controller.RunSpeed : _controller.WalkSpeed)
+            : _controller.WalkSpeed;
 
-        _fp.Speed = baseSpeed + _airSpeedBonus;
-        _fp.Speed = MathF.Min(_fp.Speed, _fp.MaxSpeed);
+        _controller.Speed = baseSpeed + _airSpeedBonus;
+        _controller.Speed = MathF.Min(_controller.Speed, _controller.MaxSpeed);
         
         RegenPlayerJumpStamina();
     }
@@ -95,20 +96,20 @@ public class PlatformerController : Behavior
         DecreaseHealth(HealthDecreaseSpeed);
     }
 
-    private void HandleAirSpeed(float deltaTime, bool isGrounded)
+    private void HandleAirSpeed(bool isGrounded)
     {
         if (IsRespawned) _isAbleToAddSpeed = isGrounded;
         if (_isAbleToAddSpeed && IsRespawned)
         {
-            _fp.Body.Velocity.Linear = new Vector3(0f);
-            _fp.Speed = 0;
+            _controller.Body.Velocity.Linear = new Vector3(0f);
+            _controller.Speed = 0;
             IsRespawned = false;
         }
 
         switch (isGrounded)
         {
             case true:
-                _groundTime += deltaTime;
+                _groundTime += Time.DeltaTime;
                 break;
             case false when _isAbleToAddSpeed:
                 _groundTime = 0f;
@@ -117,11 +118,13 @@ public class PlatformerController : Behavior
 
         if (!isGrounded && _isAbleToAddSpeed)
         {
-            _airSpeedBonus += AirSpeedGainRate * deltaTime;
+            _airSpeedBonus += AirSpeedGainRate * Time.DeltaTime;
             _airSpeedBonus = MathF.Min(_airSpeedBonus, MaxAirSpeedBonus);
 
-            Physics.Settings.Gravity.Y += -7.5f * deltaTime;
-            if (Physics.Settings.Gravity.Y <= MaxFallingGravity) Physics.Settings.Gravity.Y = MaxFallingGravity;
+            _gravityModifier += 0.3f * Time.DeltaTime;
+            _controller.Collider.PhysicsMaterial.Gravity = _gravityModifier;
+
+            if (_gravityModifier >= MaxFallingGravity) _controller.Collider.PhysicsMaterial.Gravity = MaxFallingGravity;
         }
         else if (_groundTime >= 0.5f) _airSpeedBonus = 0f;
     }
@@ -134,7 +137,7 @@ public class PlatformerController : Behavior
         var landedStamina = 45f;
         var airStamina = 15f;
 
-        JumpStamina += (!_fp.IsInAir() ? landedStamina : airStamina) * Time.DeltaTime;
+        JumpStamina += (!_controller.IsInAir() ? landedStamina : airStamina) * Time.DeltaTime;
         _playerHud.UpdateStaminaUI(JumpStamina / 100);
     }
 

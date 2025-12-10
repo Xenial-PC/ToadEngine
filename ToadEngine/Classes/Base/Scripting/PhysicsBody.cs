@@ -7,7 +7,7 @@ namespace ToadEngine.Classes.Base.Scripting;
 public class PhysicsBody : Behavior
 {
     public BaseCollider Collider = null!;
-    public BodyReference GetBody => Service.Physics.Simulation.Bodies.GetBodyReference(Collider.Collider);
+    public BodyReference GetBodyRef => Service.Physics.Simulation.Bodies.GetBodyReference(Collider.Collider);
 
     public void Start()
     {
@@ -19,17 +19,17 @@ public class PhysicsBody : Behavior
     {
         if (!GameObject.UsePhysics) return;
 
-        var body = GetBody;
+        var body = GetBodyRef;
         GameObject.Transform.Position = new Vector3(body.Pose.Position.X, body.Pose.Position.Y, body.Pose.Position.Z);
         GameObject.Transform.Rotation = new Vector3(body.Pose.Orientation.X, body.Pose.Orientation.Y, body.Pose.Orientation.Z);
     }
 
     public void ApplyForce(Vector3 linear = default, Vector3 angular = default)
     {
-        if (linear != default) GetBody.Velocity.Linear += (System.Numerics.Vector3)linear;
-        if (angular != default) GetBody.Velocity.Angular += (System.Numerics.Vector3)angular;
+        if (linear != default) GetBodyRef.Velocity.Linear += (System.Numerics.Vector3)linear * Time.FixedTime;
+        if (angular != default) GetBodyRef.Velocity.Angular += (System.Numerics.Vector3)angular * Time.FixedTime;
     }
 
-    public void ApplyDrag(Vector3 linearDrag) => GetBody.Velocity.Linear += (System.Numerics.Vector3)linearDrag;
-    public void ApplyAngularDrag(Vector3 angularDrag) => GetBody.Velocity.Angular += (System.Numerics.Vector3)angularDrag;
+    public void ApplyDrag(Vector3 linearDrag) => GetBodyRef.Velocity.Linear += (System.Numerics.Vector3)linearDrag * Time.FixedTime;
+    public void ApplyAngularDrag(Vector3 angularDrag) => GetBodyRef.Velocity.Angular += (System.Numerics.Vector3)angularDrag * Time.FixedTime;
 }
