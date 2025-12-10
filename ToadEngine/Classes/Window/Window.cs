@@ -46,7 +46,6 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
 
     public virtual void OnInit()
     {
-        CurrentScene.OnStart();
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)

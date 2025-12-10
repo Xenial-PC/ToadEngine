@@ -37,7 +37,7 @@ public class RaycastManager
             IntersectionCount = &intersectionCount
         };
 
-        GetCurrentSimulation().RayCast(ray.Origin, ray.Direction, ray.MaximumT, ref hitHandler);
+        GetCurrentSimulation().RayCast(ray.Origin, ray.Direction, ray.MaximumT, _pool, ref hitHandler);
         return hitHandler.Hits[0];
     }
 
@@ -131,7 +131,7 @@ public class RaycastManager
     {
         var intersectionCount = 0;
         var hitHandler = new HitHandler { Hits = algorithm.Results, IntersectionCount = &intersectionCount };
-        var rayBatch = new SimulationRayBatcher<HitHandler>(GetCurrentDispatcher().GetThreadMemoryPool(workerIndex),
+        var rayBatch = new SimulationRayBatcher<HitHandler>(GetCurrentDispatcher().WorkerPools[workerIndex],
             GetCurrentSimulation(), hitHandler, 2048);
 
         int claimedIndex;
@@ -155,14 +155,14 @@ public class RaycastManager
         var intersectionCount = 0;
         var hitHandler = new HitHandler { Hits = algorithm.Results, IntersectionCount = &intersectionCount };
         var claimedIndex = 0;
-        var pool = GetCurrentDispatcher().GetThreadMemoryPool(workerIndex);
+        var pool = GetCurrentDispatcher().WorkerPools[workerIndex];
         while ((claimedIndex = Interlocked.Increment(ref algorithm.JobIndex)) < _jobs.Length)
         {
             ref var job = ref _jobs[claimedIndex];
             for (var i = job.Start; i < job.End; ++i)
             {
                 ref var ray = ref _rays[i];
-                GetCurrentSimulation().RayCast((System.Numerics.Vector3)ray.Origin, (System.Numerics.Vector3)ray.Direction, ray.MaximumT, ref hitHandler, i);
+                GetCurrentSimulation().RayCast((System.Numerics.Vector3)ray.Origin, (System.Numerics.Vector3)ray.Direction, ray.MaximumT, _pool, ref hitHandler, i);
             }
         }
         return intersectionCount;

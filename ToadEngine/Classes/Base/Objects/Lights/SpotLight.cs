@@ -30,7 +30,7 @@ public class SpotLight : GameObject
 
     public void AddShadowCaster()
     {
-        ShadowCaster = Component.Add<ShadowCaster>();
+        ShadowCaster = AddComponent<ShadowCaster>();
         ShadowCaster.IsCastingShadows = true;
     }
 

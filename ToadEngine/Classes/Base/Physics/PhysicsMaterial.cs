@@ -1,4 +1,5 @@
 ﻿using BepuPhysics.Constraints;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Physics;
 
@@ -7,9 +8,21 @@ namespace ToadEngine.Classes.Base.Physics;
 /// </summary>
 public class PhysicsMaterial
 {
+    private float _gravity = Service.Physics.Settings.Gravity.Y * 1f;
+
     public string Name { get; set; } = null!;
     public float Friction { get; set; } = 1f;
     public float Restitution { get; set; } = 8f;
+
+    /// <summary>
+    /// The scalar for the overall gravity
+    /// </summary>
+    public float Gravity
+    {
+        get => _gravity;
+        set => _gravity = Service.Physics.Settings.Gravity.Y * (value);
+    }
+
     public SpringSettings SpringSettings { get; set; } = new(30, 1);
     public PhysicsLayer PhysicsLayer { get; set; } = new() { Layer = (int)PhysicsLayers.None };
 }

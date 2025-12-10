@@ -21,7 +21,6 @@ public class SPlatFormerWindow(int width, int height, string title) : Window(wid
 
     public override void OnInit()
     {
-        base.OnInit();
         CursorState = CursorState.Grabbed;
     }
 

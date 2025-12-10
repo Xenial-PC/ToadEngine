@@ -16,13 +16,15 @@ public class ObjectManager
 
     private int _goIndex;
 
-    public GameObject? FindGameObject(string name) => GameObjects.GetValueOrDefault(name);
+    public GameObject? FindGameObject(string name) =>
+        GameObjects.GetValueOrDefault(name) ?? GameObjectsLast.GetValueOrDefault(name);
 
     public void Instantiate(GameObject gameObject, InstantiateType type = InstantiateType.Early)
     {
         gameObject.Setup();
         gameObject.Name ??= $"go_{_goIndex++}";
 
+        FinalizeBehaviors(gameObject);
         if (type == InstantiateType.Early)
         {
             GameObjects.TryAdd(gameObject.Name, gameObject);
@@ -39,6 +41,7 @@ public class ObjectManager
             gameObject.Setup();
             gameObject.Name ??= $"go_{_goIndex++}";
 
+            FinalizeBehaviors(gameObject);
             if (type == InstantiateType.Early)
             {
                 GameObjects.TryAdd(gameObject.Name, gameObject);
@@ -152,17 +155,8 @@ public class ObjectManager
         }
     }
 
-    public void SetupBehaviors()
-    {
-        foreach (var render in GameObjects)
-            render.Value.SetupBehaviors();
-
-        foreach (var render in GameObjectsLast)
-            render.Value.SetupBehaviors();
-
-        Behavior.SetupTriggers();
-    }
-
+    public void FinalizeBehaviors(GameObject go) => go.Component.FinalizeComponents();
+   
     public void Dispose()
     {
         foreach (var renderObject in GameObjects)

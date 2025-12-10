@@ -14,6 +14,10 @@ public class PhysicsSettings
     public SolveDescription SolveDescription = new(8, 1);
     public SpringSettings SpringSettings = new(30, 1);
 
+    public AngularIntegrationMode AngularIntegrationMode = AngularIntegrationMode.Nonconserving;
+    public bool AllowSubstepsForUnconstrainedBodies = false;
+    public bool IntegrateVelocityForKinematics = false;
+
     public float Restitution = 8f;
     public float Friction = 1f;
 }
@@ -26,6 +30,7 @@ public class PhysicsSimulation : IDisposable
     public BufferPool BufferPool { get; set; } = null!;
     public ColliderManager ColliderManager { get; set; } = null!;
     public PhysicsSettings Settings { get; } = new();
+    public PhysicsActions Actions { get; } = new();
 
     public ThreadDispatcher ThreadDispatcher = null!;
 
@@ -73,13 +78,16 @@ public class PhysicsSimulation : IDisposable
 
     public void Step(float deltaTime)
     {
+        Actions.OnPreStep?.Invoke(deltaTime);
         Simulation.Timestep(deltaTime);
+        Actions.OnPostStep?.Invoke(deltaTime);
+
         TriggerManager.EndFrame();
     }
 
     public void Dispose()
     {
-        TriggerRegistry.Triggers.Clear();
+        TriggerManager.Reset();
         ThreadDispatcher.Dispose();
         Simulation.Dispose();
         ((IDisposable)BufferPool).Dispose();

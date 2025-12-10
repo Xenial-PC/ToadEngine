@@ -14,7 +14,7 @@ public class LevelTwo : Scene
     private Camera _camera = null!;
 
     private SpotLight _flashLight;
-    private FPController _player = null!;
+    private Player _player = null!;
 
     public PauseMenu PauseMenu = null!;
     public EOLMenu EndOfLevelMenu = null!;
@@ -37,7 +37,7 @@ public class LevelTwo : Scene
         Service.Add(_camera);
 
         _flashLight = new SpotLight();
-        _player = new FPController(new Vector3(0.3f, 3f, 0.3f));
+        _player = new Player();
 
         PauseMenu = new PauseMenu();
         EndOfLevelMenu = new EOLMenu();
@@ -51,13 +51,13 @@ public class LevelTwo : Scene
         Instantiate(_skybox, InstantiateType.Late);
         Instantiate(_flashLight);
 
-        Instantiate(_player.GameObject);
+        Instantiate(_player);
     }
 
     public override void OnUpdate(FrameEventArgs e)
     {
         _flashLight.Settings.Direction = _camera.Front;
-        _flashLight.Settings.Position = _player.GameObject.Transform.Position;
+        _flashLight.Settings.Position = _player.Transform.Position;
         
         if (PauseMenu.IsPaused) return;
         _camera.Update();

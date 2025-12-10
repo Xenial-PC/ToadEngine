@@ -1,5 +1,6 @@
 ﻿using Guinevere;
 using ToadEngine.Classes.Base.Audio;
+using ToadEngine.Classes.Base.Colliders;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Raycasting;
@@ -28,33 +29,8 @@ public abstract class Behavior : ICloneable
 
     public Gui UI => GUI.Paint;
     public Shader CoreShader => Service.CoreShader;
-    
-    public static void SetupTriggers()
-    {
-        TriggerManager.OnEnter += (a, b) =>
-        {
-            if (!BodyToGameObject.TryGetValue(a, out var objA) ||
-                !BodyToGameObject.TryGetValue(b, out var objB)) return;
 
-            foreach (var component in objA.Component.GetOfType<Behavior>())
-                component?.OnTriggerEnterMethod?.Invoke(objB);
-
-            foreach (var component in objB.Component.GetOfType<Behavior>())
-                component?.OnTriggerEnterMethod?.Invoke(objA);
-        };
-
-        TriggerManager.OnExit += (a, b) =>
-        {
-            if (!BodyToGameObject.TryGetValue(a, out var objA) ||
-                !BodyToGameObject.TryGetValue(b, out var objB)) return;
-
-            foreach (var component in objA.Component.GetOfType<Behavior>())
-                component?.OnTriggerExitMethod?.Invoke(objB);
-
-            foreach (var component in objB.Component.GetOfType<Behavior>())
-                component?.OnTriggerExitMethod?.Invoke(objA);
-        };
-    }
+    public GameObject? FindGameObject(string name) => Scene.ObjectManager.FindGameObject(name);
 
     internal Action? AwakeMethod;
     internal Action? StartMethod;

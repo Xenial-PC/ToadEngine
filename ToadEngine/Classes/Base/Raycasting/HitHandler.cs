@@ -5,6 +5,7 @@ using BepuUtilities.Memory;
 using static ToadEngine.Classes.Base.Raycasting.RaycastManager;
 using System.Runtime.CompilerServices;
 using ToadEngine.Classes.Base.Physics.Managers;
+using Vector3 = System.Numerics.Vector3;
 
 namespace ToadEngine.Classes.Base.Raycasting;
 
@@ -26,7 +27,7 @@ public unsafe struct HitHandler : IRayHitHandler
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void OnRayHit(in RayData ray, ref float maximumT, float t, in System.Numerics.Vector3 normal, CollidableReference collidable,
+    public void OnRayHit(in RayData ray, ref float maximumT, float t, Vector3 normal, CollidableReference collidable,
         int childIndex)
     {
         maximumT = t;

@@ -93,8 +93,6 @@
 
   <ItemGroup>
     <PackageReference Include="AssimpNet" Version="4.1.0" />
-    <PackageReference Include="BepuPhysics" Version="2.4.0" />
-    <PackageReference Include="BepuUtilities" Version="2.4.0" />
     <PackageReference Include="Costura.Fody" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -113,6 +111,11 @@
     <PackageReference Include="SkiaSharp.Vulkan.SharpVk" Version="3.119.1" />
     <PackageReference Include="StbImageSharp" Version="2.30.15" />
     <PackageReference Include="UltraMapper" Version="0.2.61" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BepuPhysics\BepuPhysics\BepuPhysics.csproj" />
+    <ProjectReference Include="..\BepuPhysics\BepuUtilities\BepuUtilities.csproj" />
   </ItemGroup>
 
 </Project>

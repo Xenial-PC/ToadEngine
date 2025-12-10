@@ -33,7 +33,7 @@ public class IntersectionAlgorithm
         Interlocked.Add(ref IntersectionCount, intersectionCount);
     }
 
-    public void Execute(ref QuickList<Ray> rays, IThreadDispatcher? dispatcher)
+    public unsafe void Execute(ref QuickList<Ray> rays, IThreadDispatcher? dispatcher)
     {
         for (var i = 0; i < rays.Count; ++i)
         {

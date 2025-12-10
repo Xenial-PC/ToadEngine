@@ -26,7 +26,7 @@ public class PointLight : GameObject
 
     public void AddShadowCaster()
     {
-        ShadowCaster = Component.Add<ShadowCaster>();
+        ShadowCaster = AddComponent<ShadowCaster>();
         ShadowCaster.IsCastingShadows = false;
     }
 

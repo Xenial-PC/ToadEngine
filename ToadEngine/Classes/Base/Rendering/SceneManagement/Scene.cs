@@ -154,7 +154,7 @@ public class Scene
         Start();
 
         ObjectManager.Instantiate(Scripts);
-        ObjectManager.SetupBehaviors();
+        GameObject.SetupTriggers();
     }
 
     public void Destroy()

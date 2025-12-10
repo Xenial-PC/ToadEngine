@@ -10,8 +10,6 @@ public class MeshRenderer : Behavior, IRenderObject
 
     public void Draw()
     {
-        if (GameObject == null) return;
-
         CoreShader.Use();
         GameObject.UpdateModelMatrix();
 

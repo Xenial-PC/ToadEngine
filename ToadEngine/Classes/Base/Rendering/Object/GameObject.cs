@@ -1,4 +1,5 @@
 ﻿using ToadEngine.Classes.Base.Physics;
+using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
@@ -7,18 +8,9 @@ using UltraMapper;
 
 namespace ToadEngine.Classes.Base.Rendering.Object;
 
-public struct Textures
-{
-    public Texture Diffuse;
-    public Texture Specular;
-    public Texture Normal;
-}
-
 public class GameObject
 {
     public string? Name = null;
-
-    private List<Behavior?> _behaviors = new();
 
     public List<IRenderObject> Renderers => Component.GetOfType<IRenderObject>();
 
@@ -38,6 +30,7 @@ public class GameObject
     public List<GameObject> Children = new();
     public GameObject Parent = null!;
     public bool IsChild;
+    public bool HasChildren => Children.Count > 0;
 
     public Matrix4 Model;
     
@@ -47,8 +40,8 @@ public class GameObject
 
     public bool IsEnabled = true;
 
-    public T AddComponent<T>() where T : new() => Component.Add<T>();
-    public T AddComponent<T>(string name) where T : new() => Component.Add<T>(name);
+    public T AddComponent<T>() where T : new() => Component.Add<T>(this);
+    public T AddComponent<T>(string name) where T : new() => Component.Add<T>(name, this);
     public void AddComponent(string name, object obj) => Component.Add(name, obj);
     public void AddComponent(object obj) => Component.Add(obj);
 
@@ -130,26 +123,17 @@ public class GameObject
         Scene.DestroyObject(this);
     }
 
-    public void SetupBehaviors()
+    public void RegisterBehavior(Behavior behavior)
     {
-        _behaviors = Component.GetOfType<Behavior>()!;
-        if (_behaviors.Count <= 0) return;
+        MethodRegistry.RegisterMethods(behavior);
 
-        foreach (var behavior in _behaviors.OfType<Behavior>())
-        {
-            MethodRegistry.RegisterMethods(behavior);
-
-            behavior.GameObject = this;
-            GUI.GuiCallBack += behavior.OnGuiMethod;
-
-            behavior.AwakeMethod?.Invoke();
-            behavior.StartMethod?.Invoke();
-        }
+        behavior.GameObject = this;
+        GUI.GuiCallBack += behavior.OnGuiMethod;
     }
 
     public void UpdateBehaviors()
     {
-        foreach (var behavior in _behaviors.OfType<Behavior>())
+        foreach (var behavior in Components.OfType<Behavior>())
         {
             behavior.GameObject = this;
             behavior.UpdateMethod?.Invoke();
@@ -158,7 +142,7 @@ public class GameObject
 
     public void UpdateBehaviorsFixedTime()
     {
-        foreach (var behavior in _behaviors.OfType<Behavior>())
+        foreach (var behavior in Components.OfType<Behavior>())
         {
             behavior.GameObject = this;
             behavior.FixedUpdateMethod?.Invoke();
@@ -167,7 +151,7 @@ public class GameObject
 
     public void CleanupBehaviors()
     {
-        foreach (var behavior in _behaviors.OfType<Behavior>())
+        foreach (var behavior in Components.OfType<Behavior>())
         {
             foreach (var source in behavior.Sources)
                 source.Value.Dispose();
@@ -178,8 +162,35 @@ public class GameObject
 
     public void ResizeBehaviors(FramebufferResizeEventArgs e)
     {
-        foreach (var behavior in _behaviors.OfType<Behavior>())
+        foreach (var behavior in Components.OfType<Behavior>())
             behavior.OnResizeMethod?.Invoke(e);
+    }
+
+    public static void SetupTriggers()
+    {
+        TriggerManager.OnEnter += (a, b) =>
+        {
+            if (!Behavior.BodyToGameObject.TryGetValue(a, out var objA) ||
+                !Behavior.BodyToGameObject.TryGetValue(b, out var objB)) return;
+
+            foreach (var component in objA.Component.GetComponents(objA))
+                component.OnTriggerEnterMethod?.Invoke(objB);
+
+            foreach (var component in objB.Component.GetComponents(objB))
+                component.OnTriggerEnterMethod?.Invoke(objA);
+        };
+
+        TriggerManager.OnExit += (a, b) =>
+        {
+            if (!Behavior.BodyToGameObject.TryGetValue(a, out var objA) ||
+                !Behavior.BodyToGameObject.TryGetValue(b, out var objB)) return;
+
+            foreach (var component in objA.Component.GetComponents(objA))
+                component.OnTriggerExitMethod?.Invoke(objB);
+
+            foreach (var component in objB.Component.GetComponents(objB))
+                component.OnTriggerExitMethod?.Invoke(objA);
+        };
     }
 
     public GameObject Clone()

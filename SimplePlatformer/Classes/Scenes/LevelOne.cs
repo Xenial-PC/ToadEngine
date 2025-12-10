@@ -1,16 +1,18 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
-using SimplePlatformer.Classes.GameObjects.Event;
 using SimplePlatformer.Classes.GameObjects.Materials;
 using SimplePlatformer.Classes.GameObjects.Menus;
 using SimplePlatformer.Classes.GameObjects.Models;
 using SimplePlatformer.Classes.GameObjects.Scripts;
 using SimplePlatformer.Classes.GameObjects.Scripts.World;
+using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Objects.Skybox;
 using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Base.Scripting.Renderer;
+using SavePointScript = SimplePlatformer.Classes.GameObjects.Scripts.SavePointScript;
 
 namespace SimplePlatformer.Classes.Scenes;
 
@@ -19,10 +21,10 @@ public class LevelOne : Scene
     private Skybox _skybox = null!;
     private Camera _camera = null!;
     private DirectionLight _directionLight = null!;
-    private FPController _player = null!;
+    private Player _player = null!;
 
     private LevelGenerator _generator = null!;
-    private readonly List<Lava> _outOfBoundsLava = new();
+    private readonly List<GameObject> _outOfBoundsLava = new();
     private List<GameObject> _level = null!;
     private Volcano _volcano = null!, _volcano2 = null!;
 
@@ -51,11 +53,10 @@ public class LevelOne : Scene
         PauseMenu = Scripts.AddComponent<PauseMenu>();
         EndOfLevelMenu = Scripts.AddComponent<EOLMenu>();
 
-        _player = new FPController(new Vector3(0.3f, 2f, 0.3f))
-        {
-            Controller = { JumpHeight = 8f }
-        };
-        _player.GameObject.Transform.Position = new Vector3(0f, 14f, 0f);
+        _player = new Player();
+        _player.Transform.Position = new Vector3(0f, 14f, 0f);
+        _player.Name = "player";
+        _player.AddComponent<FPController>();
 
         _directionLight = new DirectionLight();
         _directionLight.Settings.Direction = new Vector3(0f, -1f, 0);
@@ -65,12 +66,12 @@ public class LevelOne : Scene
         _directionLight.Settings.Ambient = new Vector3(0.5f);
         _directionLight.Settings.Diffuse = new Vector3(0.3f);
 
+        RespawnScript.RespawnPosition = _player.Transform.Position;
+
         _generator = new LevelGenerator { Player = _player };
-        RespawnScript.RespawnPosition =  _player.GameObject.Transform.Position;
+        _level = _generator.GenerateLevelOne(_player);
 
         GenerateLevelFloor();
-        
-        _level = _generator.GenerateLevelOne(_player);
 
         _volcano = new Volcano();
         _volcano.Transform.Position = new Vector3(-1500, -20, 400);
@@ -85,13 +86,17 @@ public class LevelOne : Scene
     {
         for (var i = -5; i < 5; i++)
         {
-            for (var j = -5; j < 5; j++)
+            for (var j = -5; j < 5; j++) 
             {
-                var lava = new Lava(new Vector3(1000f, 1f, 1000f), new Vector3(i * 800, -10f, j * 800));
-                var rScript = lava.AddScript<RespawnScript>();
-                rScript.Player = _player;
+                var lava = new TexturedCube(AssetManager.GetMaterial("LavaMat"));
+                lava.Transform.LocalScale = new Vector3(1000f, 1f, 1000f);
+                lava.Transform.Position = new Vector3(i * 800, -10f, j * 800);
 
-                lava.TGameObject.GameObject.Transform.LocalPosition.Y += 3;
+                var lavaScript = lava.AddComponent<LavaScript>();
+                lavaScript.RespawnScript = lava.AddComponent<RespawnScript>();
+                lavaScript.RespawnScript.Player = _player;
+                lavaScript.RespawnScript.Controller = _player.GetComponent<FPController>()!;
+
                 _outOfBoundsLava.Add(lava);
             }
         }
@@ -102,13 +107,13 @@ public class LevelOne : Scene
         Instantiate(_skybox, InstantiateType.Late);
         Instantiate(_directionLight);
 
-        Instantiate(_player.GameObject);
+        Instantiate(_player);
         Instantiate(_level);
 
         Instantiate(_volcano);
         Instantiate(_volcano2);
 
-        foreach (var lava in _outOfBoundsLava) Instantiate(lava.GameObjects());
+        foreach (var lava in _outOfBoundsLava) Instantiate(lava);
     }
 
     public override void OnUpdate(FrameEventArgs e)

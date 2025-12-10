@@ -11,8 +11,10 @@ namespace ToadEngine.Classes.Base.Colliders
         public BodyHandle Collider;
         public StaticHandle SCollider;
         public int Handle;
-        public ColliderType Type;
+        public ColliderType Type { get; set; }
         public float Mass = 1f;
+
+        public bool IsStandalone;
 
         public PhysicsMaterial PhysicsMaterial = PhysicsMaterials.Default;
 

@@ -9,7 +9,8 @@ public class MovingPlatform : Behavior
     public Vector3 MovingRange;
     public float MovingSpeed = 0.5f;
 
-    public FPController Player = null!;
+    public Player Player = null!;
+    public FPController Controller = null!; 
 
     private bool _isPlayerOnTop, _isForward = true;
     private Vector3 _originalPosition, _lastPlatformPosition;
@@ -17,7 +18,7 @@ public class MovingPlatform : Behavior
 
     public void Start()
     {
-        _originalPosition = GameObject.Parent.Transform.Position;
+        _originalPosition = GameObject.Transform.Position;
     }
 
     public void Update()
@@ -37,26 +38,26 @@ public class MovingPlatform : Behavior
                 break;
         }
 
-        GameObject.Parent.Transform.Position = _originalPosition + (MovingRange * _t);
+        GameObject.Transform.Position = _originalPosition + (MovingRange * _t);
 
         if (_isPlayerOnTop)
         {
-            var delta = (GameObject.Parent.Transform.Position - _lastPlatformPosition);
-            Player.Controller.Body.Pose.Position += (System.Numerics.Vector3)delta;
+            var delta = (GameObject.Transform.Position - _lastPlatformPosition);
+            Controller.Body.Pose.Position += (System.Numerics.Vector3)delta;
         }
 
-        _lastPlatformPosition = GameObject.Parent.Transform.Position;
+        _lastPlatformPosition = GameObject.Transform.Position;
     }
 
     public void OnTriggerEnter(GameObject other)
     {
-        if (other.GetComponent<FPController.FPControllerScript>() != null)
+        if (other.GetComponent<FPController>() != null)
             _isPlayerOnTop = true;
     }
 
     public void OnTriggerExit(GameObject other)
     {
-        if (other.GetComponent<FPController.FPControllerScript>() != null)
+        if (other.GetComponent<FPController>() != null)
             _isPlayerOnTop = false;
     }
 }

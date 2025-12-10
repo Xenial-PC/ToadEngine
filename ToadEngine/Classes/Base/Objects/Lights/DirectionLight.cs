@@ -18,7 +18,7 @@ public class DirectionLight : GameObject
 
     private void AddShadowCaster()
     {
-        ShadowCaster = Component.Add<ShadowCaster>();
+        ShadowCaster = AddComponent<ShadowCaster>();
         ShadowCaster.IsCastingShadows = true;
         ShadowCaster.Distance = 80f;
         ShadowCaster.SceneSize = 50f;

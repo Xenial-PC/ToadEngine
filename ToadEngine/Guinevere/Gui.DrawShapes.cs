@@ -9,6 +9,7 @@ namespace Guinevere;
 public partial class Gui
 {
     private readonly Dictionary<string ,SKImage> _imageList = new();
+    private readonly List<SKImage> _imageCache = new();
 
     /// <summary>
     /// Draws a rectangle border
@@ -263,14 +264,15 @@ public partial class Gui
     }
 
     /// <summary>
-    /// Draws an Image on the screen
+    /// Draws an image on the screen at an absolute position
     /// </summary>
-    /// <param name="image"></param>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="clip"></param>
+    /// <param name="image">Image</param>
+    /// <param name="x">X position absolute</param>
+    /// <param name="y">Y position absolute</param>
+    /// <param name="width">Image Width</param>
+    /// <param name="height">Image Height</param>
+    /// <param name="color">Color</param>
+    /// <param name="clip">Prepend the image</param>
     public void DrawImage(
         string image,
         float x,
@@ -283,7 +285,7 @@ public partial class Gui
         if (!_imageList.TryGetValue(image, out var eImage))
         {
             eImage = SKImage.FromEncodedData(File.ReadAllBytes(image));
-            _imageList.Add(image, eImage);
+            _imageList.Add(image, ImageDrawable.ConvertToBgra(eImage));
         }
 
         var paint = new SKPaint { IsAntialias = true, Color = color ?? Color.White };
@@ -294,16 +296,17 @@ public partial class Gui
     }
 
     /// <summary>
-    /// Draws an Image on the screen
+    /// Draws an image on the screen at an absolute position
     /// </summary>
-    /// <param name="image"></param>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="clip"></param>
+    /// <param name="image">Image</param>
+    /// <param name="x">X position absolute</param>
+    /// <param name="y">Y position absolute</param>
+    /// <param name="width">Image Width</param>
+    /// <param name="height">Image Height</param>
+    /// <param name="color">Color</param>
+    /// <param name="clip">Prepend the image</param>
     public void DrawImage(
-        SKImage image,
+        ref SKImage image,
         float x,
         float y,
         float width,
@@ -311,6 +314,15 @@ public partial class Gui
         Color? color = null,
         bool clip = false)
     {
+        if (!_imageCache.Contains(image))
+        {
+            image = ImageDrawable.ConvertToBgra(image);
+            _imageCache.Add(image);
+        }
+
+        var imgRef = image;
+        image = _imageCache.First(img => img == imgRef);
+
         var paint = new SKPaint { IsAntialias = true, Color = color ?? Color.White };
         var rect = new Rect(x, y, width, height);
         var drawable = new ImageDrawable(image, rect, paint);

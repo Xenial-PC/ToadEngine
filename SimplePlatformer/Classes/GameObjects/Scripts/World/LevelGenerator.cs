@@ -1,13 +1,15 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
 using SimplePlatformer.Classes.GameObjects.Event;
+using SimplePlatformer.Classes.GameObjects.Models;
+using SimplePlatformer.Classes.GameObjects.World;
+using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Rendering.Object;
-using Platform = SimplePlatformer.Classes.GameObjects.World.Platform;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts.World;
 
 public class LevelGenerator
 {
-    public FPController Player;
+    public Player Player;
 
     private Vector3 _lastPosition;
     private bool _isFirstPlatform = true;
@@ -15,11 +17,17 @@ public class LevelGenerator
 
     #region Level One
 
-    public List<GameObject> GenerateLevelOne(FPController player)
+    public List<GameObject> GenerateLevelOne(Player player)
     {
         var level = new List<GameObject>();
 
-        level.AddRange(new SavePoint(new Vector3(0, 0, 0), new Vector3(4f, 12f, 4f)).GameObjects());
+        var savePoint = new TexturedCube(AssetManager.GetMaterial("ConcreteMat"));
+        var savePointScript = savePoint.AddComponent<SavePointScript>();
+
+        savePoint.Transform.Position = new Vector3(0f);
+        savePoint.Transform.LocalScale = new Vector3(4f, 12f, 4f);
+
+        level.AddRange(savePoint);
         _lastPosition = new Vector3(0f);
 
         var rand = new Random();
@@ -46,16 +54,19 @@ public class LevelGenerator
             }
 
             var lavaChance = rand.Next(-3, 15);
-            parts.AddRange(lavaChance > 0 || _lastWasLava ? CreateMovingPlatform(rand) : CreateLava(rand));
+            parts.Add(lavaChance > 0 || _lastWasLava ? CreateMovingPlatform(rand) : CreateLava(rand));
         }
 
         parts.AddRange(CreateSavePoint(rand, isLastSavePoint));
         return parts;
     }
 
-    private List<GameObject> CreatePlatform(Random rand)
+    private GameObject CreatePlatform(Random rand)
     {
-        var platform = new Platform(new Vector3(3f, 14f, 3f));
+        var platform = new TexturedCube(AssetManager.GetMaterial("GraniteMat"));
+        platform.Transform.LocalScale = new Vector3(3f, 14f, 3f);
+
+        var platformScript = platform.AddComponent<PlatformScript>();
 
         var maxHeight = Math.Max(_lastPosition.Y + rand.Next(1, 4), 8f);
         if (maxHeight >= 8f) maxHeight = rand.Next(-3, 0);
@@ -63,19 +74,28 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
 
         var pos = new Vector3(_isFirstPlatform ? 0 : _flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2) , maxHeight, _isFirstPlatform ? 5f : distance);
-        platform.GameObject.Transform.Position = pos;
+        platform.Transform.Position = pos;
 
-        _lastPosition = platform.GameObject.Transform.Position;
+        _lastPosition = platform.Transform.Position;
 
         _isFirstPlatform = false;
         _flipDirection = !_flipDirection;
 
-        return platform.GameObjects();
+        return platform;
     }
 
-    private List<GameObject> CreateMovingPlatform(Random rand)
+    private GameObject CreateMovingPlatform(Random rand)
     {
-        var platform = new Platform(new Vector3(3f, 14f, 3f));
+        var platform = new TexturedCube(AssetManager.GetMaterial("GraniteMat"));
+        platform.Transform.LocalScale = new Vector3(3f, 14f, 3f);
+
+        var platformScript = platform.AddComponent<PlatformScript>();
+        var mPlatform = platform.AddComponent<MovingPlatform>();
+        mPlatform.MovingRange = new Vector3(_lastWasLava ? 0 : rand.Next(-6, 6), 0f, _lastWasLava ? -11.3f : 0);
+        mPlatform.MovingSpeed = 0.4f;
+        mPlatform.Player = Player;
+        mPlatform.Controller = Player.GetComponent<FPController>()!;
+
 
         var maxHeight = Math.Max(_lastPosition.Y + rand.Next(1, 4), 8f);
         if (maxHeight >= 8f) maxHeight = rand.Next(-3, 0);
@@ -83,24 +103,19 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         
         var pos = new Vector3(_isFirstPlatform ? 0 : _flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
-        platform.GameObject.Transform.Position = pos;
+        platform.Transform.Position = pos;
         
-        _lastPosition = platform.GameObject.Transform.Position;
+        _lastPosition = platform.Transform.Position;
         
         _isFirstPlatform = false;
         _flipDirection = !_flipDirection;
 
-        var mPlatform = platform.AddScript<MovingPlatform>();
-        mPlatform.MovingRange = new Vector3(_lastWasLava ? 0 : rand.Next(-6, 6), 0f, _lastWasLava ? -11.3f : 0);
-        mPlatform.MovingSpeed = 0.4f;
-        mPlatform.Player = Player;
-
         _lastWasLava = false;
 
-        return platform.GameObjects();
+        return platform;
     }
 
-    private List<GameObject> CreateLava(Random rand)
+    private GameObject CreateLava(Random rand)
     {
         _lastWasLava = true;
 
@@ -110,16 +125,22 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
 
-        var lava = new Lava(new Vector3(5f, 14f, 5f), pos);
-        var respawnScript = lava.AddScript<RespawnScript>();
+        var lava = new TexturedCube(AssetManager.GetMaterial("LavaMat"));
+        lava.Transform.Position = pos;
+        lava.Transform.LocalScale = new Vector3(5f, 14f, 5f);
 
-        _lastPosition = lava.GameObject.Transform.Position;
+        var lavaScript = lava.AddComponent<LavaScript>();
+        lavaScript.RespawnScript = lava.AddComponent<RespawnScript>();
+        lavaScript.RespawnScript.Player = Player;
+        lavaScript.RespawnScript.Controller = Player.GetComponent<FPController>()!;
+
+        _lastPosition = lava.Transform.Position;
 
         _flipDirection = !_flipDirection;
-        return lava.GameObjects();
+        return lava;
     }
 
-    private List<GameObject> CreateSavePoint(Random rand, bool isLastSavePoint)
+    private GameObject CreateSavePoint(Random rand, bool isLastSavePoint)
     {
         var maxHeight = Math.Max(_lastPosition.Y + rand.Next(1, 4), 8f);
         if (maxHeight >= 8f) maxHeight = rand.Next(-3, 0);
@@ -127,14 +148,17 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
 
-        var platform = new SavePoint(pos, new Vector3(6f, 14f, 6f));
-        var savePoint = platform.AddScript<SavePointScript>();
-        savePoint.IsLastSavePoint = isLastSavePoint;
+        var savePoint = new TexturedCube(AssetManager.GetMaterial("ConcreteMat"));
+        var savePointScript = savePoint.AddComponent<SavePointScript>();
 
-        _lastPosition = platform.SavePointObject.GameObject.Transform.Position;
+        savePoint.Transform.Position = pos;
+        savePoint.Transform.LocalScale = new Vector3(6f, 12f, 6f);
+        savePointScript.IsLastSavePoint = isLastSavePoint;
+
+        _lastPosition = savePoint.Transform.Position;
         _flipDirection = !_flipDirection;
 
-        return platform.GameObjects();
+        return savePoint;
     }
 
     #endregion
