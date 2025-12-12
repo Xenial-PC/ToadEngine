@@ -1,7 +1,7 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Event;
 using ToadEngine.Classes.Base.Scripting.Base;
 
-namespace SimplePlatformer.Classes.GameObjects.World;
+namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
 public class PlatformScript : Behavior
 {

@@ -25,7 +25,7 @@ public class Camera : GameObject
 
     public Camera()
     {
-        AspectRatio = (WHandler.Size.X / (float)WHandler.Size.Y);
+        AspectRatio = (Scene.RenderTarget.Width / (float)Scene.RenderTarget.Height);
     }
 
     public Vector3 Front

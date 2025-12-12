@@ -1,5 +1,4 @@
 ﻿using Guinevere;
-using SkiaSharp;
 using ImGuiController = ToadEngine.Classes.DearImGui.OpenTK.ImGuiController;
 
 namespace ToadEngine.Classes.Base.UI;
@@ -11,7 +10,7 @@ public class GUI
 
     public static Gui Paint = null!;
     public static ICanvasRenderer Canvas = null!;
-    public static Action GuiCallBack = null!;
+    public static Action? GuiCallBack = null!;
 
     public static Font FontText = null!, FontIcon = null!;
     public static StringBuilder TypedCharacters = new();
@@ -50,18 +49,21 @@ public class GUI
     {
         Canvas.Render(canvas =>
         {
+            Controller.Update(Paint.Time.DeltaTime);
+
             Paint.SetStage(Pass.Pass1Build);
             Paint.BeginFrame(canvas, FontText, FontIcon);
-            GuiCallBack();
+            GuiCallBack?.Invoke();
 
             Paint.CalculateLayout();
-
             Paint.SetStage(Pass.Pass2Render);
-            GuiCallBack();
-            Paint.Render();
+            GuiCallBack?.Invoke();
 
+            Paint.Render();
             Paint.EndFrame();
         });
+
+        Controller.Render();
     }
 
     public static void Dispose()

@@ -99,9 +99,12 @@ public class ObjectManager
         var coreShader = Service.CoreShader;
         var camera = Service.MainCamera;
 
-        coreShader.SetMatrix4("view", camera.GetViewMatrix());
-        coreShader.SetMatrix4("projection", camera.GetProjectionMatrix());
-        coreShader.SetVector3("viewPos", camera.Transform.LocalPosition);
+        if (camera != null!)
+        {
+            coreShader.SetMatrix4("view", camera.GetViewMatrix());
+            coreShader.SetMatrix4("projection", camera.GetProjectionMatrix());
+            coreShader.SetVector3("viewPos", camera.Transform.LocalPosition);
+        }
 
         foreach (var render in GameObjects)
             render.Value.Renderers.ForEach(r => r.Draw());

@@ -1,7 +1,6 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Controllers;
 using SimplePlatformer.Classes.GameObjects.Event;
 using SimplePlatformer.Classes.GameObjects.Models;
-using SimplePlatformer.Classes.GameObjects.World;
 using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Rendering.Object;
 

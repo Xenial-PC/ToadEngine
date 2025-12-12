@@ -4,7 +4,7 @@ using SimplePlatformer.Classes.GameObjects.Menus;
 using ToadEngine.Classes.Base.Scripting.Base;
 using Timer = System.Timers.Timer;
 
-namespace SimplePlatformer.Classes.GameObjects.Scripts;
+namespace SimplePlatformer.Classes.GameObjects.Controllers;
 
 public class PlayerHud : Behavior
 {
@@ -55,7 +55,7 @@ public class PlayerHud : Behavior
             //UI.DrawImage($"Resources/Textures/UI/health.png", 15, UI.ScreenRect.Height - 93, 35, 30);
         }
 
-        UI.DrawCircleFilled(new Vector2((UI.ScreenRect.Width / 2f), (UI.ScreenRect.Height / 2f)), 3f, Color.GhostWhite);
+        UI.DrawCircleFilled(new Vector2(UI.ScreenRect.Width / 2f, UI.ScreenRect.Height / 2f), 3f, Color.GhostWhite);
     }
 
     public static void StartTimer()

@@ -1,6 +1,6 @@
 ﻿using Guinevere;
+using SimplePlatformer.Classes.GameObjects.Controllers;
 using SimplePlatformer.Classes.GameObjects.Event;
-using SimplePlatformer.Classes.GameObjects.Scripts;
 using ToadEngine.Classes.Base.Scripting.Base;
 using SavePointScript = SimplePlatformer.Classes.GameObjects.Scripts.SavePointScript;
 

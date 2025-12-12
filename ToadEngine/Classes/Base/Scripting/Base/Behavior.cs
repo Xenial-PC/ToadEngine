@@ -12,6 +12,8 @@ namespace ToadEngine.Classes.Base.Scripting.Base;
 
 public abstract class Behavior : ICloneable
 {
+    public readonly Guid Guid = Guid.NewGuid();
+
     public RaycastManager Raycast = new(Service.Physics.BufferPool);
     public static Dictionary<int, GameObject> BodyToGameObject = new();
     public GameObject GameObject = null!;

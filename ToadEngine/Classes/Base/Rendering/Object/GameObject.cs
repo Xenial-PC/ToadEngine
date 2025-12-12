@@ -1,15 +1,15 @@
-﻿using ToadEngine.Classes.Base.Physics;
-using ToadEngine.Classes.Base.Physics.Managers;
+﻿using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
-using ToadEngine.Classes.Textures;
 using UltraMapper;
 
 namespace ToadEngine.Classes.Base.Rendering.Object;
 
 public class GameObject
 {
+    public readonly Guid Guid = Guid.NewGuid();
+
     public string? Name = null;
 
     public List<IRenderObject> Renderers => Component.GetOfType<IRenderObject>();

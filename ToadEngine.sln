@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BepuPhysics", "BepuPhysics\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BepuUtilities", "BepuPhysics\BepuUtilities\BepuUtilities.csproj", "{DA946FC9-3FEE-4087-92E7-60468A5C0CB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToadEditor", "ToadEditor\ToadEditor.csproj", "{6BB9F427-4686-4A6A-B413-71F65FCE9193}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{DA946FC9-3FEE-4087-92E7-60468A5C0CB4}.Release|x64.Build.0 = Release|Any CPU
 		{DA946FC9-3FEE-4087-92E7-60468A5C0CB4}.Release|x86.ActiveCfg = Release|Any CPU
 		{DA946FC9-3FEE-4087-92E7-60468A5C0CB4}.Release|x86.Build.0 = Release|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Debug|x64.Build.0 = Debug|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Debug|x86.Build.0 = Debug|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Release|x64.ActiveCfg = Release|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Release|x64.Build.0 = Release|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Release|x86.ActiveCfg = Release|Any CPU
+		{6BB9F427-4686-4A6A-B413-71F65FCE9193}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

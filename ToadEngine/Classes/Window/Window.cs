@@ -1,6 +1,4 @@
 ﻿using Guinevere;
-using OpenTK.Platform.Windows;
-using SkiaSharp;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
@@ -15,7 +13,8 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
 
     public Shader CoreShader = null!;
 
-    public Scene CurrentScene { get; set; } = new();
+    public Scene? CurrentScene { get; set; }
+    public IRenderTarget? RenderTarget = null;
 
     public Window(int width, int height, string title) :
         base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = (width, height), Title = title, NumberOfSamples = 4, Vsync = VSyncMode.Off })
@@ -26,6 +25,9 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
         GUI.Init(this);
         Run();
     }
+
+    public virtual void OnDraw(FrameEventArgs e) { }
+    public virtual void OnInit() { }
 
     protected override void OnLoad()
     {
@@ -44,40 +46,28 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
         GL.Enable(EnableCap.FramebufferSrgb);
     }
 
-    public virtual void OnInit()
-    {
-    }
-
     protected override void OnRenderFrame(FrameEventArgs e)
     {
         base.OnRenderFrame(e);
+        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+       
+        CurrentScene?.Draw((float)e.Time);
         OnDraw(e);
 
         GUI.Render();
         SwapBuffers();
     }
 
-    public virtual void OnDraw(FrameEventArgs e)
-    {
-        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-        CoreShader.Use();
-
-        CurrentScene.Draw((float)e.Time);
-
-        GUI.Controller.Render();
-    }
-
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
         base.OnUpdateFrame(e);
-        GUI.Controller!.Update((float)e.Time);
         GUI.Paint.Time.Update(e.Time);
         OnUpdate(e);
     }
 
     public virtual void OnUpdate(FrameEventArgs e)
     {
-        CurrentScene.Update(e);
+        CurrentScene?.Update(e);
     }
 
     protected override void OnUnload()
@@ -107,7 +97,7 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
         Width = e.Width;
         Height = e.Height;
 
-        CurrentScene.OnResize(e);
+        CurrentScene?.OnResize(e);
     }
 
     protected override void OnTextInput(TextInputEventArgs e)
@@ -127,16 +117,21 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
 
     public void LoadScene(string name)
     {
-        CurrentScene.Destroy();
-        CoreShader = new Shader($"core.vert", $"lighting.frag");
-        CoreShader.Use();
-
-        Service.Add(CoreShader);
+        CurrentScene?.Destroy();
+        CreateCoreShader();
 
         CurrentScene = SceneManager.Create(name);
         Service.Add(CurrentScene);
 
-        CurrentScene.Load(this, this);
+        CurrentScene.Load(this, this, RenderTarget);
+    }
+
+    private void CreateCoreShader()
+    {
+        CoreShader = new Shader($"core.vert", $"lighting.frag");
+        CoreShader.Use();
+
+        Service.Add(CoreShader);
     }
 
     #region IInputHandler

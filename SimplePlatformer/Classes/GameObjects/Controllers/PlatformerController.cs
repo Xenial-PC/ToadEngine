@@ -1,5 +1,4 @@
 ﻿using SimplePlatformer.Classes.GameObjects.Menus;
-using SimplePlatformer.Classes.GameObjects.Scripts;
 using ToadEngine.Classes.Base.Scripting.Base;
 using Vector3 = System.Numerics.Vector3;
 

@@ -1,5 +1,4 @@
 ﻿using BepuPhysics;
-using SimplePlatformer.Classes.GameObjects.Scripts;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;

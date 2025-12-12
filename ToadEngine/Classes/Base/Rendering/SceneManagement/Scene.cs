@@ -18,6 +18,8 @@ public class Scene
     public AudioManager AudioManager = null!;
     public ObjectManager ObjectManager = new();
 
+    public IRenderTarget RenderTarget = null!;
+
     public Shader CoreShader => Service.CoreShader;
     public static Shader ShadowMapShader = null!;
 
@@ -44,31 +46,20 @@ public class Scene
 
     public void Draw(float deltaTime)
     {
-        Service.CoreShader = ShadowMapShader;
-        foreach (var light in ObjectManager.GameObjects.Values.Where(l => l is DirectionLight))
-        {
-            var caster = light.Component.Get<ShadowCaster>();
-            if (caster == null || !caster.IsCastingShadows) continue;
+        DrawFirstPass(deltaTime);
+        DrawSecondPass(deltaTime);
+    }
 
-            caster.ConfigureShaderAndMatrices();
-            CoreShader.SetMatrix4("lightSpaceMatrix", caster.LightSpaceMatrix);
-
-            GL.Viewport(0, 0, caster.ShadowWidth, caster.ShadowHeight);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, caster.CasterFBO);
-            GL.Clear(ClearBufferMask.DepthBufferBit);
-
-            DrawScene(deltaTime);
-        }
-
-        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+    private void DrawSecondPass(float deltaTime)
+    {
         Service.CoreShader = Window.CoreShader;
+
+        RenderTarget.Bind();
+        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
         var textureIndex = 10;
         foreach (var light in ObjectManager.GameObjects.Values.Where(l => l is DirectionLight))
         {
-            GL.Viewport(0, 0, Window.Width, Window.Height);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
             var caster = light.Component.Get<ShadowCaster>();
             if (caster == null || !caster.IsCastingShadows) continue;
 
@@ -104,6 +95,26 @@ public class Scene
             }
         }
         DrawScene(deltaTime);
+        RenderTarget.Unbind();
+    }
+
+    private void DrawFirstPass(float deltaTime)
+    {
+        Service.CoreShader = ShadowMapShader;
+        foreach (var light in ObjectManager.GameObjects.Values.Where(l => l is DirectionLight))
+        {
+            var caster = light.Component.Get<ShadowCaster>();
+            if (caster == null || !caster.IsCastingShadows) continue;
+
+            caster.ConfigureShaderAndMatrices();
+            CoreShader.SetMatrix4("lightSpaceMatrix", caster.LightSpaceMatrix);
+
+            GL.Viewport(0, 0, caster.ShadowWidth, caster.ShadowHeight);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, caster.CasterFBO);
+            GL.Clear(ClearBufferMask.DepthBufferBit);
+
+            DrawScene(deltaTime);
+        }
     }
 
     private void DrawScene(float deltaTime)
@@ -134,15 +145,18 @@ public class Scene
     public virtual void OnResize(FramebufferResizeEventArgs e)
     {
         ObjectManager.ResizeGameObjects(e);
+        Service.MainCamera.AspectRatio = (RenderTarget.Width / (float)RenderTarget.Height);
     }
 
-    public void Load(NativeWindow state, Window.Window window)
+    public void Load(NativeWindow state, Window.Window window, IRenderTarget? target)
     {
         WHandler = state;
         Window = window;
 
         Service.Add(WHandler);
         Service.Add(Window);
+
+        RenderTarget = target ?? new WindowRenderTarget();
 
         AudioManager = new AudioManager();
         AudioManager.SetDistanceModel(ALDistanceModel.InverseDistanceClamped);
