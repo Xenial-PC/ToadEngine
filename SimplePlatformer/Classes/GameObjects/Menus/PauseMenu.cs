@@ -1,5 +1,4 @@
-﻿using Guinevere;
-using ToadEngine.Classes.Base.Scripting.Base;
+﻿using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Menus;
 
@@ -18,7 +17,7 @@ public class PauseMenu : Behavior
     {
         if ((!IsPaused && !IsDrawingPauseMenu) || EOLMenu.IsDrawingEOLMenu || EOLMenu.IsDrawingLoseScreen) return;
 
-        using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Expand().Enter())
+        /*using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Expand().Enter())
         {
             UI.DrawBackgroundRect(Color.FromArgb(128, 0, 0, 0));
             using (UI.Node().Expand().Margin(150).Gap(5f).AlignContent(0.5f).Direction(Axis.Vertical).Enter())
@@ -55,7 +54,7 @@ public class PauseMenu : Behavior
                     if (UI.CurrentNode.OnClick()) Environment.Exit(0);
                 }
             }
-        }
+        }*/
     }
 
     public void Update()

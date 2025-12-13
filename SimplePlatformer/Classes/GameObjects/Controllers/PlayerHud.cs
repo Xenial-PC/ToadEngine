@@ -1,5 +1,6 @@
 ﻿using System.Timers;
-using Guinevere;
+using Prowl.PaperUI;
+using Prowl.Vector;
 using SimplePlatformer.Classes.GameObjects.Menus;
 using ToadEngine.Classes.Base.Scripting.Base;
 using Timer = System.Timers.Timer;
@@ -32,7 +33,7 @@ public class PlayerHud : Behavior
     {
         if (PauseMenu.IsPaused) return;
 
-        using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Enter())
+        /*using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Enter())
         {
             UI.DrawRect(new Rect(20, 20, 65, 35), Color.FromArgb(128, 0, 0, 0), 12f);
             UI.DrawText($"Level: {Level}", 28.5f, 42.5f, 15f, Color.Purple);
@@ -55,7 +56,7 @@ public class PlayerHud : Behavior
             //UI.DrawImage($"Resources/Textures/UI/health.png", 15, UI.ScreenRect.Height - 93, 35, 30);
         }
 
-        UI.DrawCircleFilled(new Vector2(UI.ScreenRect.Width / 2f, UI.ScreenRect.Height / 2f), 3f, Color.GhostWhite);
+        UI.DrawCircleFilled(new Vector2(UI.ScreenRect.Width / 2f, UI.ScreenRect.Height / 2f), 3f, Color.GhostWhite);*/
     }
 
     public static void StartTimer()

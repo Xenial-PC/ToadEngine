@@ -1,4 +1,4 @@
-﻿using Guinevere;
+﻿using Prowl.PaperUI;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Raycasting;
@@ -28,7 +28,7 @@ public abstract class Component
 
     public Source? GetSource(string name) => Sources.GetValueOrDefault(name);
 
-    public Gui UI => GUI.UI;
+    public Paper UI => GUI.UI;
     public Shader CoreShader => Service.CoreShader;
 
     public GameObject? FindGameObject(string name) => Scene.ObjectManager.FindGameObject(name);

@@ -1,10 +1,11 @@
-﻿using Guinevere;
+﻿using Prowl.PaperUI;
+using Prowl.Vector;
 
 namespace ToadEditor.Classes.EditorCore.GUI.Base;
 
 public class DockSpaceManager()
 {
-    private Gui UI => ToadEngine.Classes.Base.UI.GUI.UI;
+    private Paper UI => ToadEngine.Classes.Base.UI.GUI.UI;
 
     private readonly List<DockSpace> _dockSpaces = new();
 
@@ -23,8 +24,8 @@ public class DockSpaceManager()
 
     public void InitDockSpaces()
     {
-        CreateDock(Docks.Header, Color.FromArgb(255, 10, 10, 10));
-        CreateDock(Docks.Top, Color.FromArgb(255, 3, 3, 3));
+        CreateDock(Docks.Header, new Color(10, 10, 10, 255));
+        CreateDock(Docks.Top, new Color(3, 3, 3, 255));
         CreateDock(Docks.Left, Color.Transparent);
         CreateDock(Docks.Middle, Color.Transparent);
         CreateDock(Docks.Right, Color.Transparent);

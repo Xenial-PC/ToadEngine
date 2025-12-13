@@ -1,4 +1,5 @@
 ﻿using Assimp;
+using Prowl.Vector;
 using StbImageSharp;
 using TextureWrapMode = OpenTK.Graphics.OpenGL4.TextureWrapMode;
 
@@ -12,6 +13,9 @@ public class Texture
 
     private static readonly Dictionary<string, int> LoadedTextures = new();
     private static readonly List<Texture> LoadedTexturesList = new();
+
+    public uint Width;
+    public uint Height;
 
     public static Texture FromPath(string imagePath, TextureType type)
     {
@@ -92,6 +96,27 @@ public class Texture
 
         return texture;
     }
+
+    public static Texture CreateNew(uint width, uint height)
+    {
+        var handle = GL.GenTexture();
+        GL.ActiveTexture(TextureUnit.Texture0);
+        GL.BindTexture(TextureTarget.Texture2D, handle);
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, (int)width, (int)height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+        return new Texture { Handle = handle, Width = width, Height = height };
+    }
+
+    public void SetData(IntRect bounds, byte[] data)
+    {
+        GL.ActiveTexture(TextureUnit.Texture0);
+        GL.BindTexture(TextureTarget.Texture2D, Handle);
+        GL.TexSubImage2D(TextureTarget.Texture2D, 0, bounds.Min.X, bounds.Min.Y, bounds.Size.X, bounds.Size.Y, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+    }
+
 
     public void Use(TextureUnit unit = TextureUnit.Texture0)
     {

@@ -103,12 +103,6 @@
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="OpenTK" Version="4.9.4" />
-    <PackageReference Include="SkiaSharp" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.Vulkan.SharpVk" Version="3.119.1" />
     <PackageReference Include="StbImageSharp" Version="2.30.15" />
     <PackageReference Include="UltraMapper" Version="0.2.61" />
   </ItemGroup>
@@ -116,6 +110,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BepuPhysics\BepuPhysics\BepuPhysics.csproj" />
     <ProjectReference Include="..\BepuPhysics\BepuUtilities\BepuUtilities.csproj" />
+    <ProjectReference Include="..\Prowl.Paper\Paper\Paper.csproj" />
   </ItemGroup>
 
 </Project>
