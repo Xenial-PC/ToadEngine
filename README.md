@@ -32,8 +32,8 @@ Xenial
 Special Thanks to the open source libraries:  
 
 UI / GUI:  
-https://github.com/aybe/DearImGui  
-https://github.com/MASS4ORG/Guinevere  
+[DearImGUI](https://github.com/aybe/DearImGui)  
+[Paper](https://github.com/ProwlEngine/Prowl.Paper?tab=readme-ov-file)  
 
 Physcis:  
-https://github.com/bepu/bepuphysics2  
+[BepuPhysics2](https://github.com/bepu/bepuphysics2)  
