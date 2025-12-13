@@ -10,49 +10,35 @@ public class SceneHierarchyTab(DockSpaceManager.Docks dock) : TabMenu(dock)
 {
     public static GameObject SelectedGameObject = null!;
 
-    private Action? ChildrenCallback;
-
-    public override void TabBody(Rect windowPos)
+    public override void TabBody(LayoutNode node)
     {
-        UI.DrawRect(windowPos, Color.FromArgb(255, 15, 15, 15));
-        DrawGameObjectList(windowPos);
+        UI.DrawRect(node.Rect, Color.FromArgb(255, 3, 3, 3));
+        DrawGameObjectList(node);
     }
 
-    private void DrawGameObjectList(Rect windowPos)
+    private void DrawGameObjectList(LayoutNode node)
     {
-        float yGap = 10;
-        foreach (var gameObject in GameObjects)
+        using (UI.Node(node.Rect.Width, node.Rect.Height).Top(node.Rect.Y).Left(node.Rect.X).Direction(Axis.Vertical).Gap(10).Enter())
         {
-            ChildrenCallback += () =>
+            var parentNode = UI.CurrentNode;
+            using (UI.Node(node.Rect.Width, node.Rect.Height).Top(parentNode.Rect.Y).Left(parentNode.Rect.X).Enter())
             {
-                windowPos.Y += yGap;
-                CreateGameObjectView(gameObject.Value, windowPos);
-                yGap += 10;
-            };
-        }
+                float gap = 10;
+                foreach (var gameObject in GameObjects)
+                {
+                    using (UI.Node().Height(20).Top(parentNode.Rect.Y + gap).Enter())
+                    {
+                        var go = gameObject.Value;
+                        var currentNode = UI.CurrentNode;
 
-        using (UI.Node().Direction(Axis.Vertical).Gap(10).Enter())
-        {
-            ChildrenCallback?.Invoke();
-        }
+                        UI.DrawRect(currentNode.Rect, Color.FromArgb(255, 45, 45, 45), 12);
+                        UI.DrawText($"{go.Name}", currentNode.Rect.X + 30f, currentNode.Center.Y + 2.5f, 12, SelectedGameObject == go ? Color.CornflowerBlue : Color.White);
 
-        ChildrenCallback = null;
-    }
-
-    private void CreateGameObjectView(GameObject go, Rect windowPos)
-    {
-        using (UI.Node())
-        {
-            var currentNode = UI.CurrentNode;
-            currentNode.Rect.Width = windowPos.Width;
-            currentNode.Rect.Height = 15;
-            currentNode.Rect.X = windowPos.X;
-            currentNode.Rect.Y = windowPos.Y;
-
-            UI.DrawRect(currentNode.Rect, Color.FromArgb(255, 45, 45, 45));
-            UI.DrawText($"{go.Name}", currentNode.Rect.X + 5f, currentNode.Center.Y + 2.5f, 12, SelectedGameObject == go ? Color.CornflowerBlue : Color.White);
-
-            if (currentNode.GetInteractable().OnClick()) SelectedGameObject = go;
+                        if (currentNode.GetInteractable().OnClick()) SelectedGameObject = go;
+                    }
+                    gap += 30;
+                }
+            }
         }
     }
 

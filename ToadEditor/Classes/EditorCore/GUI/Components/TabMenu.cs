@@ -9,8 +9,6 @@ public class TabMenu
 
     public Gui UI => ToadEngine.Classes.Base.UI.GUI.UI;
 
-    private Rect _renderSceneWindow = null!;
-
     public bool IsSelected;
     public string TabName = string.Empty;
 
@@ -66,42 +64,39 @@ public class TabMenu
 
     private void DrawTab(DockSpaceManager dock, float headerOffset)
     {
-        var currentNode = UI.Node(100, 100);
-        _renderSceneWindow = dock.Dock(Docked);
-        
-        var windowPos = _renderSceneWindow;
-        currentNode.Rect = windowPos;
-
-        using (currentNode.Enter())
+        var dockPos = dock.Dock(Docked);
+        using (UI.Node(dockPos.Width, dockPos.Height).Left(dockPos.X).Top(dockPos.Y).Enter())
         {
-            using (UI.Node(HeaderWidth, 25).Enter())
+            var currentNode = UI.CurrentNode;
+            var windowPos = currentNode.Rect;
+            using (currentNode.Enter())
             {
-                var headerNode = UI.CurrentNode;
-                headerNode.Rect.X = windowPos.X + headerOffset;
-                headerNode.Rect.Y = windowPos.Y - headerNode.Rect.Height + 5f;
-
-                var isClicked = headerNode.GetInteractable().OnClick(Guinevere.MouseButton.Left);
-                if (isClicked) IsSelected = true;
-
-                UI.DrawRect(headerNode.Rect, IsSelected ? Color.FromArgb(255, 20, 20, 20) : Color.Black, 3);
-
-                using (UI.Node(headerNode.Rect.W, headerNode.Rect.H).Enter())
+                using (UI.Node(HeaderWidth, 25).Left(windowPos.X + headerOffset).Top(windowPos.Y - 25 + 5f).Enter())
                 {
-                    var headerTextNode = UI.CurrentNode;
-                    headerTextNode.Rect = headerNode.Rect;
+                    var headerNode = UI.CurrentNode;
+                    
+                    var isClicked = headerNode.GetInteractable().OnClick(Guinevere.MouseButton.Left);
+                    if (isClicked) IsSelected = true;
 
-                    var xPos = headerTextNode.Rect.X + 10f;
-                    var yPos = headerTextNode.Center.Y + 5f;
-                    UI.DrawText(TabName, xPos, yPos, 15, Color.White);
+                    UI.DrawRect(headerNode.Rect, IsSelected ? Color.FromArgb(255, 5, 5, 5) : Color.Black, 3);
+
+                    using (UI.Node(headerNode.Rect.W, headerNode.Rect.H).Top(headerNode.Rect.Y).Left(headerNode.Rect.X).Enter())
+                    {
+                        var headerTextNode = UI.CurrentNode;
+                        
+                        var xPos = headerTextNode.Rect.X + 10f;
+                        var yPos = headerTextNode.Center.Y + 5f;
+                        UI.DrawText(TabName, xPos, yPos, 15, Color.White);
+                    }
                 }
-            }
 
-            if (!IsSelected) return;
-            TabBody(windowPos);
+                if (!IsSelected) return;
+                TabBody(currentNode);
+            }
         }
     }
 
-    public virtual void TabBody(Rect windowPos)
+    public virtual void TabBody(LayoutNode node)
     {
 
     }

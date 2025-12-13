@@ -6,8 +6,6 @@ namespace ToadEditor.Classes.EditorCore.GUI.Base;
 
 public class GUIManager(EditorRenderTarget target)
 {
-    
-
     public DockSpaceManager DockSpaceManager = new();
 
     public void Setup()

@@ -23,8 +23,8 @@ public class DockSpaceManager()
 
     public void InitDockSpaces()
     {
-        CreateDock(Docks.Header, Color.FromArgb(255, 35, 35, 35));
-        CreateDock(Docks.Top, Color.FromArgb(255, 30, 30, 30));
+        CreateDock(Docks.Header, Color.FromArgb(255, 10, 10, 10));
+        CreateDock(Docks.Top, Color.FromArgb(255, 3, 3, 3));
         CreateDock(Docks.Left, Color.Transparent);
         CreateDock(Docks.Middle, Color.Transparent);
         CreateDock(Docks.Right, Color.Transparent);

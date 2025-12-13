@@ -12,10 +12,10 @@ public class SceneViewTab(EditorRenderTarget target, DockSpaceManager.Docks dock
     public nint TextureId;
     public int Width = 200, Height = 200;
 
-    public override void TabBody(Rect windowPos)
+    public override void TabBody(LayoutNode node)
     {
-        UI.DrawRect(windowPos, Color.Black, 3);
-        RenderSceneViewWindow(windowPos);
+        UI.DrawRect(node.Rect, Color.Black, 3);
+        RenderSceneViewWindow(node.Rect);
     }
 
     private void RenderSceneViewWindow(Rect sceneViewRect)

@@ -10,8 +10,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode Expand(float widthPercentage = 1.0f, float heightPercentage = 1.0f)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.IsExpanded = true;
         Style.ExpandWidthPercentage = widthPercentage;
         Style.ExpandHeightPercentage = heightPercentage;
@@ -25,8 +23,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode ExpandWidth(float percentage = 1.0f)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.ExpandWidth = true;
         Style.ExpandWidthPercentage = percentage;
         return this;
@@ -39,8 +35,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode ExpandHeight(float percentage = 1.0f)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.ExpandHeight = true;
         Style.ExpandHeightPercentage = percentage;
         return this;
@@ -53,8 +47,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, allowing for method chaining.</returns>
     public LayoutNode Gap(float gap)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.Gap = gap;
         return this;
     }
@@ -66,8 +58,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, allowing for method chaining.</returns>
     public LayoutNode Margin(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         MarginTop(value)
             .MarginRight(value)
             .MarginBottom(value)
@@ -84,8 +74,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode Margin(float horizontal, float vertical)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         MarginTop(vertical)
             .MarginRight(horizontal)
             .MarginBottom(vertical)
@@ -104,8 +92,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode Margin(float top, float right, float bottom, float left)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         MarginTop(top)
             .MarginRight(right)
             .MarginBottom(bottom)
@@ -121,8 +107,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode MarginTop(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.MarginTop = value;
         Style.HasSpecificMargins = true;
         return this;
@@ -135,8 +119,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode MarginRight(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.MarginRight = value;
         Style.HasSpecificMargins = true;
         return this;
@@ -149,8 +131,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode MarginBottom(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.MarginBottom = value;
         Style.HasSpecificMargins = true;
         return this;
@@ -163,8 +143,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode MarginLeft(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.MarginLeft = value;
         Style.HasSpecificMargins = true;
         return this;
@@ -241,8 +219,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, allowing for method chaining.</returns>
     public LayoutNode PaddingTop(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.PaddingTop = value;
         return this;
     }
@@ -254,8 +230,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode PaddingRight(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.PaddingRight = value;
         return this;
     }
@@ -267,8 +241,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode PaddingBottom(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.PaddingBottom = value;
         return this;
     }
@@ -280,8 +252,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode PaddingLeft(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.PaddingLeft = value;
         return this;
     }
@@ -293,8 +263,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode AlignContent(float alignment)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.AlignContentHorizontal = alignment;
         Style.AlignContentVertical = alignment;
         return this;
@@ -308,8 +276,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode AlignContent(float horizontal, float vertical)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.AlignContentHorizontal = horizontal;
         Style.AlignContentVertical = vertical;
         return this;
@@ -322,8 +288,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode ContentAlignX(float horizontal)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.AlignContentHorizontal = horizontal;
         return this;
     }
@@ -335,8 +299,6 @@ public partial class LayoutNode
     /// <returns></returns>
     public LayoutNode ContentAlignY(float vertical)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.AlignContentVertical = vertical;
         return this;
     }
@@ -348,8 +310,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode AlignSelf(float alignment)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.AlignSelf = alignment;
         return this;
     }
@@ -361,8 +321,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode Direction(Axis direction)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.Direction = direction;
         return this;
     }
@@ -374,8 +332,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode Wrap(int qty)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.Wrap = true;
         return this;
     }
@@ -400,8 +356,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode Height(float height)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.Height = height;
         return this;
     }
@@ -413,8 +367,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode Left(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         _rect = _rect with { X = value };
         return this;
     }
@@ -426,8 +378,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode Top(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         _rect = _rect with { Y = value };
         return this;
     }
@@ -439,8 +389,6 @@ public partial class LayoutNode
     /// <returns>The current instance of <see cref="LayoutNode"/>, enabling method chaining.</returns>
     public LayoutNode Size(float value)
     {
-        if (_gui.Pass != Pass.Pass1Build) return this;
-
         Style.Height = value;
         Style.Width = value;
         return this;

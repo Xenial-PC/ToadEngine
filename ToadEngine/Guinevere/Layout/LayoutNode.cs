@@ -181,6 +181,12 @@ public partial class LayoutNode : IDisposable
         if (height == 0) ExpandHeight();
     }
 
+    public LayoutNode SetXPos(float x)
+    {
+
+        return _gui.CurrentNode;
+    }
+
     /// <summary>
     /// Enters this layout node's scope, making it the current active node in the GUI context.
     /// </summary>

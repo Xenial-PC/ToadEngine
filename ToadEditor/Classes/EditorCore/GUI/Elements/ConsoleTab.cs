@@ -6,8 +6,8 @@ namespace ToadEditor.Classes.EditorCore.GUI.Elements;
 
 public class ConsoleTab(DockSpaceManager.Docks dock) : TabMenu(dock)
 {
-    public override void TabBody(Rect windowPos)
+    public override void TabBody(LayoutNode node)
     {
-        UI.DrawRect(windowPos, Color.FromArgb(255, 20, 20, 20));
+        UI.DrawRect(node.Rect, Color.FromArgb(255, 3, 3, 3));
     }
 }
