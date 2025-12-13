@@ -8,7 +8,7 @@ public class GUI
     public static ImGuiController Controller = null!;
     public static ImPlotContext ImPlotContext = null!;
 
-    public static Gui Paint = null!;
+    public static Gui UI = null!;
     public static ICanvasRenderer Canvas = null!;
     public static Action? GuiCallBack = null!;
 
@@ -22,7 +22,7 @@ public class GUI
         ImPlot.SetCurrentContext(ImPlotContext);
         ImPlot.SetImGuiContext(Controller.Context);
 
-        Paint = new Gui
+        UI = new Gui
         {
             Input = window,
             WindowHandler = window
@@ -49,18 +49,18 @@ public class GUI
     {
         Canvas.Render(canvas =>
         {
-            Controller.Update(Paint.Time.DeltaTime);
+            Controller.Update(UI.Time.DeltaTime);
 
-            Paint.SetStage(Pass.Pass1Build);
-            Paint.BeginFrame(canvas, FontText, FontIcon);
+            UI.SetStage(Pass.Pass1Build);
+            UI.BeginFrame(canvas, FontText, FontIcon);
             GuiCallBack?.Invoke();
 
-            Paint.CalculateLayout();
-            Paint.SetStage(Pass.Pass2Render);
+            UI.CalculateLayout();
+            UI.SetStage(Pass.Pass2Render);
             GuiCallBack?.Invoke();
 
-            Paint.Render();
-            Paint.EndFrame();
+            UI.Render();
+            UI.EndFrame();
         });
 
         Controller.Render();

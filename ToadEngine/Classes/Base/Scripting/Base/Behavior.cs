@@ -1,39 +1,11 @@
-﻿using Guinevere;
-using ToadEngine.Classes.Base.Audio;
-using ToadEngine.Classes.Base.Colliders;
-using ToadEngine.Classes.Base.Physics;
-using ToadEngine.Classes.Base.Physics.Managers;
-using ToadEngine.Classes.Base.Raycasting;
+﻿using ToadEngine.Classes.Base.Raycasting;
 using ToadEngine.Classes.Base.Rendering.Object;
-using ToadEngine.Classes.Shaders;
-using Scene = ToadEngine.Classes.Base.Rendering.SceneManagement.Scene;
+using UltraMapper;
 
 namespace ToadEngine.Classes.Base.Scripting.Base;
 
-public abstract class Behavior : ICloneable
+public class Behavior : Component
 {
-    public readonly Guid Guid = Guid.NewGuid();
-
-    public RaycastManager Raycast = new(Service.Physics.BufferPool);
-    public static Dictionary<int, GameObject> BodyToGameObject = new();
-    public GameObject GameObject = null!;
-
-    public Scene Scene => Service.Scene;
-    public NativeWindow WHandler => Service.NativeWindow;
-
-    public AudioManager AudioManger => Service.Scene.AudioManager;
-    public PhysicsSimulation Physics => Service.Physics;
-
-    public int GetSound(string name) => AudioManger.GetSound(name);
-    public Dictionary<string, Source> Sources = new();
-
-    public Source? GetSource(string name) => Sources.GetValueOrDefault(name);
-
-    public Gui UI => GUI.Paint;
-    public Shader CoreShader => Service.CoreShader;
-
-    public GameObject? FindGameObject(string name) => Scene.ObjectManager.FindGameObject(name);
-
     internal Action? AwakeMethod;
     internal Action? StartMethod;
 
@@ -46,8 +18,6 @@ public abstract class Behavior : ICloneable
 
     internal Action<FramebufferResizeEventArgs>? OnResizeMethod;
     internal Action? DisposeMethod;
-
-    public void LoadScene(string name) => Service.Window.LoadScene(name);
 
     public HitInfo SendRay(Vector3 origin, Vector3 direction, float maxT = 1000)
     {
@@ -102,6 +72,9 @@ public abstract class Behavior : ICloneable
 
     public object Clone()
     {
-        return MemberwiseClone();
+        var mapper = new Mapper();
+        var clone = mapper.Map(this);
+
+        return clone;
     }
 }

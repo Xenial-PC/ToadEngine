@@ -61,7 +61,7 @@ public class Window : GameWindow, IInputHandler, IWindowHandler
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
         base.OnUpdateFrame(e);
-        GUI.Paint.Time.Update(e.Time);
+        GUI.UI.Time.Update(e.Time);
         OnUpdate(e);
     }
 

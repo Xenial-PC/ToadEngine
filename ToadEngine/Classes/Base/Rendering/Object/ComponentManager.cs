@@ -2,7 +2,7 @@
 
 namespace ToadEngine.Classes.Base.Rendering.Object;
 
-public class Component
+public class ComponentManager
 {
     private readonly Dictionary<string, object> _components = new();
     private readonly List<Behavior> _pendingAwake = new();

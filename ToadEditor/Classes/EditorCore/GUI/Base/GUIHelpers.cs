@@ -2,24 +2,22 @@
 using ToadEngine.Classes.Base.Scripting.Base;
 using MouseButton = OpenTK.Windowing.GraphicsLibraryFramework.MouseButton;
 
-namespace ToadEditor.Classes.EditorCore.GUI;
+namespace ToadEditor.Classes.EditorCore.GUI.Base;
 
 public class GUIHelpers
 {
     private static bool _isResizing;
     private static bool _resizeStarted;
     private static Vector2 _lastMouse;
-    
+
     private static bool _isMoving;
     private static Vector2 _moveOffset;
-
-    private const int ResizeMargin = 8;
 
     public static Rect ResizeElement(Rect rect, bool isHeld)
     {
         if (_isMoving) return rect;
         var mouse = Input.GetMousePos();
-        
+
         if (!isHeld)
         {
             _isResizing = false;

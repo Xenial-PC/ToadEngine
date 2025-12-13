@@ -1,8 +1,7 @@
-﻿using ToadEditor.Classes.EditorCore.GUI;
+﻿using ToadEditor.Classes.EditorCore.GUI.Base;
 using ToadEditor.Classes.EditorCore.Renderer;
 using ToadEditor.Classes.EditorCore.Scenes;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
-using ToadEngine.Classes.DearImGui.OpenTK;
 using Window = ToadEngine.Classes.Window.Window;
 
 namespace ToadEditor.Classes.Base;
@@ -20,7 +19,7 @@ public class Editor(int width, int height, string title) : Window(width, height,
         VSync = VSyncMode.On;
 
         RenderTarget = new EditorRenderTarget();
-        GuiManager = new(EditorRenderTarget, this);
+        GuiManager = new(EditorRenderTarget);
         GuiManager.Setup();
 
         SceneManager.Register<TestScene>("test");

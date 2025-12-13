@@ -1,6 +1,8 @@
-﻿namespace ToadEngine.Classes.Base.Rendering.Object;
+﻿using ToadEngine.Classes.Base.Scripting.Base;
 
-public class Transform
+namespace ToadEngine.Classes.Base.Rendering.Object;
+
+public class Transform : Behavior
 {
     public Vector3 Position = Vector3.Zero;
     public Vector3 Rotation = Vector3.Zero;

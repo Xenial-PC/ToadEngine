@@ -1,4 +1,5 @@
-﻿using ToadEngine.Classes.Base.Physics.Managers;
+﻿using System.Runtime.CompilerServices;
+using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
@@ -14,16 +15,26 @@ public class GameObject
 
     public List<IRenderObject> Renderers => Component.GetOfType<IRenderObject>();
 
-    public Component Component = new();
-    public Transform Transform = new()
-    {
-        Front = -Vector3.UnitZ,
-        Up = Vector3.UnitY,
-        Right = Vector3.UnitX,
+    public ComponentManager Component = new();
 
-        LocalScale = new Vector3(1f),
-        Rotation = new Vector3(0f)
-    };
+    public Transform Transform
+    {
+        get
+        {
+            var transform = GetComponent<Transform>();
+            if (transform != null) return transform;
+
+            transform = AddComponent<Transform>();
+            transform.Front = -Vector3.UnitZ;
+            transform.Up = Vector3.UnitY;
+            transform.Right = Vector3.UnitX;
+
+            transform.LocalScale = new Vector3(1f);
+            transform.Rotation = new Vector3(0f);
+
+            return transform;
+        }
+    }
 
     public bool UsePhysics = false;
 
