@@ -1,4 +1,5 @@
-﻿using Guinevere;
+﻿using Prowl.Paper.Utilities;
+using Prowl.Vector;
 using ToadEditor.Classes.EditorCore.GUI.Base;
 using ToadEditor.Classes.EditorCore.GUI.Components;
 using ToadEngine.Classes.Base.Rendering.Object;
@@ -10,13 +11,13 @@ public class SceneHierarchyTab(DockSpaceManager.Docks dock) : TabMenu(dock)
 {
     public static GameObject SelectedGameObject = null!;
 
-    public override void TabBody(LayoutNode node)
+    public override void TabBody()
     {
-        UI.DrawRect(node.Rect, Color.FromArgb(255, 3, 3, 3));
+        UI.DrawRect(node.Rect, ColorUtil.FromArgb(255, 3, 3, 3));
         DrawGameObjectList(node);
     }
 
-    private void DrawGameObjectList(LayoutNode node)
+    private void DrawGameObjectList()
     {
         using (UI.Node(node.Rect.Width, node.Rect.Height).Top(node.Rect.Y).Left(node.Rect.X).Direction(Axis.Vertical).Gap(10).Enter())
         {
@@ -31,7 +32,7 @@ public class SceneHierarchyTab(DockSpaceManager.Docks dock) : TabMenu(dock)
                         var go = gameObject.Value;
                         var currentNode = UI.CurrentNode;
 
-                        UI.DrawRect(currentNode.Rect, Color.FromArgb(255, 45, 45, 45), 12);
+                        UI.DrawRect(currentNode.Rect, ColorUtil.FromArgb(255, 45, 45, 45), 12);
                         UI.DrawText($"{go.Name}", currentNode.Rect.X + 30f, currentNode.Center.Y + 2.5f, 12, SelectedGameObject == go ? Color.CornflowerBlue : Color.White);
 
                         if (currentNode.GetInteractable().OnClick()) SelectedGameObject = go;

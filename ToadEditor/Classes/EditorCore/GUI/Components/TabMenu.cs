@@ -1,4 +1,6 @@
-﻿using Guinevere;
+﻿using Prowl.Paper.Utilities;
+using Prowl.PaperUI;
+using Prowl.Vector;
 using ToadEditor.Classes.EditorCore.GUI.Base;
 
 namespace ToadEditor.Classes.EditorCore.GUI.Components;
@@ -7,7 +9,7 @@ public class TabMenu
 {
     private static readonly Dictionary<DockSpaceManager.Docks, List<TabMenu>> _tabMenus = new();
 
-    public Gui UI => ToadEngine.Classes.Base.UI.GUI.UI;
+    public Paper UI => ToadEngine.Classes.Base.UI.GUI.UI;
 
     public bool IsSelected;
     public string TabName = string.Empty;
@@ -78,7 +80,7 @@ public class TabMenu
                     var isClicked = headerNode.GetInteractable().OnClick(Guinevere.MouseButton.Left);
                     if (isClicked) IsSelected = true;
 
-                    UI.DrawRect(headerNode.Rect, IsSelected ? Color.FromArgb(255, 5, 5, 5) : Color.Black, 3);
+                    UI.DrawRect(headerNode.Rect, IsSelected ? ColorUtil.FromArgb(255, 5, 5, 5) : Color.Black, 3);
 
                     using (UI.Node(headerNode.Rect.W, headerNode.Rect.H).Top(headerNode.Rect.Y).Left(headerNode.Rect.X).Enter())
                     {
@@ -96,7 +98,7 @@ public class TabMenu
         }
     }
 
-    public virtual void TabBody(LayoutNode node)
+    public virtual void TabBody()
     {
 
     }

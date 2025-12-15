@@ -1,4 +1,5 @@
-﻿using Guinevere;
+﻿using Prowl.Paper.Utilities;
+using Prowl.Vector;
 using ToadEditor.Classes.EditorCore.GUI.Base;
 using ToadEditor.Classes.EditorCore.GUI.Components;
 using ToadEditor.Classes.EditorCore.Renderer;
@@ -12,7 +13,7 @@ public class SceneViewTab(EditorRenderTarget target, DockSpaceManager.Docks dock
     public nint TextureId;
     public int Width = 200, Height = 200;
 
-    public override void TabBody(LayoutNode node)
+    public override void TabBody()
     {
         UI.DrawRect(node.Rect, Color.Black, 3);
         RenderSceneViewWindow(node.Rect);

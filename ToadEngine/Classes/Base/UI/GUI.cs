@@ -1,4 +1,5 @@
 ﻿using Prowl.PaperUI;
+using Prowl.Quill;
 using Prowl.Scribe;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ImGuiController = ToadEngine.Classes.DearImGui.OpenTK.ImGuiController;
@@ -14,7 +15,11 @@ public class GUI
     public static Paper UI;
    
     public static Action? GuiCallBack = null!;
-    public static StringBuilder TypedCharacters = new();
+   
+    public class Fonts
+    {
+        public static FontFile Default = null!;
+    }
 
     public static void Init(Window.Window window)
     {
@@ -26,12 +31,14 @@ public class GUI
         CanvasRenderer = new CanvasRenderer();
         CanvasRenderer.Initialize(window.Width, window.Height);
 
-        UI = new Paper(CanvasRenderer, window.Width, window.Height, new Prowl.Quill.FontAtlasSettings());
+        UI = new Paper(CanvasRenderer, window.Width, window.Height, new FontAtlasSettings());
 
         var fontStream = RReader.ReadBytes($"font.ttf");
-        if (fontStream == null ) return;
+        if (fontStream == null) return;
 
-        UI.AddFallbackFont(new FontFile(fontStream));
+        Fonts.Default = new FontFile(fontStream);
+        UI.Canvas.AddFallbackFont(Fonts.Default);
+        UI.AddFallbackFont(Fonts.Default);
     }
 
     public static void Render()

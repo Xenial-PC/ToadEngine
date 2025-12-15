@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 
 using Prowl.PaperUI.Events;
 using Prowl.PaperUI.LayoutEngine;
@@ -962,6 +963,24 @@ namespace Prowl.PaperUI
             _handle.Data.IsMarkdown = false;
             _handle.Data.Paragraph = text;
             _handle.Data.Font = font;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the image content of the element.
+        /// </summary>
+        /// <param name="texture">Texture to display</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        /// <param name="color">Color/Opacity</param>
+        /// <returns></returns>
+        public ElementBuilder Image(object texture)
+        {
+            _paper.AddActionElement((canvas, rect) =>
+            {
+                var current = _handle.Data;
+                canvas.Image(texture, current.X, current.Y, current.LayoutWidth, current.LayoutHeight, Color.White);
+            });
             return this;
         }
 

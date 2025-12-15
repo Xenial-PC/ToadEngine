@@ -1,8 +1,11 @@
 ﻿using System.Timers;
+using Assimp;
 using Prowl.PaperUI;
+using Prowl.PaperUI.LayoutEngine;
 using Prowl.Vector;
 using SimplePlatformer.Classes.GameObjects.Menus;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Textures;
 using Timer = System.Timers.Timer;
 
 namespace SimplePlatformer.Classes.GameObjects.Controllers;
@@ -32,31 +35,87 @@ public class PlayerHud : Behavior
     public void OnGUI()
     {
         if (PauseMenu.IsPaused) return;
-
-        /*using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Enter())
+        using (UI.Box("PlayerHud").Size(UI.ScreenRect.Size.X, UI.ScreenRect.Size.Y).Enter())
         {
-            UI.DrawRect(new Rect(20, 20, 65, 35), Color.FromArgb(128, 0, 0, 0), 12f);
-            UI.DrawText($"Level: {Level}", 28.5f, 42.5f, 15f, Color.Purple);
+            UI.Canvas.RoundedRectFilled(20, 20, 65, 35, 12f, Color32.FromArgb(128, 0, 0, 0));
+            UI.Box("LevelText")
+                .PositionType(PositionType.SelfDirected)
+                .BackgroundColor(Color32.FromArgb(128, 0, 0, 0))
+                .Size(65, 35)
+                .Left(20)
+                .Top(20)
+                .Rounded(12f)
+                .Text($"Level {Level}", GUI.Fonts.Default)
+                .BackgroundColor(Color.Transparent)
+                .Alignment(TextAlignment.MiddleCenter)
+                .TextColor(Color.Purple);
 
-            UI.DrawRect(new Rect(UI.CurrentNode.Rect.W - 120, 20, 105, 35), Color.FromArgb(128, 0, 0, 0), 12f);
-            UI.DrawText($"{Time.Minutes}:{Time.Seconds}:{Time.Milliseconds}", UI.CurrentNode.Rect.W - 80, 42.5f, 15f, Color.Purple);
-            UI.DrawImage($"Resources/Textures/UI/timer.png", UI.CurrentNode.Rect.W - 120, 20, 35, 35);
+            using (UI.Row("Timer")
+                       .PositionType(PositionType.SelfDirected)
+                       .BackgroundColor(Color32.FromArgb(128, 0, 0, 0))
+                       .Size(105, 50)
+                       .Left(UI.ScreenRect.Size.X - 120)
+                       .Top(20)
+                       .Rounded(12f).Enter())
+            {
+                UI.Box("TimerImage")
+                    .PositionType(PositionType.SelfDirected)
+                    .Image(Texture.FromPath($"Resources/Textures/UI/timer.png", TextureType.Diffuse))
+                    .Height(50)
+                    .Width(50);
 
-            var width = UI.CurrentNode.Rect.W * 0.30f;
-            UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 40, width, 20), Color.Gray, 12f);
-            UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 40, _doubleJumpSlider * width, 20), Color.Purple, 12f);
-            UI.DrawImage($"Resources/Textures/UI/jumpStamina.png", 20, UI.ScreenRect.Height - 42, 25, 25);
+                UI.Box("TimeText")
+                    .Text($"{Time.Minutes}:{Time.Seconds}:{Time.Milliseconds}", GUI.Fonts.Default)
+                    .Alignment(TextAlignment.MiddleRight)
+                    .PositionType(PositionType.SelfDirected)
+                    .TextColor(Color.Purple)
+                    .Margin(0, 10, 0, 0);
+            }
 
-            UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 65, width, 20), Color.Gray, 12f);
-            UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 65, _boostSlider * width, 20), Color.Yellow, 12f);
-            UI.DrawImage($"Resources/Textures/UI/boost.png", 15, UI.ScreenRect.Height - 85, 45, 45, Color.Black);
+            using (UI.Column("Information").PositionType(PositionType.SelfDirected)
+                       .Size(450, 80)
+                       .Top(UI.ScreenRect.Size.Y - 80).Enter())
+            {
+                ValueSlider("HealthSlider",
+                    information: (value: _healthSlider, width: 400, height: 20),
+                    position: (top: 5f, left: 20),
+                    colors: (backgroundColor: Color.Gray, foreGroundColor: Color.DarkRed));
 
-            UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 90, width, 20), Color.Gray, 12f);
-            UI.DrawRect(new Rect(15, UI.ScreenRect.Height - 90, _healthSlider * width, 20), Color.DarkRed, 12f);
-            //UI.DrawImage($"Resources/Textures/UI/health.png", 15, UI.ScreenRect.Height - 93, 35, 30);
+                ValueSlider("BoostSlider",
+                    information: (value: _boostSlider, width: 400, height: 20),
+                    position: (top: 5f, left: 20),
+                    colors: (backgroundColor: Color.Gray, foreGroundColor: Color.Teal));
+
+                ValueSlider("StaminaSlider",
+                    information: (value: _doubleJumpSlider, width: 400, height: 20),
+                    position: (top: 5f, left: 20),
+                    colors: (backgroundColor: Color.Gray, foreGroundColor: Color.Purple));
+            }
         }
 
-        UI.DrawCircleFilled(new Vector2(UI.ScreenRect.Width / 2f, UI.ScreenRect.Height / 2f), 3f, Color.GhostWhite);*/
+        UI.Canvas.CircleFilled(UI.ScreenRect.Center.X, UI.ScreenRect.Center.Y, 3f, Color.GhostWhite);
+    }
+
+    private void ValueSlider(string sliderName, 
+        (float value, float width, float height) information, 
+        (UnitValue top, UnitValue left) position, 
+        (Color32 backgroundColor, Color32 foreGroundColor) colors)
+    {
+        using (UI.Box($"{sliderName}Background")
+                   .BackgroundColor(colors.backgroundColor)
+                   .Rounded(12f)
+                   .Top(position.top)
+                   .Left(position.left)
+                   .Height(information.height)
+                   .Width(information.width).Enter())
+        {
+            UI.Box($"{sliderName}")
+                .PositionType(PositionType.SelfDirected)
+                .Height(information.height)
+                .Width(information.value * information.width)
+                .BackgroundColor(colors.foreGroundColor)
+                .Rounded(12f);
+        }
     }
 
     public static void StartTimer()
@@ -76,33 +135,15 @@ public class PlayerHud : Behavior
         LevelTimer.Enabled = _isTimerRunning;
     }
 
-    public void UpdateStaminaUI(float value)
-    {
-        _doubleJumpSlider = value switch
+    public void UpdateStaminaUI(float value) => MapSlider(out _doubleJumpSlider, value);
+    public void UpdateBoostUI(float value) => MapSlider(out _boostSlider, value);
+    public void UpdateHealthUI(float value) => MapSlider(out _healthSlider, value);
+    
+    private void MapSlider(out float slider, float value)
+        => slider = value switch
         {
             < 0 => 0,
             > 1 => 1,
             _ => value
         };
-    }
-
-    public void UpdateBoostUI(float value)
-    {
-        _boostSlider = value switch
-        {
-            < 0 => 0,
-            > 1 => 1,
-            _ => value
-        };
-    }
-
-    public void UpdateHealthUI(float value)
-    {
-        _healthSlider = value switch
-        {
-            < 0 => 0,
-            > 1 => 1,
-            _ => value
-        };
-    }
 }

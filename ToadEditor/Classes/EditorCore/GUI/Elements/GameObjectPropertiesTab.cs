@@ -1,4 +1,5 @@
-﻿using Guinevere;
+﻿using Prowl.Paper.Utilities;
+using Prowl.Vector;
 using ToadEditor.Classes.EditorCore.GUI.Base;
 using ToadEditor.Classes.EditorCore.GUI.Components;
 using ToadEngine.Classes.Base.Rendering.Object;
@@ -25,9 +26,9 @@ public class GameObjectPropertiesTab(DockSpaceManager.Docks dock) : TabMenu(dock
         }*/
     }
 
-    public override void TabBody(LayoutNode node)
+    public override void TabBody()
     {
-        UI.DrawRect(node.Rect, Color.FromArgb(255, 3, 3, 3));
+        UI.DrawRect(node.Rect, ColorUtil.FromArgb(255, 3, 3, 3));
 
         _isAlreadySelected = _lastSelected == SceneHierarchyTab.SelectedGameObject;
         if (!_isAlreadySelected)

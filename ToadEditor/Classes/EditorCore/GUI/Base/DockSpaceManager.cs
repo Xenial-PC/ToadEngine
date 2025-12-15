@@ -1,4 +1,5 @@
-﻿using Prowl.PaperUI;
+﻿using Prowl.Paper.Utilities;
+using Prowl.PaperUI;
 using Prowl.Vector;
 
 namespace ToadEditor.Classes.EditorCore.GUI.Base;
@@ -24,8 +25,8 @@ public class DockSpaceManager()
 
     public void InitDockSpaces()
     {
-        CreateDock(Docks.Header, new Color(10, 10, 10, 255));
-        CreateDock(Docks.Top, new Color(3, 3, 3, 255));
+        CreateDock(Docks.Header, ColorUtil.FromArgb(255, 10, 10, 10));
+        CreateDock(Docks.Top, ColorUtil.FromArgb(255, 3, 3, 3));
         CreateDock(Docks.Left, Color.Transparent);
         CreateDock(Docks.Middle, Color.Transparent);
         CreateDock(Docks.Right, Color.Transparent);
