@@ -41,12 +41,12 @@ namespace ToadEditor.Classes.EditorCore.Scenes
 
            
 
-            /*for (var i = 0; i < 4; i++)
+            for (var i = 0; i < 32; i++)
             {
                 var cube = BuiltIns.Primitives.Cube();
                 cube.Transform.Position = new Vector3(30 / 10f * i);
                 Instantiate(cube);
-            }*/
+            }
         }
 
         public override void OnStart()

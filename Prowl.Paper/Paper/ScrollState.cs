@@ -142,6 +142,7 @@ namespace Prowl.PaperUI
                 return false;
 
             var (trackX, trackY, trackWidth, trackHeight, _, _) = CalculateHorizontalScrollbar(rect, flags);
+            trackY += 100; // Somehow we are exactly 100 units off for the hit-test?
 
             return point.X >= trackX &&
                    point.X <= trackX + trackWidth &&

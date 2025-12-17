@@ -16,7 +16,7 @@ public class SceneHierarchyTab(DockType dockType) : TabMenu(dockType, "Hierarchy
 
     public override void TabBody(RectangleF containerSize)
     {
-        using (UI.Column("BodyContainer").Enter())
+        using (UI.Column("BodyContainer").Height(UI.Stretch()).Enter())
         {
             DrawSearchbar();
             DrawGameObjectList();
@@ -39,7 +39,7 @@ public class SceneHierarchyTab(DockType dockType) : TabMenu(dockType, "Hierarchy
 
     private void DrawGameObjectList()
     {
-        using (UI.Column("GameObjects").SetScroll(Scroll.ScrollXY).Height(400).Clip()
+        using (UI.Column("GameObjects").SetScroll(Scroll.ScrollXY).Height(UI.Stretch()).Clip()
                    .Enter())
         {
             foreach (var gameObject in GameObjects.Where(goName => string.IsNullOrEmpty(_filter) || goName.Value.Name!.Contains(_filter)))
@@ -57,11 +57,12 @@ public class SceneHierarchyTab(DockType dockType) : TabMenu(dockType, "Hierarchy
     {
         using (UI.Box(go.Name!)
                    .BackgroundColor(Color32.FromArgb(5, 25, 25, 45))
-                   .Height(15).Width(150)
+                   .Height(15)
                    .Rounded(3f)
                    .Top(5f)
                    .Left(5f)
                    .If(go.IsChild)
+                   .Width(UI.Percent(100f))
                    .Left(childIndent)
                    .End()
                    .OnClick((e) =>
