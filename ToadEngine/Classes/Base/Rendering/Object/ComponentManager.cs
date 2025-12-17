@@ -5,8 +5,8 @@ namespace ToadEngine.Classes.Base.Rendering.Object;
 public class ComponentManager
 {
     private readonly Dictionary<string, object> _components = new();
-    private readonly List<Behavior> _pendingAwake = new();
-    private readonly List<Behavior> _pendingStart = new();
+    private readonly List<MonoBehavior> _pendingAwake = new();
+    private readonly List<MonoBehavior> _pendingStart = new();
 
     private int _index;
 
@@ -18,7 +18,7 @@ public class ComponentManager
         var component = new T();
 
         _components.TryAdd($"component_{_index++}", component);
-        if (component is not Behavior behavior) return component;
+        if (component is not MonoBehavior behavior) return component;
 
         go.RegisterBehavior(behavior);
         NotifyAdded(behavior);
@@ -30,7 +30,7 @@ public class ComponentManager
         var component = new T();
 
         _components.TryAdd(name, component);
-        if (component is not Behavior behavior) return component;
+        if (component is not MonoBehavior behavior) return component;
 
         go.RegisterBehavior(behavior);
         NotifyAdded(behavior);
@@ -42,26 +42,26 @@ public class ComponentManager
     public List<T> GetOfType<T>() where T : class => _components.Select(t => t.Value).OfType<T>().ToList();
     public List<object> Components => _components.Select(t => t.Value).ToList();
 
-    public List<Behavior> GetComponents(GameObject obj)
+    public List<MonoBehavior> GetComponents(GameObject obj)
     {
-        var components = new List<Behavior>();
-        if (obj.HasChildren) components.AddRange(obj.Children.SelectMany(child => child.Component.GetOfType<Behavior>()));
-        if (obj.IsChild) components.AddRange(obj.Parent.Component.GetOfType<Behavior>());
-        components.AddRange(obj.Component.GetOfType<Behavior>());
+        var components = new List<MonoBehavior>();
+        if (obj.HasChildren) components.AddRange(obj.Children.SelectMany(child => child.Component.GetOfType<MonoBehavior>()));
+        if (obj.IsChild) components.AddRange(obj.Parent.Component.GetOfType<MonoBehavior>());
+        components.AddRange(obj.Component.GetOfType<MonoBehavior>());
         return components;
     }
 
-    private void NotifyAdded(Behavior behavior)
+    private void NotifyAdded(MonoBehavior monoBehavior)
     {
-        _pendingAwake.Add(behavior);
-        _pendingStart.Add(behavior);
+        _pendingAwake.Add(monoBehavior);
+        _pendingStart.Add(monoBehavior);
     }
 
     public void FinalizeComponents()
     {
         while (_pendingAwake.Count > 0)
         {
-            var toProcess = new List<Behavior>(_pendingAwake);
+            var toProcess = new List<MonoBehavior>(_pendingAwake);
             _pendingAwake.Clear();
 
             foreach (var component in toProcess) component.AwakeMethod?.Invoke();
@@ -69,7 +69,7 @@ public class ComponentManager
 
         while (_pendingStart.Count > 0)
         {
-            var toProcess = new List<Behavior>(_pendingStart);
+            var toProcess = new List<MonoBehavior>(_pendingStart);
             _pendingStart.Clear();
 
             foreach (var component in toProcess) component.StartMethod?.Invoke();

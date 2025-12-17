@@ -18,5 +18,9 @@ public class PhysicsManager
     public static PhysicsSimulation Get(string name) => Physics.TryGetValue(name, out var simulation) ? simulation : Register(name);
     public static List<PhysicsSimulation> GetSimulations => Physics.Select(s => s.Value).ToList();
 
-    public static void Reset() => Physics.Clear();
+    public static void Reset()
+    {
+        foreach (var simulation in GetSimulations) simulation.Dispose();
+        Physics.Clear();
+    }
 }

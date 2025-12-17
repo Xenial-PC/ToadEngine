@@ -6,7 +6,7 @@ using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
-public class SavePointScript : Behavior
+public class SavePointScript : MonoBehavior
 {
     public Trigger Trigger = null!;
     public TriggerScript TriggerScript = null!;

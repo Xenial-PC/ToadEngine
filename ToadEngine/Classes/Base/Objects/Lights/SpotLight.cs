@@ -1,9 +1,8 @@
-﻿using ToadEngine.Classes.Base.Rendering.Object;
-using ToadEngine.Classes.Base.Scripting.Renderer;
+﻿using ToadEngine.Classes.Base.Scripting.Renderer;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
 
-public class SpotLight : GameObject
+public class SpotLight : Light
 {
     public static int LightIndex;
     public int CurrentIndex;
@@ -11,7 +10,7 @@ public class SpotLight : GameObject
     public ShadowCaster ShadowCaster = null!;
     public LightRenderer LightRenderer = null!;
 
-    public BaseLight.SpotLight Settings = new()
+    public SpotLight Settings = new()
     {
         Position = new Vector3(-0.2f, -1.0f, -0.3f),
         Direction = new Vector3(0f, 0f, 0f),
@@ -34,7 +33,7 @@ public class SpotLight : GameObject
         ShadowCaster.IsCastingShadows = true;
     }
 
-    public override void Setup()
+    public void Awake()
     {
         LightIndex++;
         CurrentIndex = LightIndex - 1;

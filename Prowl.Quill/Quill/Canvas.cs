@@ -1473,10 +1473,10 @@ namespace Prowl.Quill
             uint startVertexIndex = (uint)_vertices.Count;
 
             // Add all vertices with the transformed coordinates
-            AddVertex(new Vertex(topLeft, new Float2(0, 0), color));
-            AddVertex(new Vertex(topRight, new Float2(0, 1), color));
-            AddVertex(new Vertex(bottomRight, new Float2(1, 1), color));
-            AddVertex(new Vertex(bottomLeft, new Float2(1, 0), color));
+            AddVertex(new Vertex(topLeft, new Float2(0, 1), color));
+            AddVertex(new Vertex(topRight, new Float2(0, 0), color));
+            AddVertex(new Vertex(bottomRight, new Float2(1, 0), color));
+            AddVertex(new Vertex(bottomLeft, new Float2(1, 1), color));
 
             // Add indexes for fill
             _indices.Add(startVertexIndex);

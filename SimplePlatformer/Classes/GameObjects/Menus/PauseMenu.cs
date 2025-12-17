@@ -1,8 +1,10 @@
-﻿using ToadEngine.Classes.Base.Scripting.Base;
+﻿using Prowl.PaperUI;
+using Prowl.Vector;
+using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Menus;
 
-public class PauseMenu : Behavior
+public class PauseMenu : MonoBehavior
 {
     public static bool IsPaused, IsDrawingPauseMenu;
     private static Vector2 _mousePositionCache;
@@ -17,44 +19,52 @@ public class PauseMenu : Behavior
     {
         if ((!IsPaused && !IsDrawingPauseMenu) || EOLMenu.IsDrawingEOLMenu || EOLMenu.IsDrawingLoseScreen) return;
 
-        /*using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Expand().Enter())
+        using (UI.Box("PauseScreen").Size(UI.ScreenRect.Size.X, UI.ScreenRect.Size.Y)
+                   .BackgroundColor(Color32.FromArgb(128, 0, 0, 0)).Enter())
         {
-            UI.DrawBackgroundRect(Color.FromArgb(128, 0, 0, 0));
-            using (UI.Node().Expand().Margin(150).Gap(5f).AlignContent(0.5f).Direction(Axis.Vertical).Enter())
+            using (UI.Column("ElementContainer").Size(UI.Auto).Margin(UI.Stretch(1.0f)).Enter())
             {
-                var backgroundColor = Color.FromArgb(155, 25, 25, 25);
-                using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
-                {
-                    var onHover = UI.CurrentNode.GetInteractable().OnHover();
-                    UI.DrawBackgroundRect(backgroundColor, 12f);
-                    UI.DrawText("Resume", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
+                UI.Box("HeaderText")
+                    .Text("Simple Platformer!", Fonts.Default)
+                    .TextColor(Color.Aqua)
+                    .Alignment(TextAlignment.MiddleCenter)
+                    .Margin(UI.Stretch(1), UI.Stretch(1), 0, 20f);
 
-                    if (UI.CurrentNode.GetInteractable().OnClick())
+                UI.Box("ResumeButton")
+                    .Width(100)
+                    .Height(25)
+                    .Text("Resume", Fonts.Default)
+                    .TextColor(Color.White)
+                    .Alignment(TextAlignment.MiddleCenter)
+                    .BackgroundColor(Color.Black)
+                    .Rounded(5f)
+                    .Margin(0, 0, 0, 5f)
+                    .Hovered
+                        .BackgroundColor(Color.DarkGray)
+                    .End()
+                    .OnClick((value) =>
                     {
                         UpdatePausedState();
                         IsDrawingPauseMenu = false;
-                    }
-                }
+                    });
 
-                using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
-                {
-                    var onHover = UI.CurrentNode.GetInteractable().OnHover();
-                    UI.DrawBackgroundRect(backgroundColor, 12f);
-                    UI.DrawText("Settings", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
-
-                    if (UI.CurrentNode.GetInteractable().OnClick()) {}
-                }
-
-                using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
-                {
-                    var onHover = UI.CurrentNode.GetInteractable().OnHover();
-                    UI.DrawBackgroundRect(backgroundColor, 12f);
-                    UI.DrawText("Exit", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
-
-                    if (UI.CurrentNode.OnClick()) Environment.Exit(0);
-                }
+                UI.Box("ExitButton")
+                    .Width(100)
+                    .Height(25)
+                    .Text("Exit", Fonts.Default)
+                    .TextColor(Color.White)
+                    .Alignment(TextAlignment.MiddleCenter)
+                    .BackgroundColor(Color.Black)
+                    .Rounded(5f)
+                    .Hovered
+                        .BackgroundColor(Color.DarkGray)
+                    .End()
+                    .OnClick((value) =>
+                    {
+                        Environment.Exit(0);
+                    });
             }
-        }*/
+        }
     }
 
     public void Update()

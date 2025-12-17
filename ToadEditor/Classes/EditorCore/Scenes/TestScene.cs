@@ -1,7 +1,7 @@
-﻿using ToadEngine.Classes.Base.Objects.Lights;
-using ToadEngine.Classes.Base.Objects.Primitives;
-using ToadEngine.Classes.Base.Objects.Skybox;
+﻿using ToadEngine.Classes.Base.Objects.BuiltIn;
+using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Objects.View;
+using ToadEngine.Classes.Base.Objects.World;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
 
@@ -17,20 +17,21 @@ namespace ToadEditor.Classes.EditorCore.Scenes
         {
             var baseDirectory = $"{Directory.GetCurrentDirectory()}/Resources/";
 
-            _skybox = new Skybox
-            ([
-                $"{baseDirectory}Textures/level_one_skybox/right.png",
-                $"{baseDirectory}Textures/level_one_skybox/left.png",
-                $"{baseDirectory}Textures/level_one_skybox/top.png",
-                $"{baseDirectory}Textures/level_one_skybox/bottom.png",
-                $"{baseDirectory}Textures/level_one_skybox/front.png",
-                $"{baseDirectory}Textures/level_one_skybox/back.png",
-            ]);
+            _skybox = BuiltIns.World.Skybox();
+            _skybox.Material = new SkyboxMaterial()
+            {
+                Right = $"{baseDirectory}Textures/level_one_skybox/right.png",
+                Left = $"{baseDirectory}Textures/level_one_skybox/left.png",
+                Top = $"{baseDirectory}Textures/level_one_skybox/top.png",
+                Bottom = $"{baseDirectory}Textures/level_one_skybox/bottom.png",
+                Front = $"{baseDirectory}Textures/level_one_skybox/front.png",
+                Back = $"{baseDirectory}Textures/level_one_skybox/back.png",
+            };
 
             _camera = new Camera();
             Service.MainCamera = _camera;
 
-            _directionLight = new DirectionLight();
+            _directionLight = BuiltIns.Lights.DirectionLight();
             _directionLight.Settings.Direction = new Vector3(0f, -1f, 0);
             _directionLight.Transform.Rotation = new Vector3(-1f, -1.5f, -1f);
 
@@ -38,16 +39,43 @@ namespace ToadEditor.Classes.EditorCore.Scenes
             _directionLight.Settings.Ambient = new Vector3(0.5f);
             _directionLight.Settings.Diffuse = new Vector3(0.3f);
 
-            var cube = new Cube();
-            cube.Transform.Position = new Vector3(1f);
-            cube.Transform.LocalScale = new Vector3(1f);
-            Instantiate(cube);
+           
+
+            /*for (var i = 0; i < 4; i++)
+            {
+                var cube = BuiltIns.Primitives.Cube();
+                cube.Transform.Position = new Vector3(30 / 10f * i);
+                Instantiate(cube);
+            }*/
         }
 
         public override void OnStart()
         {
-            Instantiate(_skybox, InstantiateType.Late);
-            Instantiate(_directionLight);
+            var cube = BuiltIns.Primitives.Cube();
+            cube.Name = "Parent Cube";
+            cube.Transform.Position = new Vector3(1f);
+
+            var childCube = BuiltIns.Primitives.Cube();
+            childCube.Name = "Child Cube";
+            childCube.Transform.LocalPosition.Y += 2f;
+
+            var childCube2 = BuiltIns.Primitives.Cube();
+            childCube2.Name = "Child Cube 2";
+            childCube2.Transform.LocalPosition.Y += 2f;
+
+            var childCube3 = BuiltIns.Primitives.Cube();
+            childCube3.Name = "Child Cube 3";
+            childCube3.Transform.LocalPosition.Y += 2f;
+
+            cube.AddChild(childCube);
+            cube.AddChild(childCube3);
+
+            childCube.AddChild(childCube2);
+
+            Instantiate([cube, childCube, childCube2, childCube3]);
+
+            Instantiate(_skybox.GameObject, InstantiateType.Late);
+            Instantiate(_directionLight.GameObject);
         }
 
         public override void OnUpdate(FrameEventArgs e)

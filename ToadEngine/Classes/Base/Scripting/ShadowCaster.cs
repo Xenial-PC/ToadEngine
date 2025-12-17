@@ -3,7 +3,7 @@ using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Scripting;
 
-public class ShadowCaster : Behavior
+public class ShadowCaster : MonoBehavior
 {
     public int CasterFBO, ShadowMap;
     public int ShadowWidth = 1024, ShadowHeight = 1024;
@@ -44,7 +44,8 @@ public class ShadowCaster : Behavior
         var lightView = new Matrix4();
         var lightProjection = new Matrix4();
 
-        switch (GameObject)
+        var light = GameObject.GetComponent<Light>();
+        switch (light)
         {
             case DirectionLight directionLight:
                 var lightPos = -Vector3.Normalize(GameObject.Transform.Rotation) * Distance;

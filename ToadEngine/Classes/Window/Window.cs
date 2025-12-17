@@ -77,8 +77,6 @@ public class Window : GameWindow
     public virtual void OnDispose()
     {
         CoreShader.Dispose();
-        ImPlot.DestroyContext(GUI.ImPlotContext);
-        GUI.Controller.Dispose();
         GUI.Dispose();
     }
 

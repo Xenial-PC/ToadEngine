@@ -502,6 +502,7 @@ namespace Prowl.PaperUI
             }
         }
 
+        // TODO: ZZZ Fix Placement (hit test is way off)
         /// <summary>
         /// Draws the default scrollbars for a scrollable element.
         /// </summary>
@@ -529,7 +530,9 @@ namespace Prowl.PaperUI
 
             if (hasHorizontal)
             {
+
                 var (trackX, trackY, trackWidth, trackHeight, thumbX, thumbWidth) = state.CalculateHorizontalScrollbar(rect, flags);
+                trackY -= 100;
 
                 // Draw horizontal scrollbar track
                 canvas.RoundedRectFilled(trackX, trackY, trackWidth, trackHeight, 10, 10, 10, 10, Color32.FromArgb(50, 0, 0, 0));

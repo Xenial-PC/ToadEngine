@@ -1,4 +1,5 @@
-﻿using ToadEngine.Classes.Base.Scripting.Base;
+﻿using Prowl.Scribe;
+using ToadEngine.Classes.Base.Scripting.Base;
 using MouseButton = OpenTK.Windowing.GraphicsLibraryFramework.MouseButton;
 
 namespace ToadEditor.Classes.EditorCore.GUI.Base;
@@ -12,7 +13,7 @@ public class GUIHelpers
     private static bool _isMoving;
     private static Vector2 _moveOffset;
 
-    public static Rect ResizeElement(Rect rect, bool isHeld)
+    public static RectangleF ResizeElement(RectangleF rect, bool isHeld)
     {
         if (_isMoving) return rect;
         var mouse = Input.GetMousePos();
@@ -53,7 +54,7 @@ public class GUIHelpers
         return rect;
     }
 
-    public static Rect MoveElement(Rect rect, bool isHeld)
+    public static RectangleF MoveElement(RectangleF rect, bool isHeld)
     {
         if (_isResizing) return rect;
         var mouse = Input.GetMousePos();

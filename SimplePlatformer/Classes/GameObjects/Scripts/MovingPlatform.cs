@@ -4,7 +4,7 @@ using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
-public class MovingPlatform : Behavior
+public class MovingPlatform : MonoBehavior
 {
     public Vector3 MovingRange;
     public float MovingSpeed = 0.5f;

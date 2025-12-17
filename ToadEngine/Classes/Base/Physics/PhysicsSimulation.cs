@@ -91,5 +91,6 @@ public class PhysicsSimulation : IDisposable
         ThreadDispatcher.Dispose();
         Simulation.Dispose();
         ((IDisposable)BufferPool).Dispose();
+        BufferPool.Clear();
     }
 }

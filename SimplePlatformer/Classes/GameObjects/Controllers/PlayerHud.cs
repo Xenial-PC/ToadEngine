@@ -10,7 +10,7 @@ using Timer = System.Timers.Timer;
 
 namespace SimplePlatformer.Classes.GameObjects.Controllers;
 
-public class PlayerHud : Behavior
+public class PlayerHud : MonoBehavior
 {
     public static int Level = 1;
     private float _doubleJumpSlider, _boostSlider, _healthSlider;
@@ -45,7 +45,7 @@ public class PlayerHud : Behavior
                 .Left(20)
                 .Top(20)
                 .Rounded(12f)
-                .Text($"Level {Level}", GUI.Fonts.Default)
+                .Text($"Level {Level}", Fonts.Default)
                 .BackgroundColor(Color.Transparent)
                 .Alignment(TextAlignment.MiddleCenter)
                 .TextColor(Color.Purple);
@@ -65,14 +65,14 @@ public class PlayerHud : Behavior
                     .Width(50);
 
                 UI.Box("TimeText")
-                    .Text($"{Time.Minutes}:{Time.Seconds}:{Time.Milliseconds}", GUI.Fonts.Default)
+                    .Text($"{Time.Minutes}:{Time.Seconds}:{Time.Milliseconds}", Fonts.Default)
                     .Alignment(TextAlignment.MiddleRight)
                     .PositionType(PositionType.SelfDirected)
                     .TextColor(Color.Purple)
                     .Margin(0, 10, 0, 0);
             }
 
-            using (UI.Column("Information").PositionType(PositionType.SelfDirected)
+            using (UI.Column("PlayerInformation").PositionType(PositionType.SelfDirected)
                        .Size(450, 80)
                        .Top(UI.ScreenRect.Size.Y - 80).Enter())
             {

@@ -4,7 +4,7 @@ using Vector3 = System.Numerics.Vector3;
 
 namespace SimplePlatformer.Classes.GameObjects.Controllers;
 
-public class PlatformerController : Behavior
+public class PlatformerController : MonoBehavior
 {
     private PlayerHud _playerHud = null!;
     private FPController _controller = null!;

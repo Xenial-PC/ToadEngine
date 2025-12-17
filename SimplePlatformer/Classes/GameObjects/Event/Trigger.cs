@@ -5,7 +5,7 @@ namespace SimplePlatformer.Classes.GameObjects.Event;
 
 public class Trigger : GameObject;
 
-public class TriggerScript : Behavior
+public class TriggerScript : MonoBehavior
 {
     public BoxCollider Collider = null!;
 

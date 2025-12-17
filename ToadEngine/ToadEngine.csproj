@@ -97,19 +97,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DearImGui" Version="1.89.3" />
-    <PackageReference Include="DearImGui.OpenTK" Version="1.0.0.1" />
-    <PackageReference Include="DearImPlot" Version="0.14.0.1" />
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="StbImageSharp" Version="2.30.15" />
-    <PackageReference Include="UltraMapper" Version="0.2.61" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BepuPhysics\BepuPhysics\BepuPhysics.csproj" />
     <ProjectReference Include="..\BepuPhysics\BepuUtilities\BepuUtilities.csproj" />
+    <ProjectReference Include="..\Prowl.DotRecast\src\DotRecast.Recast\DotRecast.Recast.csproj" />
+    <ProjectReference Include="..\Prowl.Echo\Echo\Echo.csproj" />
     <ProjectReference Include="..\Prowl.Paper\Paper\Paper.csproj" />
   </ItemGroup>
 

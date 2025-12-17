@@ -4,7 +4,7 @@ using ToadEngine.Classes.Shaders;
 
 namespace ToadEngine.Classes.Base.Scripting.Renderer;
 
-public class SkyboxRenderer : Behavior, IRenderObject
+public class SkyboxRenderer : MonoBehavior, IRenderObject
 {
     public Shader SkyboxShader = null!;
     public int SkyboxVAO;

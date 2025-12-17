@@ -58,9 +58,9 @@ public class Scene
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
         var textureIndex = 10;
-        foreach (var light in ObjectManager.GameObjects.Values.Where(l => l is DirectionLight))
+        foreach (var light in ObjectManager.GameObjects.Values.Where(l => l.GetComponent<Light>() != null))
         {
-            var caster = light.Component.Get<ShadowCaster>();
+            var caster = light.GetComponent<ShadowCaster>();
             if (caster == null || !caster.IsCastingShadows) continue;
 
             if (textureIndex >= 31)
@@ -69,7 +69,8 @@ public class Scene
                 return;
             }
 
-            switch (light)
+            var baseLight = light.GetComponent<Light>();
+            switch (baseLight)
             {
                 case DirectionLight dirLight:
                     CoreShader.SetMatrix4($"dirLight.fragPosLightSpace", caster.LightSpaceMatrix);
@@ -77,21 +78,21 @@ public class Scene
 
                     GL.ActiveTexture(TextureUnit.Texture0 + textureIndex);
                     GL.BindTexture(TextureTarget.Texture2D, caster.ShadowMap);
-                    continue;
+                    break;
                 case PointLight pointLight:
                     CoreShader.SetMatrix4($"pointLights[{pointLight.CurrentIndex}].fragPosLightSpace", caster.LightSpaceMatrix);
                     CoreShader.SetInt1($"pointLights[{pointLight.CurrentIndex}].shadowMap", ++textureIndex);
 
                     GL.ActiveTexture(TextureUnit.Texture0 + textureIndex);
                     GL.BindTexture(TextureTarget.Texture2D, caster.ShadowMap);
-                    continue;
+                    break;
                 case SpotLight spotLight:
                     CoreShader.SetMatrix4($"spotLights[{spotLight.CurrentIndex}].fragPosLightSpace", caster.LightSpaceMatrix);
                     CoreShader.SetInt1($"spotLights[{spotLight.CurrentIndex}].shadowMap", ++textureIndex);
 
                     GL.ActiveTexture(TextureUnit.Texture0 + textureIndex);
                     GL.BindTexture(TextureTarget.Texture2D, caster.ShadowMap);
-                    continue;
+                    break;
             }
         }
         DrawScene(deltaTime);
@@ -101,9 +102,9 @@ public class Scene
     private void DrawFirstPass(float deltaTime)
     {
         Service.CoreShader = ShadowMapShader;
-        foreach (var light in ObjectManager.GameObjects.Values.Where(l => l is DirectionLight))
+        foreach (var light in ObjectManager.GameObjects.Values.Where(l => l.GetComponent<Light>() != null))
         {
-            var caster = light.Component.Get<ShadowCaster>();
+            var caster = light.GetComponent<ShadowCaster>();
             if (caster == null || !caster.IsCastingShadows) continue;
 
             caster.ConfigureShaderAndMatrices();

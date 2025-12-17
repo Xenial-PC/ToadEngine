@@ -2,7 +2,7 @@
 
 namespace ToadEngine.Classes.Base.Rendering.Object;
 
-public class Transform : Behavior
+public class Transform : MonoBehavior
 {
     public Vector3 Position = Vector3.Zero;
     public Vector3 Rotation = Vector3.Zero;
@@ -19,10 +19,5 @@ public class Transform : Behavior
     public void SetScale(Vector3 scale)
     {
         Scale = scale;
-    }
-
-    public Transform Clone()
-    {
-        return (Transform)(MemberwiseClone());
     }
 }

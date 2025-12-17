@@ -1,9 +1,7 @@
-﻿using System.Runtime.CompilerServices;
-using ToadEngine.Classes.Base.Physics.Managers;
+﻿using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
-using UltraMapper;
 
 namespace ToadEngine.Classes.Base.Rendering.Object;
 
@@ -60,8 +58,6 @@ public class GameObject
     public T GetComponent<T>(string name) where T : class => Component.Get<T>(name);
     public List<T> GetComponentsOfType<T>(string name) where T : class => Component.GetOfType<T>();
     public List<object> Components => Component.Components;
-
-    public virtual void Setup() { }
 
     public void UpdateModelMatrix()
     {
@@ -134,17 +130,17 @@ public class GameObject
         Scene.DestroyObject(this);
     }
 
-    public void RegisterBehavior(Behavior behavior)
+    public void RegisterBehavior(MonoBehavior monoBehavior)
     {
-        MethodRegistry.RegisterMethods(behavior);
+        MethodRegistry.RegisterMethods(monoBehavior);
 
-        behavior.GameObject = this;
-        GUI.GuiCallBack += behavior.OnGuiMethod;
+        monoBehavior.GameObject = this;
+        GUI.GuiCallBack += monoBehavior.OnGuiMethod;
     }
 
     public void UpdateBehaviors()
     {
-        foreach (var behavior in Components.OfType<Behavior>())
+        foreach (var behavior in Components.OfType<MonoBehavior>())
         {
             behavior.GameObject = this;
             behavior.UpdateMethod?.Invoke();
@@ -153,7 +149,7 @@ public class GameObject
 
     public void UpdateBehaviorsFixedTime()
     {
-        foreach (var behavior in Components.OfType<Behavior>())
+        foreach (var behavior in Components.OfType<MonoBehavior>())
         {
             behavior.GameObject = this;
             behavior.FixedUpdateMethod?.Invoke();
@@ -162,7 +158,7 @@ public class GameObject
 
     public void CleanupBehaviors()
     {
-        foreach (var behavior in Components.OfType<Behavior>())
+        foreach (var behavior in Components.OfType<MonoBehavior>())
         {
             foreach (var source in behavior.Sources)
                 source.Value.Dispose();
@@ -173,7 +169,7 @@ public class GameObject
 
     public void ResizeBehaviors(FramebufferResizeEventArgs e)
     {
-        foreach (var behavior in Components.OfType<Behavior>())
+        foreach (var behavior in Components.OfType<MonoBehavior>())
             behavior.OnResizeMethod?.Invoke(e);
     }
 
@@ -181,8 +177,8 @@ public class GameObject
     {
         TriggerManager.OnEnter += (a, b) =>
         {
-            if (!Behavior.BodyToGameObject.TryGetValue(a, out var objA) ||
-                !Behavior.BodyToGameObject.TryGetValue(b, out var objB)) return;
+            if (!MonoBehavior.BodyToGameObject.TryGetValue(a, out var objA) ||
+                !MonoBehavior.BodyToGameObject.TryGetValue(b, out var objB)) return;
 
             foreach (var component in objA.Component.GetComponents(objA))
                 component.OnTriggerEnterMethod?.Invoke(objB);
@@ -193,8 +189,8 @@ public class GameObject
 
         TriggerManager.OnExit += (a, b) =>
         {
-            if (!Behavior.BodyToGameObject.TryGetValue(a, out var objA) ||
-                !Behavior.BodyToGameObject.TryGetValue(b, out var objB)) return;
+            if (!MonoBehavior.BodyToGameObject.TryGetValue(a, out var objA) ||
+                !MonoBehavior.BodyToGameObject.TryGetValue(b, out var objB)) return;
 
             foreach (var component in objA.Component.GetComponents(objA))
                 component.OnTriggerExitMethod?.Invoke(objB);
@@ -202,11 +198,5 @@ public class GameObject
             foreach (var component in objB.Component.GetComponents(objB))
                 component.OnTriggerExitMethod?.Invoke(objA);
         };
-    }
-
-    public GameObject Clone()
-    {
-        var uMap = new Mapper();
-        return uMap.Map(this);
     }
 }

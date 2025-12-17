@@ -1,5 +1,6 @@
 ﻿using ToadEditor.Classes.EditorCore.GUI.Components;
 using ToadEditor.Classes.EditorCore.GUI.Elements;
+using ToadEditor.Classes.EditorCore.GUI.Elements.Tabs;
 using ToadEditor.Classes.EditorCore.Renderer;
 
 namespace ToadEditor.Classes.EditorCore.GUI.Base;
@@ -7,6 +8,7 @@ namespace ToadEditor.Classes.EditorCore.GUI.Base;
 public class GUIManager(EditorRenderTarget target)
 {
     public DockSpaceManager DockSpaceManager = new();
+    public HeaderContainer Header = null!;
 
     public void Setup()
     {
@@ -17,40 +19,21 @@ public class GUIManager(EditorRenderTarget target)
     private void SetupDefaults()
     {
         DockSpaceManager.InitDockSpaces();
+        Header = new HeaderContainer(DockSpaceManager);
         SetupDefaultTabs();
     }
 
     private void SetupDefaultTabs()
     {
-        SceneViewTab sceneViewTab = new(target, DockSpaceManager.Docks.Middle)
-        {
-            IsSelected = true,
-            TabName = "Scene View",
-        };
-
-        SceneHierarchyTab hierarchyTab = new(DockSpaceManager.Docks.Left)
-        {
-            IsSelected = true,
-            TabName = "Hierarchy",
-            HeaderWidth = 90f
-        };
-
-        GameObjectPropertiesTab propertiesTab = new(DockSpaceManager.Docks.Right)
-        {
-            IsSelected = true,
-            TabName = "Properties"
-        };
-
-        ConsoleTab consoleTab = new(DockSpaceManager.Docks.Bottom)
-        {
-            IsSelected = true,
-            TabName = "Console"
-        };
+        _ = new SceneViewTab(target, DockType.Middle) { IsSelected = true };
+        _ = new ConsoleTab(DockType.Bottom) { IsSelected = false };
+        _ = new SceneHierarchyTab(DockType.Left) { IsSelected = true };
+        _ = new GameObjectPropertiesTab(DockType.Right) { IsSelected = true };
     }
 
     private void EditorCallback()
     {
-        DockSpaceManager.DrawDockSpaces();
+        Header.DrawHeader();
         TabMenu.DrawTabs(DockSpaceManager);
     }
 }

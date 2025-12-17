@@ -8,7 +8,7 @@ namespace SimplePlatformer.Classes.GameObjects.Controllers;
 
 public class Player : GameObject;
 
-public class FPController : Behavior
+public class FPController : MonoBehavior
 {
     public Camera Camera = null!;
     public PlayerHud PlayerHud = null!;
@@ -63,7 +63,7 @@ public class FPController : Behavior
         Camera.Transform.LocalPosition = GameObject.Transform.Position;
         Camera.Transform.LocalRotation = new Vector3(0f, 90f, 0f);
 
-        Body = Physics.Simulation.Bodies.GetBodyReference(Collider.Collider);
+        Body = Physics.Simulation.Bodies.GetBodyReference(Collider.BHandle);
         Body.GetDescription(out var desc);
 
         desc.LocalInertia.InverseInertiaTensor = default;

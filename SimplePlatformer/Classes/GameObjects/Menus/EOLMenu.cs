@@ -1,11 +1,12 @@
-﻿using SimplePlatformer.Classes.GameObjects.Controllers;
-using SimplePlatformer.Classes.GameObjects.Event;
+﻿using Prowl.PaperUI;
+using Prowl.Vector;
+using SimplePlatformer.Classes.GameObjects.Controllers;
 using ToadEngine.Classes.Base.Scripting.Base;
 using SavePointScript = SimplePlatformer.Classes.GameObjects.Scripts.SavePointScript;
 
 namespace SimplePlatformer.Classes.GameObjects.Menus;
 
-public class EOLMenu : Behavior
+public class EOLMenu : MonoBehavior
 {
     public static bool IsDrawingEOLMenu, IsDrawingLoseScreen;
 
@@ -23,83 +24,107 @@ public class EOLMenu : Behavior
 
     private void WinScreen()
     {
-        /*using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Expand().Enter())
-           {
-               UI.DrawBackgroundRect(Color.FromArgb(128, 0, 0, 0));
-               using (UI.Node().Expand().Margin(150).Gap(5f).AlignContent(0.5f).Direction(Axis.Vertical).Enter())
-               {
-                   var backgroundColor = Color.FromArgb(155, 25, 25, 25);
-                   using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0f).MarginBottom(15f).Enter())
-                   {
-                       UI.DrawText("Congrats You Win!!", 20f, Color.SpringGreen);
-                   }
-           
-                   using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
-                   {
-                       var onHover = UI.CurrentNode.GetInteractable().OnHover();
-                       UI.DrawBackgroundRect(backgroundColor, 12f);
-                       UI.DrawText("Next Level", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
-           
-                       if (UI.CurrentNode.GetInteractable().OnClick())
-                       {
-                           PauseMenu.UpdatePausedState();
-                           PlayerHud.Level++;
-           
-                           LoadScene($"Level{PlayerHud.Level}");
-                           IsDrawingEOLMenu = false;
-                       }
-                   }
-           
-                   using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
-                   {
-                       var onHover = UI.CurrentNode.GetInteractable().OnHover();
-                       UI.DrawBackgroundRect(backgroundColor, 12f);
-                       UI.DrawText("Exit", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
-           
-                       if (UI.CurrentNode.OnClick()) Environment.Exit(0);
-                   }
-               }
-           }*/
+        using (UI.Box("WinScreen").Size(UI.ScreenRect.Size.X, UI.ScreenRect.Size.Y)
+                   .BackgroundColor(Color32.FromArgb(128, 0, 0, 0)).Enter())
+        {
+            using (UI.Column("ElementContainer").Size(UI.Auto).Margin(UI.Stretch(1.0f)).Enter())
+            {
+                UI.Box("WinText")
+                    .Text("You Win!", Fonts.Default)
+                    .TextColor(Color.Green)
+                    .Alignment(TextAlignment.MiddleCenter)
+                    .Margin(UI.Stretch(1), UI.Stretch(1), 0, 20f);
+
+                UI.Box("NextLevelButton")
+                    .Width(100)
+                    .Height(25)
+                    .Text("Next Level", Fonts.Default)
+                    .TextColor(Color.White)
+                    .Alignment(TextAlignment.MiddleCenter)
+                    .BackgroundColor(Color.Black)
+                    .Rounded(5f)
+                    .Margin(0, 0, 0, 5f)
+                    .Hovered
+                        .BackgroundColor(Color.DarkGray)
+                    .End()
+                    .OnClick((value) =>
+                    {
+                        PauseMenu.UpdatePausedState();
+                        PlayerHud.Level++;
+
+                        LoadScene($"Level{PlayerHud.Level}");
+                        IsDrawingEOLMenu = false;
+                    });
+
+                UI.Box("ExitButton")
+                    .Width(100)
+                    .Height(25)
+                    .Text("Exit", Fonts.Default)
+                    .TextColor(Color.White)
+                    .Alignment(TextAlignment.MiddleCenter)
+                    .BackgroundColor(Color.Black)
+                    .Rounded(5f)
+                    .Hovered
+                        .BackgroundColor(Color.DarkGray)
+                    .End()
+                    .OnClick((value) =>
+                    {
+                        Environment.Exit(0);
+                    });
+            }
+        }
     }
 
     private void LoseScreen()
     {
-        /*using (UI.Node(UI.ScreenRect.Width, UI.ScreenRect.Height).Expand().Enter())
+        using (UI.Box("LoseScreen").Size(UI.ScreenRect.Size.X, UI.ScreenRect.Size.Y)
+                   .BackgroundColor(Color32.FromArgb(128, 0, 0, 0)).Enter())
         {
-            UI.DrawBackgroundRect(Color.FromArgb(128, 0, 0, 0));
-            using (UI.Node().Expand().Margin(150).Gap(5f).AlignContent(0.5f).Direction(Axis.Vertical).Enter())
+            using (UI.Column("ElementContainer").Size(UI.Auto).Margin(UI.Stretch(1.0f)).Enter())
             {
-                var backgroundColor = Color.FromArgb(155, 25, 25, 25);
-                using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0f).MarginBottom(15f).MarginRight(80f).Enter())
-                {
-                    UI.DrawText("You Have Fallen To Time!", 20f, Color.DarkRed);
-                }
+                UI.Box("LoseText")
+                    .Text("You Have Fallen To Time!", Fonts.Default)
+                    .TextColor(Color.DarkRed)
+                    .Alignment(TextAlignment.MiddleCenter)
+                    .Margin(UI.Stretch(1), UI.Stretch(1), 0, 20f);
 
-                using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
-                {
-                    var onHover = UI.CurrentNode.GetInteractable().OnHover();
-                    UI.DrawBackgroundRect(backgroundColor, 12f);
-                    UI.DrawText("Restart Level", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
-
-                    if (UI.CurrentNode.GetInteractable().OnClick())
+                UI.Box("RetryLevelButton")
+                    .Width(100)
+                    .Height(25)
+                    .Text("Restart Level", Fonts.Default)
+                    .TextColor(Color.White)
+                    .Alignment(TextAlignment.MiddleCenter)
+                    .BackgroundColor(Color.Black)
+                    .Rounded(5f)
+                    .Margin(0, 0, 0, 5f)
+                    .Hovered
+                    .BackgroundColor(Color.DarkGray)
+                    .End()
+                    .OnClick((value) =>
                     {
                         PauseMenu.UpdatePausedState();
 
                         SavePointScript.SavePoint = new Vector3(0f, 14f, 0f);
                         LoadScene($"Level{PlayerHud.Level}");
                         IsDrawingLoseScreen = false;
-                    }
-                }
+                    });
 
-                using (UI.Node(150, 30).Direction(Axis.Vertical).AlignContent(0.5f).Enter())
-                {
-                    var onHover = UI.CurrentNode.GetInteractable().OnHover();
-                    UI.DrawBackgroundRect(backgroundColor, 12f);
-                    UI.DrawText("Exit", 10f, onHover ? Color.DarkGray : Color.White).MarginBottom(5f);
-
-                    if (UI.CurrentNode.OnClick()) Environment.Exit(0);
-                }
+                UI.Box("ExitButton")
+                    .Width(100)
+                    .Height(25)
+                    .Text("Exit", Fonts.Default)
+                    .TextColor(Color.White)
+                    .Alignment(TextAlignment.MiddleCenter)
+                    .BackgroundColor(Color.Black)
+                    .Rounded(5f)
+                    .Hovered
+                    .BackgroundColor(Color.DarkGray)
+                    .End()
+                    .OnClick((value) =>
+                    {
+                        Environment.Exit(0);
+                    });
             }
-        }*/
+        }
     }
 }

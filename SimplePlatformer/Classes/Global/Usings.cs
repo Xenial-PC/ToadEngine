@@ -12,6 +12,4 @@ global using ToadEngine.Classes.Base.Rendering;
 global using ToadEngine.Classes.Base.Scripting;
 global using ToadEngine.Classes.Base.UI;
 global using ToadEngine.Classes.Base.Colliders;
-global using DearImPlot;
-global using DearImGui;
-global using static ToadEngine.Classes.Base.Colliders.BaseCollider;
+global using static ToadEngine.Classes.Base.Colliders.Collider;

@@ -3,7 +3,7 @@ using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
-public class LavaScript : Behavior
+public class LavaScript : MonoBehavior
 {
     public Trigger Trigger = null!;
     public TriggerScript TriggerScript = null!;

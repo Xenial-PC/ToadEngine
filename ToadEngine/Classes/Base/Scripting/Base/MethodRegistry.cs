@@ -5,28 +5,28 @@ namespace ToadEngine.Classes.Base.Scripting.Base;
 
 public class MethodRegistry
 {
-    public static void RegisterMethods(Behavior behavior)
+    public static void RegisterMethods(MonoBehavior monoBehavior)
     {
         
-        behavior.AwakeMethod = RegisterMethod<Action>(paramLength: 0, "Awake", behavior);
-        behavior.StartMethod = RegisterMethod<Action>(paramLength: 0, "Start", behavior);
+        monoBehavior.AwakeMethod = RegisterMethod<Action>(paramLength: 0, "Awake", monoBehavior);
+        monoBehavior.StartMethod = RegisterMethod<Action>(paramLength: 0, "Start", monoBehavior);
 
-        behavior.UpdateMethod = RegisterMethod<Action>(paramLength: 0, "Update", behavior);
-        behavior.FixedUpdateMethod = RegisterMethod<Action>(paramLength: 0, "FixedUpdate", behavior);
-        behavior.OnGuiMethod = RegisterMethod<Action>(paramLength: 0, "OnGUI", behavior);
+        monoBehavior.UpdateMethod = RegisterMethod<Action>(paramLength: 0, "Update", monoBehavior);
+        monoBehavior.FixedUpdateMethod = RegisterMethod<Action>(paramLength: 0, "FixedUpdate", monoBehavior);
+        monoBehavior.OnGuiMethod = RegisterMethod<Action>(paramLength: 0, "OnGUI", monoBehavior);
 
-        behavior.OnTriggerEnterMethod = RegisterMethod<Action<GameObject>>(paramLength: 1, "OnTriggerEnter", behavior);
+        monoBehavior.OnTriggerEnterMethod = RegisterMethod<Action<GameObject>>(paramLength: 1, "OnTriggerEnter", monoBehavior);
         
-        behavior.OnTriggerExitMethod = RegisterMethod<Action<GameObject>>(paramLength: 1, "OnTriggerExit", behavior);
-        behavior.OnResizeMethod = RegisterMethod<Action<FramebufferResizeEventArgs>>(paramLength: 1, "OnResize", behavior);
+        monoBehavior.OnTriggerExitMethod = RegisterMethod<Action<GameObject>>(paramLength: 1, "OnTriggerExit", monoBehavior);
+        monoBehavior.OnResizeMethod = RegisterMethod<Action<FramebufferResizeEventArgs>>(paramLength: 1, "OnResize", monoBehavior);
 
-        behavior.DisposeMethod = RegisterMethod<Action>(paramLength: 0, "Dispose", behavior);
+        monoBehavior.DisposeMethod = RegisterMethod<Action>(paramLength: 0, "Dispose", monoBehavior);
 
         var actions = Service.Physics.Actions;
-        actions.OnCollision += RegisterMethod<Action<GameObject>>(paramLength: 1, "OnCollision", behavior);
+        actions.OnCollision += RegisterMethod<Action<GameObject>>(paramLength: 1, "OnCollision", monoBehavior);
 
-        actions.OnPreStep += RegisterMethod<Action<float>>(paramLength: 1, "OnPhysicsPreStep", behavior);
-        actions.OnPostStep += RegisterMethod<Action<float>>(paramLength: 1, "OnPhysicsPostStep", behavior);
+        actions.OnPreStep += RegisterMethod<Action<float>>(paramLength: 1, "OnPhysicsPreStep", monoBehavior);
+        actions.OnPostStep += RegisterMethod<Action<float>>(paramLength: 1, "OnPhysicsPostStep", monoBehavior);
     }
 
     /*private static T? RegisterMethod<T>(int paramLength, string method, Behavior behavior) where T : class
@@ -37,12 +37,12 @@ public class MethodRegistry
         return (Delegate.CreateDelegate(typeof(T), behavior, action) as T);
     }*/
 
-    private static T? RegisterMethod<T>(int paramLength, string method, Behavior behavior) where T : class
+    private static T? RegisterMethod<T>(int paramLength, string method, MonoBehavior monoBehavior) where T : class
     {
-        var type = behavior.GetType();
+        var type = monoBehavior.GetType();
         var paramTypes = typeof(T).GetMethod("Invoke")!.GetParameters().Select(p => p.ParameterType).ToArray();
         var action = type.GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, paramTypes, null);
         if (action == null || action.GetParameters().Length != paramLength) return null;
-        return (Delegate.CreateDelegate(typeof(T), behavior, action) as T);
+        return (Delegate.CreateDelegate(typeof(T), monoBehavior, action) as T);
     }
 }

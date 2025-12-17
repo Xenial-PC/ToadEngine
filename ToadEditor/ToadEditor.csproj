@@ -39,4 +39,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Classes\EditorCore\GUI\Elements\Widgets\" />
+  </ItemGroup>
+
 </Project>

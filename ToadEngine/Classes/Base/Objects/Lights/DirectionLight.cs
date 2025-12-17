@@ -1,14 +1,13 @@
-﻿using ToadEngine.Classes.Base.Rendering.Object;
-using ToadEngine.Classes.Base.Scripting.Renderer;
+﻿using ToadEngine.Classes.Base.Scripting.Renderer;
 
 namespace ToadEngine.Classes.Base.Objects.Lights;
 
-public class DirectionLight : GameObject
+public class DirectionLight : Light
 {
     public ShadowCaster ShadowCaster = null!;
     public LightRenderer LightRenderer = null!;
 
-    public BaseLight.DirectionLight Settings = new()
+    public DirectionLight Settings = new()
     {
         Direction = new Vector3(0f, 0f, 0f),
         Ambient = new Vector3(1.8f),
@@ -26,7 +25,7 @@ public class DirectionLight : GameObject
         ShadowCaster.FarPlane = 200f;
     }
 
-    public override void Setup()
+    public void Awake()
     {
         LightRenderer = AddComponent<LightRenderer>();
         LightRenderer.Settings = Settings;

@@ -4,15 +4,15 @@ using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Scripting;
 
-public class PhysicsBody : Behavior
+public class PhysicsBody : MonoBehavior
 {
-    public BaseCollider Collider = null!;
-    public BodyReference GetBodyRef => Service.Physics.Simulation.Bodies.GetBodyReference(Collider.Collider);
+    public Collider Collider = null!;
+    public BodyReference GetBodyRef => Service.Physics.Simulation.Bodies.GetBodyReference(Collider.BHandle);
 
     public void Start()
     {
-        if (GameObject.GetComponent<BaseCollider>() == null) return;
-        Collider = GameObject.GetComponent<BaseCollider>()!;
+        if (GameObject.GetComponent<Collider>() == null) return;
+        Collider = GameObject.GetComponent<Collider>()!;
     }
 
     public void Update()

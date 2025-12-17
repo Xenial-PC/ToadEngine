@@ -4,7 +4,7 @@ using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Scripting.Renderer;
 
-public class LightRenderer : Behavior, IRenderObject
+public class LightRenderer : MonoBehavior, IRenderObject
 {
     public dynamic Settings = null!;
     public int CurrentIndex;
@@ -19,8 +19,9 @@ public class LightRenderer : Behavior, IRenderObject
 
         GameObject.UpdateModelMatrix();
         CoreShader.SetMatrix4("model", GameObject.Model);
-        
-        switch (GameObject)
+
+        var light = GameObject.GetComponent<Light>();
+        switch (light)
         {
             case DirectionLight directionLight:
                 CoreShader.SetVector3($"dirLight.direction", Settings.Direction);
@@ -60,7 +61,8 @@ public class LightRenderer : Behavior, IRenderObject
 
     public void Dispose()
     {
-        switch (GameObject)
+        var light = GameObject.GetComponent<Light>();
+        switch (light)
         {
             case PointLight pointLight:
                 PointLight.LightIndex--;

@@ -1,12 +1,13 @@
 ﻿using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Textures;
 
 namespace ToadEditor.Classes.EditorCore.Renderer;
 
 public class EditorRenderTarget : IRenderTarget
 {
     public int FBO;
-    public int Texture;
+    public Texture Texture;
     public int DepthRBO;
 
     public int Width { get; private set; }
@@ -24,20 +25,21 @@ public class EditorRenderTarget : IRenderTarget
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
 
-    public void Resize(int width, int height)
+    public Texture Resize(int width, int height)
     {
+        var tex = new Texture();
+
         Width = width;
         Height = height;
 
         if (FBO != 0) GL.DeleteFramebuffer(FBO);
-        if (Texture != 0) GL.DeleteTexture(Texture);
         if (DepthRBO != 0) GL.DeleteRenderbuffer(DepthRBO);
 
         FBO = GL.GenFramebuffer();
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, FBO);
 
-        Texture = GL.GenTexture();
-        GL.BindTexture(TextureTarget.Texture2D, Texture);
+        tex.Handle = GL.GenTexture();
+        GL.BindTexture(TextureTarget.Texture2D, tex.Handle);
 
         GL.TexImage2D(
             TextureTarget.Texture2D,
@@ -61,7 +63,7 @@ public class EditorRenderTarget : IRenderTarget
             FramebufferTarget.Framebuffer,
             FramebufferAttachment.ColorAttachment0,
             TextureTarget.Texture2D,
-            Texture,
+            tex.Handle,
             0
         );
 
@@ -84,5 +86,7 @@ public class EditorRenderTarget : IRenderTarget
             Console.WriteLine($"[EditorRenderTarget] Framebuffer incomplete: {status}");
 
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+        return tex;
     }
 }

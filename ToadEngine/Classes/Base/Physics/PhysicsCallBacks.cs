@@ -57,8 +57,8 @@ public class PhysicsCallBacks
 
             pairMaterial.SpringSettings = isMaterialsFound ? matA!.SpringSettings : physics.Settings.SpringSettings;
 
-            var gameObjectA = Behavior.BodyToGameObject[pair.A.RawHandleValue];
-            var gameObjectB = Behavior.BodyToGameObject[pair.B.RawHandleValue];
+            var gameObjectA = MonoBehavior.BodyToGameObject[pair.A.RawHandleValue];
+            var gameObjectB = MonoBehavior.BodyToGameObject[pair.B.RawHandleValue];
 
             var collisionChecks =
                 isMaterialsFound &&

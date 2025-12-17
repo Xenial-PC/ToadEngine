@@ -4,7 +4,7 @@ using Vector3 = System.Numerics.Vector3;
 
 namespace ToadEngine.Classes.Base.Colliders;
 
-public class MeshCollider : BaseCollider
+public class MeshCollider : Collider
 {
     public OpenTK.Mathematics.Vector3 Size = OpenTK.Mathematics.Vector3.Zero;
     public Buffer<Triangle> Triangles;
@@ -17,33 +17,33 @@ public class MeshCollider : BaseCollider
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = Physics.ColliderManager.CreateTrigger.Mesh(
+                BHandle = Physics.ColliderManager.CreateTrigger.Mesh(
                     (Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size);
 
-                Handle = Collider.Value;
+                Handle = BHandle.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             case ColliderType.Kinematic:
-                Collider = Physics.ColliderManager.CreateKinematic.Mesh((Vector3)GameObject.Transform.Position,
+                BHandle = Physics.ColliderManager.CreateKinematic.Mesh((Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size);
 
-                Handle = Collider.Value;
+                Handle = BHandle.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             case ColliderType.Dynamic:
-                Collider = Physics.ColliderManager.CreateDynamic.Mesh((Vector3)GameObject.Transform.Position,
+                BHandle = Physics.ColliderManager.CreateDynamic.Mesh((Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size, Mass);
 
-                Handle = Collider.Value;
+                Handle = BHandle.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             case ColliderType.Static:
             {
-                SCollider = Physics.ColliderManager.CreateStatic.Mesh((Vector3)GameObject.Transform.Position,
+                SHandle = Physics.ColliderManager.CreateStatic.Mesh((Vector3)GameObject.Transform.Position,
                     Triangles, (Vector3)Size);
 
-                Handle = SCollider.Value;
+                Handle = SHandle.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             }

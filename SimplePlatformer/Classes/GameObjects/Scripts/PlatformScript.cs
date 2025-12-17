@@ -3,7 +3,7 @@ using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
-public class PlatformScript : Behavior
+public class PlatformScript : MonoBehavior
 {
     public Trigger Trigger = null!;
     public TriggerScript TriggerScript = null!;

@@ -21,7 +21,6 @@ public class ObjectManager
 
     public void Instantiate(GameObject gameObject, InstantiateType type = InstantiateType.Early)
     {
-        gameObject.Setup();
         gameObject.Name ??= $"go_{_goIndex++}";
 
         FinalizeBehaviors(gameObject);
@@ -38,7 +37,6 @@ public class ObjectManager
     {
         foreach (var gameObject in gameObjects)
         {
-            gameObject.Setup();
             gameObject.Name ??= $"go_{_goIndex++}";
 
             FinalizeBehaviors(gameObject);
@@ -174,6 +172,6 @@ public class ObjectManager
             DestroyObject(renderObject.Value);
         }
 
-        Behavior.BodyToGameObject.Clear();
+        Component.BodyToGameObject.Clear();
     }
 }

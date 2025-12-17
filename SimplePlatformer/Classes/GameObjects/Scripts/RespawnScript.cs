@@ -4,7 +4,7 @@ using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts;
 
-public class RespawnScript : Behavior
+public class RespawnScript : MonoBehavior
 {
     public Player Player = null!;
     public FPController Controller = null!;

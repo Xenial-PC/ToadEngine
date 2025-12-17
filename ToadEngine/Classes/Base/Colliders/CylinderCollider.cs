@@ -4,7 +4,7 @@ using BepuPhysics.Collidables;
 
 namespace ToadEngine.Classes.Base.Colliders;
 
-public class CylinderCollider : BaseCollider
+public class CylinderCollider : Collider
 {
     public float Radius;
     public Vector2 Size = Vector2.Zero;
@@ -17,28 +17,28 @@ public class CylinderCollider : BaseCollider
         switch (Type)
         {
             case ColliderType.Trigger:
-                Collider = Physics.ColliderManager.CreateTrigger.Cylinder((Vector3)GameObject.Transform.Position, Size);
+                BHandle = Physics.ColliderManager.CreateTrigger.Cylinder((Vector3)GameObject.Transform.Position, Size);
 
-                Handle = Collider.Value;
+                Handle = BHandle.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             case ColliderType.Kinematic:
-                Collider = Physics.ColliderManager.CreateKinematic.Cylinder((Vector3)GameObject.Transform.Position, Size);
+                BHandle = Physics.ColliderManager.CreateKinematic.Cylinder((Vector3)GameObject.Transform.Position, Size);
 
-                Handle = Collider.Value;
+                Handle = BHandle.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             case ColliderType.Dynamic:
-                Collider = Physics.ColliderManager.CreateDynamic.Cylinder((Vector3)GameObject.Transform.Position, Size, Mass);
+                BHandle = Physics.ColliderManager.CreateDynamic.Cylinder((Vector3)GameObject.Transform.Position, Size, Mass);
 
-                Handle = Collider.Value;
+                Handle = BHandle.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             case ColliderType.Static:
             {
-                SCollider = Physics.ColliderManager.CreateStatic.Cylinder((Vector3)GameObject.Transform.Position, Size);
+                SHandle = Physics.ColliderManager.CreateStatic.Cylinder((Vector3)GameObject.Transform.Position, Size);
 
-                Handle = SCollider.Value;
+                Handle = SHandle.Value;
                 BodyToGameObject[Handle] = GameObject;
                 break;
             }

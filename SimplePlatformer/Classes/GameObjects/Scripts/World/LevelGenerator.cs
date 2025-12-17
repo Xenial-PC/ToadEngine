@@ -2,6 +2,7 @@
 using SimplePlatformer.Classes.GameObjects.Event;
 using SimplePlatformer.Classes.GameObjects.Models;
 using ToadEngine.Classes.Base.Assets;
+using ToadEngine.Classes.Base.Objects.BuiltIn;
 using ToadEngine.Classes.Base.Rendering.Object;
 
 namespace SimplePlatformer.Classes.GameObjects.Scripts.World;
@@ -20,7 +21,8 @@ public class LevelGenerator
     {
         var level = new List<GameObject>();
 
-        var savePoint = new TexturedCube(AssetManager.GetMaterial("ConcreteMat"));
+        var savePoint = BuiltIns.Primitives.Cube();
+        savePoint.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("ConcreteMat");
         var savePointScript = savePoint.AddComponent<SavePointScript>();
 
         savePoint.Transform.Position = new Vector3(0f);
@@ -62,7 +64,8 @@ public class LevelGenerator
 
     private GameObject CreatePlatform(Random rand)
     {
-        var platform = new TexturedCube(AssetManager.GetMaterial("GraniteMat"));
+        var platform = BuiltIns.Primitives.Cube();
+        platform.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("GraniteMat");
         platform.Transform.LocalScale = new Vector3(3f, 14f, 3f);
 
         var platformScript = platform.AddComponent<PlatformScript>();
@@ -85,7 +88,8 @@ public class LevelGenerator
 
     private GameObject CreateMovingPlatform(Random rand)
     {
-        var platform = new TexturedCube(AssetManager.GetMaterial("GraniteMat"));
+        var platform = BuiltIns.Primitives.Cube();
+        platform.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("GraniteMat");
         platform.Transform.LocalScale = new Vector3(3f, 14f, 3f);
 
         var platformScript = platform.AddComponent<PlatformScript>();
@@ -94,7 +98,6 @@ public class LevelGenerator
         mPlatform.MovingSpeed = 0.4f;
         mPlatform.Player = Player;
         mPlatform.Controller = Player.GetComponent<FPController>()!;
-
 
         var maxHeight = Math.Max(_lastPosition.Y + rand.Next(1, 4), 8f);
         if (maxHeight >= 8f) maxHeight = rand.Next(-3, 0);
@@ -124,7 +127,8 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
 
-        var lava = new TexturedCube(AssetManager.GetMaterial("LavaMat"));
+        var lava = BuiltIns.Primitives.Cube();
+        lava.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("LavaMat");
         lava.Transform.Position = pos;
         lava.Transform.LocalScale = new Vector3(5f, 14f, 5f);
 
@@ -147,7 +151,8 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
 
-        var savePoint = new TexturedCube(AssetManager.GetMaterial("ConcreteMat"));
+        var savePoint = BuiltIns.Primitives.Cube();
+        savePoint.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("ConcreteMat");
         var savePointScript = savePoint.AddComponent<SavePointScript>();
 
         savePoint.Transform.Position = pos;
