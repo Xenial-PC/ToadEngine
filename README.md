@@ -3,21 +3,14 @@ TOAD – Transform, Optimize, Animate, Deploy
 
 Toad Engine is built to mimic the layout and structure of Unity as thats what I know best.  
 
-Added:  
-GameObject: Holds the model view, and handles drawing,  
-Behaviour: Very similar to unities MonoBehaviour these are components that are added directly to the GameObjects,  
-Physics: Using BepuPhysics Engine -> Colliders and Tick based Physics have been added, along with Raycasting.  
-UI: Using Guinevere for Immediate mode UI (In Game) and ImGUI for Editor UI.  
-
 TODO:  
 Write Game Engine Docs  
 
 Improve graphics:   
-Point Shadows  
-Normal Mapping,  
+Point Shadows   
 HDR Pipeline,  
 Bloom,  
-Deffered Shading,  
+Deffered Shading or Forward+,  
 SSAO  
 
 Work further on Sample Game -> Simple Platformer  
@@ -31,8 +24,7 @@ Xenial
 
 Special Thanks to the open source libraries:  
 
-UI / GUI:  
-[DearImGUI](https://github.com/aybe/DearImGui)  
+UI / GUI:
 [Paper](https://github.com/ProwlEngine/Prowl.Paper?tab=readme-ov-file)  
 
 Physcis:  
