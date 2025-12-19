@@ -4,15 +4,15 @@ public class Shader : IDisposable
 {
     private bool _isDisposing;
     public int Handle;
-    private readonly string _vert, _frag;
+    public string Vert, Frag;
+    public string Name;
 
-    public Shader(string vertex, string fragment)
+    public Shader() { }
+
+    public static Shader LoadShader(string name, string vert, string frag)
     {
-        _vert = vertex;
-        _frag = fragment;
-
-        var vertexShaderSource = RReader.ReadText(vertex);
-        var fragmentShaderSource = RReader.ReadText(fragment);
+        var vertexShaderSource = RReader.ReadText(vert);
+        var fragmentShaderSource = RReader.ReadText(frag);
 
         var vertexShader = GL.CreateShader(ShaderType.VertexShader);
         GL.ShaderSource(vertexShader, vertexShaderSource);
@@ -36,23 +36,33 @@ public class Shader : IDisposable
             Console.WriteLine($"Error compiling shader:\n{infoLog}");
         }
 
-        Handle = GL.CreateProgram();
-        GL.AttachShader(Handle, vertexShader);
-        GL.AttachShader(Handle, fragmentShader);
+        var handle = GL.CreateProgram();
+        GL.AttachShader(handle, vertexShader);
+        GL.AttachShader(handle, fragmentShader);
 
-        GL.LinkProgram(Handle);
-        GL.GetProgram(Handle, GetProgramParameterName.LinkStatus, out success);
+        GL.LinkProgram(handle);
+        GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out success);
         if (success == 0)
         {
-            var infoLog = GL.GetProgramInfoLog(Handle);
+            var infoLog = GL.GetProgramInfoLog(handle);
             Console.WriteLine($"Error Linking Program:\n{infoLog}");
         }
 
-        GL.DetachShader(Handle, vertexShader);
-        GL.DetachShader(Handle, fragmentShader);
+        GL.DetachShader(handle, vertexShader);
+        GL.DetachShader(handle, fragmentShader);
 
         GL.DeleteShader(fragmentShader);
         GL.DeleteShader(vertexShader);
+
+        var shader = new Shader()
+        {
+            Frag = frag,
+            Vert = vert,
+            Handle = handle,
+            Name = name,
+        };
+
+        return shader;
     }
 
     public void Use()
@@ -119,11 +129,12 @@ public class Shader : IDisposable
     ~Shader()
     {
         if (_isDisposing) return;
-        Console.WriteLine($"GPU Resource Leak! Remember to call Dispose():\n{_vert}\n{_frag}");
+        Console.WriteLine($"GPU Resource Leak! Remember to call Dispose():\n{Vert}\n{Frag}");
     }
 
     public void Dispose()
     {
+        ShaderManager.Remove(Name);
         Dispose(true);
         GC.SuppressFinalize(this);
     }

@@ -5,8 +5,12 @@ using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace ToadEngine.Classes.Base.Objects.View;
 
-public class Camera : GameObject
+public class Camera : MonoBehavior
 {
+    public static Camera MainCamera => Service.Scene.ObjectManager.FindGameObjectByTag("MainCamera")?.GetComponent<Camera>()!;
+
+    public static List<GameObject> GameObjects => Service.Scene.ObjectManager.GameObjects.Select(val => val.Value).ToList();
+
     private Vector3 _front = -Vector3.UnitZ;
     private Vector3 _up = Vector3.UnitY;
     private Vector3 _right = Vector3.UnitX;
@@ -19,14 +23,9 @@ public class Camera : GameObject
 
     private bool _firstMove = true;
 
-    public float AspectRatio { get; set; }
+    public float AspectRatio;
 
     public float DepthNear = .01f, DepthFar = 2000f;
-
-    public Camera()
-    {
-        AspectRatio = (Scene.RenderTarget.Width / (float)Scene.RenderTarget.Height);
-    }
 
     public Vector3 Front
     {
@@ -68,37 +67,10 @@ public class Camera : GameObject
         }
     }
 
-    public Matrix4 GetViewMatrix()
+    public void Awake()
     {
-        return Matrix4.LookAt(Transform.LocalPosition, Transform.LocalPosition + _front, _up);
+        AspectRatio = (Scene.RenderTarget.Width / (float)Scene.RenderTarget.Height);
     }
-
-    public Matrix4 GetProjectionMatrix()
-    {
-        return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, DepthNear, DepthFar);
-    }
-
-    public void UpdateVectors()
-    {
-        var pitch = MathHelper.DegreesToRadians(Transform.LocalRotation.X);
-        var yaw = MathHelper.DegreesToRadians(Transform.LocalRotation.Y);
-        var roll = MathHelper.DegreesToRadians(Transform.LocalRotation.Z);
-
-        _front.X = MathF.Cos(pitch) * MathF.Cos(yaw);
-        _front.Y = MathF.Sin(pitch);
-        _front.Z = MathF.Cos(pitch) * MathF.Sin(yaw);
-
-        _front = Vector3.Normalize(_front);
-
-        _right = Vector3.Normalize(Vector3.Cross(Vector3.UnitY, _front));
-        _up = Vector3.Normalize(Vector3.Cross(_front, _right));
-
-        if (roll == 0) return;
-        var rollMatrix = Matrix3.CreateFromAxisAngle(_front, roll);
-        _right = Vector3.TransformVector(_right, new Matrix4(rollMatrix));
-        _up = Vector3.TransformVector(_up, new Matrix4(rollMatrix));
-    }
-
 
     public void Update()
     {
@@ -128,5 +100,30 @@ public class Camera : GameObject
         Transform.LocalRotation.X = MathHelper.Clamp(Transform.LocalRotation.X, -89f, 89f);
 
         UpdateVectors();
+    }
+
+    public Matrix4 GetViewMatrix() => Matrix4.LookAt(Transform.LocalPosition, Transform.LocalPosition + _front, _up);
+
+    public Matrix4 GetProjectionMatrix() => Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, DepthNear, DepthFar);
+
+    public void UpdateVectors()
+    {
+        var pitch = MathHelper.DegreesToRadians(Transform.LocalRotation.X);
+        var yaw = MathHelper.DegreesToRadians(Transform.LocalRotation.Y);
+        var roll = MathHelper.DegreesToRadians(Transform.LocalRotation.Z);
+
+        _front.X = MathF.Cos(pitch) * MathF.Cos(yaw);
+        _front.Y = MathF.Sin(pitch);
+        _front.Z = MathF.Cos(pitch) * MathF.Sin(yaw);
+
+        _front = Vector3.Normalize(_front);
+
+        _right = Vector3.Normalize(Vector3.Cross(Vector3.UnitY, _front));
+        _up = Vector3.Normalize(Vector3.Cross(_front, _right));
+
+        if (roll == 0) return;
+        var rollMatrix = Matrix3.CreateFromAxisAngle(_front, roll);
+        _right = Vector3.TransformVector(_right, new Matrix4(rollMatrix));
+        _up = Vector3.TransformVector(_up, new Matrix4(rollMatrix));
     }
 }

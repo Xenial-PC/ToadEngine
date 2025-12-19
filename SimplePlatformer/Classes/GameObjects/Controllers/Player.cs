@@ -43,8 +43,8 @@ public class FPController : MonoBehavior
         Sources.Add("movement", new Source());
         Sources.Add("jump", new Source());
 
-        Camera = Service.MainCamera;
-        GameObject.AddChild(Camera);
+        Camera = Camera.MainCamera;
+        GameObject.AddChild(Camera.GameObject);
 
         Collider = GameObject.AddComponent<BoxCollider>();
         Collider.Type = ColliderType.Dynamic;

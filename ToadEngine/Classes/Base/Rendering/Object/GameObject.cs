@@ -1,4 +1,5 @@
-﻿using ToadEngine.Classes.Base.Physics.Managers;
+﻿using Prowl.Echo;
+using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
@@ -11,9 +12,10 @@ public class GameObject
 
     public string? Name = null;
 
-    public List<IRenderObject> Renderers => Component.GetOfType<IRenderObject>();
+    public List<RenderObject> Renderers => Component.GetOfType<RenderObject>();
 
     public ComponentManager Component = new();
+    public Tags Tags = new();
 
     public Transform Transform
     {
@@ -58,6 +60,11 @@ public class GameObject
     public T GetComponent<T>(string name) where T : class => Component.Get<T>(name);
     public List<T> GetComponentsOfType<T>(string name) where T : class => Component.GetOfType<T>();
     public List<object> Components => Component.Components;
+
+    public bool HasTag(string name) => Tags.HasTag(name);
+    public List<string> GetTags => Tags.GetTags;
+    public void AddTag(string tag) => Tags.AddTag(tag);
+    public void RemoveTag(string tag) => Tags.RemoveTag(tag);
 
     public void UpdateModelMatrix()
     {
@@ -132,9 +139,9 @@ public class GameObject
 
     public void RegisterBehavior(MonoBehavior monoBehavior)
     {
+        monoBehavior.GameObject = this;
         MethodRegistry.RegisterMethods(monoBehavior);
 
-        monoBehavior.GameObject = this;
         GUI.GuiCallBack += monoBehavior.OnGuiMethod;
     }
 
@@ -199,4 +206,6 @@ public class GameObject
                 component.OnTriggerExitMethod?.Invoke(objA);
         };
     }
+
+    public EchoObject Serialized => Serializer.Serialize(this);
 }

@@ -1,7 +1,9 @@
 ﻿using OpenTK.Audio.OpenAL;
+using Prowl.Echo;
 using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Objects.Lights;
+using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
@@ -10,20 +12,34 @@ using ToadEngine.Classes.Textures;
 
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
 
+public class SceneSettings
+{
+    public bool IsRunning;
+}
+
 public class Scene
 {
-    public NativeWindow WHandler = null!;
-    public Window.Window Window = null!;
+    public Scene() {}
+
+    [SerializeIgnore] public NativeWindow WHandler = null!;
+    [SerializeIgnore] public Window.Window Window = null!;
 
     public AudioManager AudioManager = null!;
     public ObjectManager ObjectManager = new();
 
-    public IRenderTarget RenderTarget = null!;
+    public SceneSettings Settings = new();
 
-    public Shader CoreShader => Service.CoreShader;
+    [SerializeIgnore] public IRenderTarget RenderTarget = null!;
+
+    public Shader CoreShader;
     public static Shader ShadowMapShader = null!;
 
+    public AssetManager AssetManager = new();
+    public ShaderManager ShaderManager = new();
+
     public GameObject Scripts = new() { Name = "Scripts" };
+
+    [SerializeIgnore] public Action? PreUpdate, PostUpdate, PreRender, PostRender;
 
     public virtual void Setup() { }
     public virtual void OnStart() { }
@@ -46,14 +62,16 @@ public class Scene
 
     public void Draw(float deltaTime)
     {
+        PreRender?.Invoke();
         DrawFirstPass(deltaTime);
         DrawSecondPass(deltaTime);
+        PostRender?.Invoke();
     }
 
     private void DrawSecondPass(float deltaTime)
     {
-        Service.CoreShader = Window.CoreShader;
-
+        Service.CoreShader = CoreShader;
+       
         RenderTarget.Bind();
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -127,8 +145,11 @@ public class Scene
     public void Update(FrameEventArgs e)
     {
         Time.DeltaTime = (float)e.Time;
-        Time.AccumulatedTime += (float)e.Time;
 
+        PreUpdate?.Invoke();
+        if (!Settings.IsRunning) return;
+
+        Time.AccumulatedTime += (float)e.Time;
         while (Time.AccumulatedTime >= Time.FixedDeltaTime)
         {
             if (!Service.Physics.IsPhysicsPaused) 
@@ -140,13 +161,15 @@ public class Scene
 
         OnUpdate(e);
         ObjectManager.UpdateGameObjects();
+        ObjectManager.UpdateBehaviors();
         OnLateUpdate(e);
+        PostUpdate?.Invoke();
     }
 
     public virtual void OnResize(FramebufferResizeEventArgs e)
     {
         ObjectManager.ResizeGameObjects(e);
-        Service.MainCamera.AspectRatio = (RenderTarget.Width / (float)RenderTarget.Height);
+        Camera.MainCamera.AspectRatio = (RenderTarget.Width / (float)RenderTarget.Height);
     }
 
     public void Load(NativeWindow state, Window.Window window, IRenderTarget? target)
@@ -156,6 +179,9 @@ public class Scene
 
         Service.Add(WHandler);
         Service.Add(Window);
+        
+        Service.Add(AssetManager);
+        Service.Add(ShaderManager);
 
         RenderTarget = target ?? new WindowRenderTarget();
 
@@ -163,13 +189,23 @@ public class Scene
         AudioManager.SetDistanceModel(ALDistanceModel.InverseDistanceClamped);
 
         AudioManager.Init();
-        ShadowMapShader = new Shader("shadowmap.vert", "shadowmap.frag");
+        ShadowMapShader = ShaderManager.Add("ShadowMap", "shadowmap.vert", "shadowmap.frag");
+
+        CreateCoreShader();
 
         Setup();
         Start();
 
         ObjectManager.Instantiate(Scripts);
         GameObject.SetupTriggers();
+    }
+
+
+    private void CreateCoreShader()
+    {
+        CoreShader = ShaderManager.Add("CoreShader", $"core.vert", $"lighting.frag");
+        CoreShader.Use();
+        Service.Add(CoreShader);
     }
 
     public void Destroy()
@@ -181,7 +217,7 @@ public class Scene
         AudioManager?.Dispose();
         ShadowMapShader?.Dispose();
 
-        Window?.CoreShader?.Dispose();
+        CoreShader?.Dispose();
 
         Service.Clear();
         Texture.ClearTextures();
@@ -191,4 +227,6 @@ public class Scene
 
         Dispose();
     }
+
+    public EchoObject Serialized => Serializer.Serialize(this);
 }

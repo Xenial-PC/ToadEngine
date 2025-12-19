@@ -1,4 +1,5 @@
-﻿using ToadEngine.Classes.Base.Objects.View;
+﻿using ToadEngine.Classes.Base.Assets;
+using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
@@ -47,12 +48,22 @@ public static class Service
         }
     }
 
-    public static Camera MainCamera
+    public static ShaderManager ShaderManager
     {
-        get => Get<Camera>()!;
+        get => Get<ShaderManager>()!;
         set
         {
-            Remove<Camera>();
+            Remove<ShaderManager>();
+            Add(value);
+        }
+    }
+
+    public static AssetManager AssetManager
+    {
+        get => Get<AssetManager>()!;
+        set
+        {
+            Remove<AssetManager>();
             Add(value);
         }
     }

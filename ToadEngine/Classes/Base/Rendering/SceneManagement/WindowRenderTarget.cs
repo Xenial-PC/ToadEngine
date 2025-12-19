@@ -11,6 +11,7 @@ public class WindowRenderTarget() : IRenderTarget
 
     public void Bind()
     {
+        if (!Service.Scene.Settings.IsRunning) Service.Scene.Settings.IsRunning = true;
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         GL.Viewport(0, 0, Width, Height);
     }

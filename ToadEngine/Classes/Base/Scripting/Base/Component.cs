@@ -1,4 +1,5 @@
-﻿using Prowl.PaperUI;
+﻿using Prowl.Echo;
+using Prowl.PaperUI;
 using ToadEngine.Classes.Base.Audio;
 using ToadEngine.Classes.Base.Physics;
 using ToadEngine.Classes.Base.Raycasting;
@@ -14,6 +15,7 @@ public abstract class Component
 
     public RaycastManager Raycast = new(Service.Physics.BufferPool);
     public static Dictionary<int, GameObject> BodyToGameObject = new();
+
     public GameObject GameObject = null!;
 
     public Transform Transform => GameObject.Transform;
@@ -31,8 +33,6 @@ public abstract class Component
     public Paper UI => GUI.UI;
     public Shader CoreShader => Service.CoreShader;
 
-    public GameObject? FindGameObject(string name) => Scene.ObjectManager.FindGameObject(name);
-
     public void LoadScene(string name) => Service.Window.LoadScene(name);
 
     public T AddComponent<T>() where T : new() => GameObject.Component.Add<T>(GameObject);
@@ -45,9 +45,26 @@ public abstract class Component
     public List<T> GetComponentsOfType<T>(string name) where T : class => GameObject.Component.GetOfType<T>();
     public List<object> Components => GameObject.Component.Components;
 
+    public GameObject? FindGameObject(string name) => Scene.ObjectManager.FindGameObject(name);
+    public GameObject? FindGameObjectByTag(string tag) => Scene.ObjectManager.FindGameObjectByTag(tag);
+    public List<GameObject>? FindGameObjectsByTag(string tag) => Scene.ObjectManager.FindGameObjectsByTag(tag);
+
+    public List<string> GetTags => GameObject.GetTags;
+    public bool HasTag(string name) => GameObject.HasTag(name);
+    public void AddTag(string name) => GameObject.Tags.AddTag(name);
+    public void RemoveTag(string name) => GameObject.Tags.RemoveTag(name);
+
     public void Instantiate(GameObject gameObject, InstantiateType type = InstantiateType.Early) =>
         Scene.Instantiate(gameObject, type);
 
     public void Instantiate(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early) =>
         Scene.Instantiate(gameObjects, type);
+
+    public void Destroy(GameObject gameObject, InstantiateType type = InstantiateType.Early) =>
+        Scene.DestroyObject(gameObject, type);
+
+    public void Destroy(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early) =>
+        Scene.DestroyObject(gameObjects, type);
+
+    public EchoObject Serialize => Serializer.Serialize(this);
 }

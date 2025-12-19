@@ -60,7 +60,7 @@ public class Skybox : MonoBehavior
 
     public void Awake()
     {
-        _skyboxShader = new Shader($"skybox.vert", $"skybox.frag");
+        _skyboxShader = ShaderManager.Add("Skybox", $"skybox.vert", $"skybox.frag");
 
         GL.GenVertexArrays(1, out _skyboxVao);
         GL.GenBuffers(1, out _skyboxVbo);

@@ -19,6 +19,8 @@ public class Mesh
 
     private uint _vao, _vbo, _ebo;
 
+    public Mesh() {}
+
     public Mesh(List<Vertex> vertices, List<int> indices, InternalMat mat)
     {
         Vertices = vertices;

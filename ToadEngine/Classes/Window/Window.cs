@@ -10,8 +10,6 @@ public class Window : GameWindow
     public int Width { get; private set; }
     public int Height { get; private set; }
 
-    public Shader CoreShader = null!;
-
     public Scene? CurrentScene { get; set; }
     public IRenderTarget? RenderTarget = null;
 
@@ -76,7 +74,6 @@ public class Window : GameWindow
 
     public virtual void OnDispose()
     {
-        CoreShader.Dispose();
         GUI.Dispose();
     }
 
@@ -100,20 +97,19 @@ public class Window : GameWindow
     public void LoadScene(string name)
     {
         CurrentScene?.Destroy();
-        CreateCoreShader();
-
         CurrentScene = SceneManager.Create(name);
         Service.Add(CurrentScene);
 
         CurrentScene.Load(this, this, RenderTarget);
     }
 
-    private void CreateCoreShader()
+    public void LoadScene(Scene sceneObject)
     {
-        CoreShader = new Shader($"core.vert", $"lighting.frag");
-        CoreShader.Use();
+        CurrentScene?.Destroy();
+        CurrentScene = sceneObject;
+        Service.Add(CurrentScene);
 
-        Service.Add(CoreShader);
+        CurrentScene.Load(this, this, RenderTarget);
     }
 
     #region InputHandling

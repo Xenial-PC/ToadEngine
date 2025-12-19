@@ -6,9 +6,9 @@ namespace ToadEngine.Classes.Base.Assets;
 
 public class Material
 {
-    public Shader Shader { get; set; } = Service.CoreShader;
-    public Texture? Diffuse { get; set; }
-    public Texture? Specular { get; set; }
-    public Texture? Normal { get; set; }
-    public Texture? Height { get; set; }
+    public Shader Shader = Service.CoreShader;
+    public Texture? Diffuse;
+    public Texture? Specular;
+    public Texture? Normal;
+    public Texture? Height;
 }

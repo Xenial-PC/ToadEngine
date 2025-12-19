@@ -21,9 +21,9 @@ public class LevelGenerator
     {
         var level = new List<GameObject>();
 
-        var savePoint = BuiltIns.Primitives.Cube();
+        var savePoint = BuiltIn.Primitives.Cube;
         savePoint.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("ConcreteMat");
-        var savePointScript = savePoint.AddComponent<SavePointScript>();
+        savePoint.AddComponent<SavePointScript>();
 
         savePoint.Transform.Position = new Vector3(0f);
         savePoint.Transform.LocalScale = new Vector3(4f, 12f, 4f);
@@ -64,7 +64,7 @@ public class LevelGenerator
 
     private GameObject CreatePlatform(Random rand)
     {
-        var platform = BuiltIns.Primitives.Cube();
+        var platform = BuiltIn.Primitives.Cube;
         platform.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("GraniteMat");
         platform.Transform.LocalScale = new Vector3(3f, 14f, 3f);
 
@@ -88,7 +88,7 @@ public class LevelGenerator
 
     private GameObject CreateMovingPlatform(Random rand)
     {
-        var platform = BuiltIns.Primitives.Cube();
+        var platform = BuiltIn.Primitives.Cube;
         platform.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("GraniteMat");
         platform.Transform.LocalScale = new Vector3(3f, 14f, 3f);
 
@@ -127,7 +127,7 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
 
-        var lava = BuiltIns.Primitives.Cube();
+        var lava = BuiltIn.Primitives.Cube;
         lava.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("LavaMat");
         lava.Transform.Position = pos;
         lava.Transform.LocalScale = new Vector3(5f, 14f, 5f);
@@ -151,7 +151,7 @@ public class LevelGenerator
         var distance = Math.Max(_lastPosition.Z + rand.Next(5, 13), _lastPosition.Z + 10f);
         var pos = new Vector3(_flipDirection ? rand.Next(2, 4) : rand.Next(-4, -2), maxHeight, _isFirstPlatform ? 5f : distance);
 
-        var savePoint = BuiltIns.Primitives.Cube();
+        var savePoint = BuiltIn.Primitives.Cube;
         savePoint.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("ConcreteMat");
         var savePointScript = savePoint.AddComponent<SavePointScript>();
 

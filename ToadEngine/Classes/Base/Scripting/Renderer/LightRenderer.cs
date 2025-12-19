@@ -1,15 +1,15 @@
-﻿using ToadEngine.Classes.Base.Objects.Lights;
+﻿using Prowl.Echo;
+using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Rendering.Object;
-using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Scripting.Renderer;
 
-public class LightRenderer : MonoBehavior, IRenderObject
+public class LightRenderer : RenderObject
 {
-    public dynamic Settings = null!;
-    public int CurrentIndex;
+    [SerializeField] public dynamic Settings = null!;
+    [SerializeField] public int CurrentIndex;
 
-    public void Draw()
+    public override void Draw()
     {
         if (GameObject == null) return;
 

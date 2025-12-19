@@ -1,4 +1,6 @@
 ﻿using System.Reflection.PortableExecutable;
+using Prowl.Echo;
+using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
@@ -11,13 +13,19 @@ public enum InstantiateType
 
 public class ObjectManager
 {
-    public Dictionary<string, GameObject> GameObjects { get; set; } = new();
-    public Dictionary<string, GameObject> GameObjectsLast { get; set; } = new();
+    public Dictionary<string, GameObject> GameObjects = new();
+    public Dictionary<string, GameObject> GameObjectsLast = new();
 
     private int _goIndex;
 
     public GameObject? FindGameObject(string name) =>
         GameObjects.GetValueOrDefault(name) ?? GameObjectsLast.GetValueOrDefault(name);
+
+    public GameObject? FindGameObjectByTag(string tag) =>
+        GameObjects.Select(go => go.Value).FirstOrDefault(goTag => goTag.HasTag(tag));
+
+    public List<GameObject>? FindGameObjectsByTag(string tag) =>
+        GameObjects.Where(go => go.Value.HasTag(tag)).Select(go => go.Value).ToList();
 
     public void Instantiate(GameObject gameObject, InstantiateType type = InstantiateType.Early)
     {
@@ -27,10 +35,17 @@ public class ObjectManager
         if (type == InstantiateType.Early)
         {
             GameObjects.TryAdd(gameObject.Name, gameObject);
+            if (!gameObject.HasChildren) return;
+            foreach (var obj in gameObject.Children)
+                Instantiate(obj, type);
+
             return;
         }
 
         GameObjectsLast.TryAdd(gameObject.Name, gameObject);
+        if (!gameObject.HasChildren) return;
+        foreach (var obj in gameObject.Children)
+            Instantiate(obj, type);
     }
 
     public void Instantiate(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early)
@@ -43,10 +58,17 @@ public class ObjectManager
             if (type == InstantiateType.Early)
             {
                 GameObjects.TryAdd(gameObject.Name, gameObject);
+                if (!gameObject.HasChildren) continue;
+                foreach (var obj in gameObject.Children)
+                    Instantiate(obj, type);
+
                 continue;
             }
 
             GameObjectsLast.TryAdd(gameObject.Name, gameObject);
+            if (!gameObject.HasChildren) continue;
+            foreach (var obj in gameObject.Children)
+                Instantiate(obj, type);
         }
     }
 
@@ -57,10 +79,17 @@ public class ObjectManager
         if (type == InstantiateType.Early)
         {
             GameObjects.Remove(gameObject.Name!);
+            if (!gameObject.HasChildren) return;
+            foreach (var obj in gameObject.Children)
+                DestroyObject(obj, type);
+
             return;
         }
 
         GameObjectsLast.Remove(gameObject.Name!);
+        if (!gameObject.HasChildren) return;
+        foreach (var obj in gameObject.Children)
+            DestroyObject(obj, type);
     }
 
     public void DestroyObject(List<GameObject> gameObjects, InstantiateType type = InstantiateType.Early)
@@ -70,10 +99,17 @@ public class ObjectManager
             if (type == InstantiateType.Early)
             {
                 GameObjects.Remove(gameObject.Name!);
+                if (!gameObject.HasChildren) continue;
+                foreach (var obj in gameObject.Children)
+                    DestroyObject(obj, type);
+
                 continue;
             }
 
             GameObjectsLast.Remove(gameObject.Name!);
+            if (!gameObject.HasChildren) continue;
+            foreach (var obj in gameObject.Children)
+                DestroyObject(obj, type);
         }
     }
 
@@ -95,7 +131,7 @@ public class ObjectManager
     public void DrawGameObjects()
     {
         var coreShader = Service.CoreShader;
-        var camera = Service.MainCamera;
+        var camera = Camera.MainCamera;
 
         if (camera != null!)
         {
@@ -114,16 +150,10 @@ public class ObjectManager
     public void UpdateGameObjects()
     {
         foreach (var render in GameObjects)
-        {
             render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehaviors();
-        }
 
         foreach (var render in GameObjectsLast)
-        {
             render.Value.UpdateWorldTransform();
-            render.Value.UpdateBehaviors();
-        }
     }
 
     public void UpdateBehaviorsFixedTime()
@@ -139,6 +169,15 @@ public class ObjectManager
             render.Value.UpdateWorldTransform();
             render.Value.UpdateBehaviorsFixedTime();
         }
+    }
+
+    public void UpdateBehaviors()
+    {
+        foreach (var render in GameObjects)
+            render.Value.UpdateBehaviors();
+
+        foreach (var render in GameObjectsLast)
+            render.Value.UpdateBehaviors();
     }
 
     public void ResizeGameObjects(FramebufferResizeEventArgs e)

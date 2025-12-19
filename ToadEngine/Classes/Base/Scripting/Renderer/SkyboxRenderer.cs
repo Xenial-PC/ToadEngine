@@ -1,17 +1,18 @@
-﻿using ToadEngine.Classes.Base.Rendering.Object;
-using ToadEngine.Classes.Base.Scripting.Base;
+﻿using Prowl.Echo;
+using ToadEngine.Classes.Base.Objects.View;
+using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Shaders;
 
 namespace ToadEngine.Classes.Base.Scripting.Renderer;
 
-public class SkyboxRenderer : MonoBehavior, IRenderObject
+public class SkyboxRenderer : RenderObject
 {
-    public Shader SkyboxShader = null!;
-    public int SkyboxVAO;
+    [SerializeField] public Shader SkyboxShader = null!;
+    [SerializeField] public int SkyboxVAO;
 
-    public void Draw()
+    public override void Draw()
     {
-        var camera = Service.MainCamera;
+        var camera = Camera.MainCamera;
 
         GL.DepthFunc(DepthFunction.Lequal);
         GL.DepthMask(false);

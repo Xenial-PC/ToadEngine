@@ -15,7 +15,7 @@ public class GUI
     public static CanvasRenderer CanvasRenderer;
     public static Paper UI;
    
-    public static Action? GuiCallBack;
+    public static Action? GuiCallBack, StaticGuiCallBack;
     
     public static void Init(Window.Window window)
     {
@@ -35,6 +35,7 @@ public class GUI
     public static void Render()
     {
         UI.BeginFrame(Time.DeltaTime);
+        StaticGuiCallBack?.Invoke();
         GuiCallBack?.Invoke();
         UI.EndFrame();
     }

@@ -1,4 +1,5 @@
 ﻿using ToadEditor.Classes.EditorCore.GUI.Base;
+using ToadEditor.Classes.EditorCore.Modules;
 using ToadEditor.Classes.EditorCore.Renderer;
 using ToadEditor.Classes.EditorCore.Scenes;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
@@ -24,6 +25,8 @@ public class Editor(int width, int height, string title) : Window(width, height,
 
         SceneManager.Register<TestScene>("test");
         LoadScene("test");
+
+        HookManager.SetupHooks();
     }
 
     public override void OnInit()

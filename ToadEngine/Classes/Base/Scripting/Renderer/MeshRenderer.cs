@@ -1,14 +1,13 @@
 ﻿using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Rendering.Object;
-using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Scripting.Renderer;
 
-public class MeshRenderer : MonoBehavior, IRenderObject
+public class MeshRenderer : RenderObject
 {
-    public Model Model { get; set; } = null!;
+    public Model Model = null!;
 
-    public void Draw()
+    public override void Draw()
     {
         CoreShader.Use();
         GameObject.UpdateModelMatrix();

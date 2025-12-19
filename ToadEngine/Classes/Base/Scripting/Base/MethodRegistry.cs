@@ -7,7 +7,6 @@ public class MethodRegistry
 {
     public static void RegisterMethods(MonoBehavior monoBehavior)
     {
-        
         monoBehavior.AwakeMethod = RegisterMethod<Action>(paramLength: 0, "Awake", monoBehavior);
         monoBehavior.StartMethod = RegisterMethod<Action>(paramLength: 0, "Start", monoBehavior);
 
@@ -28,14 +27,6 @@ public class MethodRegistry
         actions.OnPreStep += RegisterMethod<Action<float>>(paramLength: 1, "OnPhysicsPreStep", monoBehavior);
         actions.OnPostStep += RegisterMethod<Action<float>>(paramLength: 1, "OnPhysicsPostStep", monoBehavior);
     }
-
-    /*private static T? RegisterMethod<T>(int paramLength, string method, Behavior behavior) where T : class
-    {
-        var type = behavior.GetType();
-        var action = type.GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-        if (action == null || action.GetParameters().Length != paramLength) return null;
-        return (Delegate.CreateDelegate(typeof(T), behavior, action) as T);
-    }*/
 
     private static T? RegisterMethod<T>(int paramLength, string method, MonoBehavior monoBehavior) where T : class
     {

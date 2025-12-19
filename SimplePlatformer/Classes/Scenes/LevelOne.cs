@@ -37,7 +37,7 @@ public class LevelOne : Scene
 
         var baseDirectory = $"{Directory.GetCurrentDirectory()}/Resources/";
 
-        _skybox = BuiltIns.World.Skybox();
+        _skybox = BuiltIn.World.Skybox;
         _skybox.Material = new SkyboxMaterial()
         {
             Right = $"{baseDirectory}Textures/level_one_skybox/right.png",
@@ -48,9 +48,8 @@ public class LevelOne : Scene
             Back = $"{baseDirectory}Textures/level_one_skybox/back.png",
         };
 
-        _camera = new Camera();
-        Service.MainCamera = _camera;
-
+        _camera = BuiltIn.World.CreateMainCamera();
+        
         PauseMenu = Scripts.AddComponent<PauseMenu>();
         EndOfLevelMenu = Scripts.AddComponent<EOLMenu>();
 
@@ -59,7 +58,7 @@ public class LevelOne : Scene
         _player.Name = "player";
         _player.AddComponent<FPController>();
 
-        _directionLight = BuiltIns.Lights.DirectionLight();
+        _directionLight = BuiltIn.Lights.DirectionLight;
         _directionLight.Settings.Direction = new Vector3(0f, -1f, 0);
         _directionLight.Transform.Rotation = new Vector3(-1f, -1.5f, -1f);
 
@@ -91,7 +90,7 @@ public class LevelOne : Scene
         {
             for (var j = -5; j < 5; j++) 
             {
-                var lava = BuiltIns.Primitives.Cube();
+                var lava = BuiltIn.Primitives.Cube;
                 lava.AddComponent<TexturedCube>().Material = AssetManager.GetMaterial("LavaMat");
                 
                 lava.Transform.LocalScale = new Vector3(1000f, 1f, 1000f);

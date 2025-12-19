@@ -2,6 +2,7 @@
 using ToadEditor.Classes.EditorCore.GUI.Base;
 using ToadEditor.Classes.EditorCore.GUI.Components;
 using ToadEditor.Classes.EditorCore.Renderer;
+using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Textures;
 
@@ -24,7 +25,7 @@ public class SceneViewTab(EditorRenderTarget target, DockType dockType) : TabMen
         if (Width != (int)containerSize.Width || Height != (int)containerSize.Height)
         {
             Texture = target.Resize((int)containerSize.Width, (int)containerSize.Height);
-            Service.MainCamera.AspectRatio = target.Width / (float)target.Height;
+            Camera.MainCamera.AspectRatio = target.Width / (float)target.Height;
 
             Width = (int)containerSize.Width;
             Height = (int)containerSize.Height;

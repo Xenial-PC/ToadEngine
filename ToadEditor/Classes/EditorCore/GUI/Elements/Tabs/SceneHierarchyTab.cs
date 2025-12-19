@@ -50,6 +50,8 @@ public class SceneHierarchyTab(DockType dockType) : TabMenu(dockType, "Hierarchy
                 var childIndent = 0;
                 DrawGameObject(go, ref childIndent);
             }
+
+            UI.Box("BottomPadding").Height(40);
         }
     }
 
@@ -101,5 +103,5 @@ public class SceneHierarchyTab(DockType dockType) : TabMenu(dockType, "Hierarchy
     }
 
     public GameObject? FindGameObject(string name) => Service.Scene.ObjectManager.FindGameObject(name);
-    public Dictionary<string, GameObject> GameObjects => Service.Scene.ObjectManager.GameObjects;
+    public Dictionary<string, GameObject>? GameObjects => Service.Scene == null ? new Dictionary<string, GameObject>() : Service.Scene.ObjectManager.GameObjects;
 }

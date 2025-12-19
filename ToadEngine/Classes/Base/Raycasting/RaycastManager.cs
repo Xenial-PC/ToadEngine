@@ -18,6 +18,8 @@ public class RaycastManager
     private readonly BufferPool _pool;
     private readonly IntersectionAlgorithm _intersection = new();
 
+    public RaycastManager() {}
+
     public RaycastManager(BufferPool pool, int initCapacity = 1024)
     {
         _pool = pool;

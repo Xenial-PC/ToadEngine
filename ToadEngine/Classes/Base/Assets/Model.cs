@@ -13,6 +13,8 @@ public class Model
 
     public List<Material?> GetMaterials => Meshes.Select(m => m.Material).ToList();
     
+    public Model() {}
+
     public Model(string path, string model)
     {
         _directory = Path.Combine(path, model);

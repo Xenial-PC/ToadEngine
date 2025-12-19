@@ -24,7 +24,7 @@ public class LevelTwo : Scene
     {
         var baseDirectory = $"{Directory.GetCurrentDirectory()}/Resources/";
 
-        _skybox = BuiltIns.World.Skybox();
+        _skybox = BuiltIn.World.Skybox;
         _skybox.Material = new SkyboxMaterial()
         {
             Right = $"{baseDirectory}Textures/level_one_skybox/right.png",
@@ -35,8 +35,7 @@ public class LevelTwo : Scene
             Back = $"{baseDirectory}Textures/level_one_skybox/back.png",
         };
 
-        _camera = new Camera();
-        Service.Add(_camera);
+        _camera = BuiltIn.World.CreateMainCamera();
 
         _player = new Player();
 

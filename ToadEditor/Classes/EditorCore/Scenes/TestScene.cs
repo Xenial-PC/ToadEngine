@@ -1,23 +1,27 @@
-﻿using ToadEngine.Classes.Base.Objects.BuiltIn;
+﻿using Prowl.Echo;
+using ToadEngine.Classes.Base.Assets;
+using ToadEngine.Classes.Base.Objects.BuiltIn;
 using ToadEngine.Classes.Base.Objects.Lights;
-using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Objects.World;
+using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
+using ToadEngine.Classes.Base.Scripting.Renderer;
 
 namespace ToadEditor.Classes.EditorCore.Scenes
 {
     public class TestScene : Scene
     {
+        public TestScene() { }
+
         private Skybox _skybox = null!;
-        private Camera _camera = null!;
         private DirectionLight _directionLight = null!;
 
         public override void Setup()
         {
             var baseDirectory = $"{Directory.GetCurrentDirectory()}/Resources/";
 
-            _skybox = BuiltIns.World.Skybox();
+            _skybox = BuiltIn.World.Skybox;
             _skybox.Material = new SkyboxMaterial()
             {
                 Right = $"{baseDirectory}Textures/level_one_skybox/right.png",
@@ -28,42 +32,33 @@ namespace ToadEditor.Classes.EditorCore.Scenes
                 Back = $"{baseDirectory}Textures/level_one_skybox/back.png",
             };
 
-            _camera = new Camera();
-            Service.MainCamera = _camera;
+            BuiltIn.World.CreateMainCamera();
 
-            _directionLight = BuiltIns.Lights.DirectionLight();
+            _directionLight = BuiltIn.Lights.DirectionLight;
             _directionLight.Settings.Direction = new Vector3(0f, -1f, 0);
             _directionLight.Transform.Rotation = new Vector3(-1f, -1.5f, -1f);
 
             _directionLight.Settings.Specular = new Vector3(0.3f);
             _directionLight.Settings.Ambient = new Vector3(0.5f);
             _directionLight.Settings.Diffuse = new Vector3(0.3f);
-
-           
-
-            for (var i = 0; i < 32; i++)
-            {
-                var cube = BuiltIns.Primitives.Cube();
-                cube.Transform.Position = new Vector3(30 / 10f * i);
-                Instantiate(cube);
-            }
         }
 
         public override void OnStart()
         {
-            var cube = BuiltIns.Primitives.Cube();
+            var cube = BuiltIn.Primitives.Cube;
             cube.Name = "Parent Cube";
             cube.Transform.Position = new Vector3(1f);
+            cube.AddComponent<FallScript>();
 
-            var childCube = BuiltIns.Primitives.Cube();
+            var childCube = BuiltIn.Primitives.Cube;
             childCube.Name = "Child Cube";
             childCube.Transform.LocalPosition.Y += 2f;
 
-            var childCube2 = BuiltIns.Primitives.Cube();
+            var childCube2 = BuiltIn.Primitives.Cube;
             childCube2.Name = "Child Cube 2";
             childCube2.Transform.LocalPosition.Y += 2f;
 
-            var childCube3 = BuiltIns.Primitives.Cube();
+            var childCube3 = BuiltIn.Primitives.Cube;
             childCube3.Name = "Child Cube 3";
             childCube3.Transform.LocalPosition.Y += 2f;
 
@@ -72,7 +67,7 @@ namespace ToadEditor.Classes.EditorCore.Scenes
 
             childCube.AddChild(childCube2);
 
-            Instantiate([cube, childCube, childCube2, childCube3]);
+            Instantiate(cube);
 
             Instantiate(_skybox.GameObject, InstantiateType.Late);
             Instantiate(_directionLight.GameObject);
@@ -80,7 +75,6 @@ namespace ToadEditor.Classes.EditorCore.Scenes
 
         public override void OnUpdate(FrameEventArgs e)
         {
-            _camera.Update();
         }
 
         public override void OnResize(FramebufferResizeEventArgs e)
@@ -90,5 +84,21 @@ namespace ToadEditor.Classes.EditorCore.Scenes
         public override void Dispose()
         {
         }
+    }
+}
+
+public class FallScript : MonoBehavior
+{
+    public int x;
+
+    public void Awake()
+    {
+        Console.WriteLine("Awake called");
+    }
+
+    public void Update()
+    {
+        GameObject.Transform.Position.Y -= 12.05f * Time.DeltaTime;
+        Console.WriteLine($"Update being called {x++}");
     }
 }

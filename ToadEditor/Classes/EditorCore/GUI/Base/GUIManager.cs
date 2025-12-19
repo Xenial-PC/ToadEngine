@@ -13,7 +13,7 @@ public class GUIManager(EditorRenderTarget target)
     public void Setup()
     {
         SetupDefaults();
-        ToadEngine.Classes.Base.UI.GUI.GuiCallBack += EditorCallback;
+        ToadEngine.Classes.Base.UI.GUI.StaticGuiCallBack += EditorCallback;
     }
 
     private void SetupDefaults()
