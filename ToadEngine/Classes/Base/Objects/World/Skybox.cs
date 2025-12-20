@@ -1,4 +1,5 @@
-﻿using ToadEngine.Classes.Base.Scripting.Base;
+﻿using Prowl.Echo;
+using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Base.Scripting.Renderer;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
@@ -10,7 +11,7 @@ public class Skybox : MonoBehavior
     public SkyboxMaterial Material;
 
     private CubeMap? _skyboxCubeMap;
-    private Shader? _skyboxShader;
+    [SerializeIgnore] private Shader? _skyboxShader;
 
     private int _skyboxVao, _skyboxVbo;
     private readonly float[] _skyboxVertices =
@@ -83,8 +84,21 @@ public class Skybox : MonoBehavior
         _skyboxShader.Use();
         _skyboxShader.SetInt1("skybox", 0);
 
+        var skybox = GetComponent<SkyboxRenderer>();
+        if (skybox != null)
+        {
+            skybox.SkyboxShader = _skyboxShader;
+            skybox.SkyboxVAO = _skyboxVao;
+            return;
+        }
+
         var skyboxRenderer = AddComponent<SkyboxRenderer>();
         skyboxRenderer.SkyboxShader = _skyboxShader;
         skyboxRenderer.SkyboxVAO = _skyboxVao;
+    }
+
+    public void Dispose()
+    {
+        _skyboxShader?.Dispose();
     }
 }

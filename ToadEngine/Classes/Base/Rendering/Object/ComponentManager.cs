@@ -11,7 +11,14 @@ public class ComponentManager : ISerializable
 
     private int _index;
 
-    public void Add(string name, object obj) => _components.TryAdd(name, obj);
+    public void Add(string name, GameObject go, MonoBehavior component)
+    {
+        _components.TryAdd($"component_{_index++}", component);
+        if (component is not MonoBehavior behavior) return;
+
+        RegisterComponent(go, behavior);
+    }
+
     public void Add(object obj) => _components.TryAdd($"component_{_index++}", obj);
     
     public T Add<T>(GameObject go) where T : new()
@@ -71,7 +78,8 @@ public class ComponentManager : ISerializable
             var toProcess = new List<MonoBehavior>(_pendingAwake);
             _pendingAwake.Clear();
 
-            foreach (var component in toProcess) component.AwakeMethod?.Invoke();
+            foreach (var component in toProcess)
+                component.AwakeMethod?.Invoke();
         }
 
         while (_pendingStart.Count > 0)
@@ -97,13 +105,14 @@ public class ComponentManager : ISerializable
         var componentObject = value.Get("Components");
         var componentsList = Serializer.Deserialize<Dictionary<string, object>>(componentObject, ctx);
 
-        _components = componentsList!;
-
-        foreach (var component in _components.Where(obj => obj.Value is MonoBehavior)
-                     .Select(obj => obj.Value as MonoBehavior).ToList())
+        foreach (var component in componentsList!)
         {
-            RegisterComponent(component!.GameObject, component);
-            Console.WriteLine("Registered Component");
+            var go = ((MonoBehavior)component.Value).GameObject;
+            Add(component.Key, go, (MonoBehavior)component.Value);
         }
+
+        var indexObject = value.Get("Index");
+        var index = Serializer.Deserialize<int>(indexObject);
+        _index = index;
     }
 }

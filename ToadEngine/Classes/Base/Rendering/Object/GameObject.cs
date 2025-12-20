@@ -2,7 +2,6 @@
 using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
-using ToadEngine.Classes.Shaders;
 
 namespace ToadEngine.Classes.Base.Rendering.Object;
 
@@ -46,14 +45,13 @@ public class GameObject
     public Matrix4 Model;
     
     public Scene Scene => Service.Scene;
-    public Shader CoreShader => Service.CoreShader;
     public NativeWindow WHandler => Service.NativeWindow;
 
     public bool IsEnabled = true;
 
     public T AddComponent<T>() where T : new() => Component.Add<T>(this);
     public T AddComponent<T>(string name) where T : new() => Component.Add<T>(name, this);
-    public void AddComponent(string name, object obj) => Component.Add(name, obj);
+    public void AddComponent(string name, MonoBehavior mono) => Component.Add(name, this, mono);
     public void AddComponent(object obj) => Component.Add(obj);
 
     public T? GetComponent<T>() where T : class => Component.Get<T>();

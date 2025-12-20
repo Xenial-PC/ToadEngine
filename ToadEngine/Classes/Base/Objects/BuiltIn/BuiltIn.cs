@@ -3,6 +3,7 @@ using ToadEngine.Classes.Base.Objects.Primitives;
 using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Objects.World;
 using ToadEngine.Classes.Base.Rendering.Object;
+using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
 
 namespace ToadEngine.Classes.Base.Objects.BuiltIn;

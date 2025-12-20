@@ -2,13 +2,18 @@
 using Prowl.Echo;
 using ToadEngine.Classes.Base.Assets;
 using ToadEngine.Classes.Base.Audio;
+using ToadEngine.Classes.Base.Objects.BuiltIn;
 using ToadEngine.Classes.Base.Objects.Lights;
 using ToadEngine.Classes.Base.Objects.View;
+using ToadEngine.Classes.Base.Objects.World;
 using ToadEngine.Classes.Base.Physics.Managers;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
 using ToadEngine.Classes.Shaders;
 using ToadEngine.Classes.Textures;
+using DirectionLight = ToadEngine.Classes.Base.Objects.Lights.DirectionLight;
+using PointLight = ToadEngine.Classes.Base.Objects.Lights.PointLight;
+using SpotLight = ToadEngine.Classes.Base.Objects.Lights.SpotLight;
 
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;
 
@@ -19,7 +24,7 @@ public class SceneSettings
 
 public class Scene
 {
-    public Scene() {}
+    public Scene() { Init(); }
 
     [SerializeIgnore] public NativeWindow WHandler = null!;
     [SerializeIgnore] public Window.Window Window = null!;
@@ -31,13 +36,16 @@ public class Scene
 
     [SerializeIgnore] public IRenderTarget RenderTarget = null!;
 
-    public Shader CoreShader;
-    public static Shader ShadowMapShader = null!;
+    [SerializeIgnore] public Shader CoreShader;
+    [SerializeIgnore] public Shader ShadowMapShader = null!;
 
     public AssetManager AssetManager = new();
     public ShaderManager ShaderManager = new();
 
     public GameObject Scripts = new() { Name = "Scripts" };
+
+    public Skybox? Skybox;
+    public DirectionLight? DirectionLight;
 
     [SerializeIgnore] public Action? PreUpdate, PostUpdate, PreRender, PostRender;
 
@@ -57,7 +65,43 @@ public class Scene
     public void Start()
     {
         ObjectManager.SetupGameObjects();
+        AddDefaults();
         OnStart();
+    }
+
+    private void AddDefaults()
+    {
+        BuiltIn.World.CreateMainCamera();
+
+        var baseDirectory = $"{Directory.GetCurrentDirectory()}/Resources/";
+
+        if (Skybox == null)
+        {
+            Skybox = BuiltIn.World.Skybox;
+            Skybox.Material = new SkyboxMaterial()
+            {
+                Right = $"{baseDirectory}Textures/level_one_skybox/right.png",
+                Left = $"{baseDirectory}Textures/level_one_skybox/left.png",
+                Top = $"{baseDirectory}Textures/level_one_skybox/top.png",
+                Bottom = $"{baseDirectory}Textures/level_one_skybox/bottom.png",
+                Front = $"{baseDirectory}Textures/level_one_skybox/front.png",
+                Back = $"{baseDirectory}Textures/level_one_skybox/back.png",
+            };
+        }
+
+        if (DirectionLight == null)
+        {
+            DirectionLight = BuiltIn.Lights.DirectionLight;
+            DirectionLight.Settings.Direction = new Vector3(0f, -1f, 0);
+            DirectionLight.Transform.Rotation = new Vector3(-1f, -1.5f, -1f);
+
+            DirectionLight.Settings.Specular = new Vector3(0.3f);
+            DirectionLight.Settings.Ambient = new Vector3(0.5f);
+            DirectionLight.Settings.Diffuse = new Vector3(0.3f);
+        }
+
+        Instantiate(Skybox.GameObject, InstantiateType.Late);
+        Instantiate(DirectionLight.GameObject);
     }
 
     public void Draw(float deltaTime)
@@ -174,24 +218,17 @@ public class Scene
 
     public void Load(NativeWindow state, Window.Window window, IRenderTarget? target)
     {
+        CreateCoreShaders();
+
+        Init();
+
         WHandler = state;
         Window = window;
 
         Service.Add(WHandler);
         Service.Add(Window);
-        
-        Service.Add(AssetManager);
-        Service.Add(ShaderManager);
 
         RenderTarget = target ?? new WindowRenderTarget();
-
-        AudioManager = new AudioManager();
-        AudioManager.SetDistanceModel(ALDistanceModel.InverseDistanceClamped);
-
-        AudioManager.Init();
-        ShadowMapShader = ShaderManager.Add("ShadowMap", "shadowmap.vert", "shadowmap.frag");
-
-        CreateCoreShader();
 
         Setup();
         Start();
@@ -200,11 +237,25 @@ public class Scene
         GameObject.SetupTriggers();
     }
 
+    private void Init()
+    {
+        Service.Add(AssetManager);
+        Service.Add(ShaderManager);
 
-    private void CreateCoreShader()
+        if (AudioManager == null)
+            AudioManager = new AudioManager();
+
+        AudioManager.SetDistanceModel(ALDistanceModel.InverseDistanceClamped);
+        AudioManager.Init();
+    }
+
+    private void CreateCoreShaders()
     {
         CoreShader = ShaderManager.Add("CoreShader", $"core.vert", $"lighting.frag");
         CoreShader.Use();
+
+        ShadowMapShader = ShaderManager.Add("ShadowMap", "shadowmap.vert", "shadowmap.frag");
+        
         Service.Add(CoreShader);
     }
 
@@ -213,18 +264,17 @@ public class Scene
         GUI.GuiCallBack = null!;
 
         ObjectManager.Dispose();
-
         AudioManager?.Dispose();
-        ShadowMapShader?.Dispose();
 
         CoreShader?.Dispose();
+        ShadowMapShader?.Dispose();
 
-        Service.Clear();
-        Texture.ClearTextures();
-
+        ShaderManager.Reset();
         AssetManager.Reset();
         PhysicsManager.Reset();
+        Texture.ClearTextures();
 
+        Service.Clear();
         Dispose();
     }
 

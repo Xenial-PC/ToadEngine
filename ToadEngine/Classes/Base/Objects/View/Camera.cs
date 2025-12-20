@@ -7,7 +7,7 @@ namespace ToadEngine.Classes.Base.Objects.View;
 
 public class Camera : MonoBehavior
 {
-    public static Camera MainCamera => Service.Scene.ObjectManager.FindGameObjectByTag("MainCamera")?.GetComponent<Camera>()!;
+    public static Camera MainCamera => Service.Scene == null ? null : Service.Scene.ObjectManager.FindGameObjectByTag("MainCamera")?.GetComponent<Camera>();
 
     public static List<GameObject> GameObjects => Service.Scene.ObjectManager.GameObjects.Select(val => val.Value).ToList();
 
@@ -69,6 +69,7 @@ public class Camera : MonoBehavior
 
     public void Awake()
     {
+        if (Scene == null) return;
         AspectRatio = (Scene.RenderTarget.Width / (float)Scene.RenderTarget.Height);
     }
 

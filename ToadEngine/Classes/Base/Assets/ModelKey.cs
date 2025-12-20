@@ -11,7 +11,7 @@ public readonly struct ModelKey : IEquatable<ModelKey>
 
         if (materials == null)
         {
-            MaterialHash = -1;
+            MaterialHash = new Random().Next(10000, 60_000);
             return;
         }
 

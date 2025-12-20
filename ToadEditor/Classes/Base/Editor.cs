@@ -2,6 +2,7 @@
 using ToadEditor.Classes.EditorCore.Modules;
 using ToadEditor.Classes.EditorCore.Renderer;
 using ToadEditor.Classes.EditorCore.Scenes;
+using ToadEngine.Classes.Base.Objects.BuiltIn;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using Window = ToadEngine.Classes.Window.Window;
 
@@ -23,10 +24,35 @@ public class Editor(int width, int height, string title) : Window(width, height,
         GuiManager = new(EditorRenderTarget);
         GuiManager.Setup();
 
-        SceneManager.Register<TestScene>("test");
-        LoadScene("test");
+        var scene = new Scene();
 
-        HookManager.SetupHooks();
+        var cube = BuiltIn.Primitives.Cube;
+        cube.Name = "Parent Cube";
+        cube.Transform.Position = new Vector3(0f, 0f, -1f);
+        //cube.AddComponent<FallScript>();
+
+        var childCube = BuiltIn.Primitives.Cube;
+        childCube.Name = "Child Cube";
+        childCube.Transform.LocalPosition.Y += 2f;
+
+        var childCube2 = BuiltIn.Primitives.Cube;
+        childCube2.Name = "Child Cube 2";
+        childCube2.Transform.LocalPosition.Y += 2f;
+
+        var childCube3 = BuiltIn.Primitives.Cube;
+        childCube3.Name = "Child Cube 3";
+        childCube3.Transform.LocalPosition.Y += 2f;
+
+        cube.AddChild(childCube);
+        cube.AddChild(childCube3);
+
+        childCube.AddChild(childCube2);
+
+        scene.Instantiate(cube);
+
+        LoadScene(scene);
+
+        //HookManager.SetupHooks();
     }
 
     public override void OnInit()

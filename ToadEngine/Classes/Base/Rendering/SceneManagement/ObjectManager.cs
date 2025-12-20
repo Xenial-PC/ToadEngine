@@ -1,6 +1,4 @@
-﻿using System.Reflection.PortableExecutable;
-using Prowl.Echo;
-using ToadEngine.Classes.Base.Objects.View;
+﻿using ToadEngine.Classes.Base.Objects.View;
 using ToadEngine.Classes.Base.Rendering.Object;
 using ToadEngine.Classes.Base.Scripting.Base;
 namespace ToadEngine.Classes.Base.Rendering.SceneManagement;

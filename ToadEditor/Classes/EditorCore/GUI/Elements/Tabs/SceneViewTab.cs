@@ -25,7 +25,9 @@ public class SceneViewTab(EditorRenderTarget target, DockType dockType) : TabMen
         if (Width != (int)containerSize.Width || Height != (int)containerSize.Height)
         {
             Texture = target.Resize((int)containerSize.Width, (int)containerSize.Height);
-            Camera.MainCamera.AspectRatio = target.Width / (float)target.Height;
+
+            if (Camera.MainCamera != null!)
+                Camera.MainCamera.AspectRatio = target.Width / (float)target.Height;
 
             Width = (int)containerSize.Width;
             Height = (int)containerSize.Height;

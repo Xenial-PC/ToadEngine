@@ -37,7 +37,7 @@ public abstract class Component
 
     public T AddComponent<T>() where T : new() => GameObject.Component.Add<T>(GameObject);
     public T AddComponent<T>(string name) where T : new() => GameObject.Component.Add<T>(name, GameObject);
-    public void AddComponent(string name, object obj) => GameObject.Component.Add(name, obj);
+    public void AddComponent(string name, GameObject go, MonoBehavior obj) => GameObject.Component.Add(name, go, obj);
     public void AddComponent(object obj) => GameObject.Component.Add(obj);
 
     public T? GetComponent<T>() where T : class => GameObject.Component.Get<T>();

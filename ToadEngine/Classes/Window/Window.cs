@@ -1,7 +1,6 @@
 ﻿using Prowl.PaperUI;
 using ToadEngine.Classes.Base.Rendering.SceneManagement;
 using ToadEngine.Classes.Base.Scripting.Base;
-using ToadEngine.Classes.Shaders;
 
 namespace ToadEngine.Classes.Window;
 
@@ -94,19 +93,29 @@ public class Window : GameWindow
         CurrentScene?.OnResize(e);
     }
 
+    /// <summary>
+    /// Legacy (API Only Scene)
+    /// </summary>
+    /// <param name="name"></param>
     public void LoadScene(string name)
     {
         CurrentScene?.Destroy();
+
         CurrentScene = SceneManager.Create(name);
         Service.Add(CurrentScene);
 
         CurrentScene.Load(this, this, RenderTarget);
     }
 
+    /// <summary>
+    /// Serialized Scene Loader 
+    /// </summary>
+    /// <param name="sceneObject"></param>
     public void LoadScene(Scene sceneObject)
     {
         CurrentScene?.Destroy();
-        CurrentScene = sceneObject;
+
+        CurrentScene = SceneManager.SetupScene(sceneObject);
         Service.Add(CurrentScene);
 
         CurrentScene.Load(this, this, RenderTarget);

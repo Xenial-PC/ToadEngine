@@ -26,7 +26,7 @@ public class AssetManager
         m = Model.Load(path, model);
 
         if (materials != null) m.SetMaterials(materials);
-        if (key.MaterialHash != -1) Assets.Models[key] = m;
+        Assets.Models[key] = m;
         return m;
     }
 
@@ -44,7 +44,7 @@ public class AssetManager
         m = Model.Load(model);
 
         if (materials != null) m.SetMaterials(materials);
-        if (key.MaterialHash != -1) Assets.Models[key] = m;
+        Assets.Models[key] = m;
         return m;
     }
 
